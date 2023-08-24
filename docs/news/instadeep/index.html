@@ -9,9 +9,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Algorithms for the 3D bounded knapsack problem with polyominoes | Lars C.P.M. Quaedvlieg</title>
+    <title>Instadeep | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="This project uses different algorithms to create fast, high-quality solutions to the 3D bin packing problem with one bin" />
+    <meta name="description" content="The portfolio website of Lars C.P.M. Quaedvlieg
+" />
 
 
     <!-- Bootstrap & MDB -->
@@ -31,7 +32,7 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="http://localhost:4000/projects/3d-bin-packing/">
+    <link rel="canonical" href="http://localhost:4000/news/instadeep/">
     
     <!-- Dark Mode -->
     
@@ -104,114 +105,27 @@
 
     <!-- Content -->
     <div class="container mt-5">
-      <!-- page.html -->
-        <div class="post">
+      <!-- _layouts/post.html -->
 
-          <header class="post-header">
-            <h1 class="post-title">Algorithms for the 3D bounded knapsack problem with polyominoes</h1>
-            
-            <p><b>Authors: Lars C.P.M. Quaedvlieg, Ngoc Hoang Trieu, Sander op den Camp, Daniël van der Velde, Martin Aviles</b></p>
-            
-            
-            <p class="post-description">This project uses different algorithms to create fast, high-quality solutions to the 3D bin packing problem with one bin</p>
-          </header>
+<div class="post">
 
-          <article>
-            <p>This is my first official group project, which was completed in Fall 2020 for the Project 1-1 course at my bachelor’s <a href="https://www.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence/courses-curriculum" target="_blank" rel="noopener noreferrer">Data Science and Artificial Intelligence</a>
-at Maastricht University.</p>
+  <header class="post-header">
+    <h1 class="post-title">Instadeep</h1>
+    <p class="post-meta">July 13, 2023</p>
+    <p class="post-tags">
+      <a href="/blog/2023"> <i class="fas fa-calendar fa-sm"></i> 2023 </a>
 
-<h2 id="phase-1-the-2-dimensional-knapsack-problem">Phase 1: The 2-Dimensional Knapsack Problem</h2>
+    </p>
+  </header>
 
-<p>Initially, we focussed on the 2-dimensional knapsack problem. Given the
-shapes of pentominoes, the goal was to see if they could be used to create a perfect fit on a grid of any size. We
-implemented the dancing links algorithm, invented by Donald Knuth, to do efficient planning for this problem. The result
-is shown in the GIF below.</p>
+  <article class="post-content">
+    <p>I’m very excited to announce that I will be joining <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a> in Paris for the upcoming 
+six months as a Research Intern. Together with the team, I will be working on the development of a general agent for
+multiple combinatorial optimization problems!</p>
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <div class="text-center">
-            <figure>
+  </article>
 
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/phase1.gif" class="center img-fluid rounded z-depth-1" width="auto" height="auto" title="Example of the solution" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-        </div>
-    </div>
 </div>
-<div class="caption">
-    The GIF above displays examples of the results of the algorithm for a certain configuration.
-</div>
-
-<h2 id="phase-2-pentris">Phase 2: Pentris</h2>
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-4 mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/phase2.gif" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm-8 mt-3 mt-md-0">
-        In the second phase of the project we decided to learn about different planning algorithms and genetic algorithms to
-        learn how to play a game of Tetris with pentominoes! We also learned how to use JavaFX, save and load high scores,
-        and even include music in the game. You can see the final product on the left!
-    </div>
-</div>
-
-<h2 id="phase-3-optimizing-for-the-bounded-3d-knapsack-problem">Phase 3: Optimizing for the Bounded 3D Knapsack Problem</h2>
-
-<p>Finally, we decided to apply our knowledge from the previous two phases in order to develop software that is able to
-optimally pack parcels into a 3-dimensional container. We developed 6 types of parcels of different sizes, for which
-the user is able to fill in their amounts and values. The goal of the algorithm is to fill the container with parcels
-such that the cumulative value is maximized. We used genetic algorithms and modified the 2-dimensional version of the
-dancing links algorithm to 3-dimensional space, and made it work with incomplete solutions. The final result can be seen
-in the video below!</p>
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <div class="text-center">
-            <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/phase3.gif" class="center img-fluid rounded z-depth-1" width="auto" height="auto" title="Example of the solution" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-        </div>
-    </div>
-</div>
-<div class="caption">
-    The solution to an example configuration being showcased for the final product. 
-</div>
-
-<p>The final report for this project is attached below!</p>
-
-<style> .pdf-embed-wrap-40dabb5a-c084-402b-a313-e04e6fb7840b { display:flex; flex-direction: column; width: 100%; height: 1030px; } .pdf-embed-container-40dabb5a-c084-402b-a313-e04e6fb7840b { height: 100%; } .pdf-embed-container-40dabb5a-c084-402b-a313-e04e6fb7840b iframe { width: 100%; height: 100%; } </style>
-<div class="pdf-embed-wrap-40dabb5a-c084-402b-a313-e04e6fb7840b"> <div class="pdf-embed-container-40dabb5a-c084-402b-a313-e04e6fb7840b"> <iframe src="/assets/pdf/dke_project11.pdf" frameborder="0" allowfullscreen=""></iframe> </div> </div>
-
-          </article>
-
-        </div>
 
     </div>
 
