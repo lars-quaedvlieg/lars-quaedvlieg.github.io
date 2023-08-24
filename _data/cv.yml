@@ -12,9 +12,9 @@
     - name: Programming Languages
       value: Python, Java, SQL, MATLAB, R, C, C++, JavaScript, PHP
     - name: Tools
-      value: Pytorch, NumPy, Gym, Pandas, Seaborn, Matplotlib, TensorFlow
+      value: Jax, Haiku, Optax, Flax, Pytorch, Hydra, Neptune
     - name: References
-      value: Can be found in the pdf-version of my CV (at the top of this webpage)
+      value: Can be found in the pdf-version of my CV (at the top of this webpage, a bit outdated)
 
 #- title: Academic Interests
 #  type: nested_list
@@ -29,6 +29,7 @@
   type: list
   contents:
     - Deep Reinforcement Learning
+    - Transformers and LLMs
     - Graph Neural Networks
     - Multi-Task Learning
 
@@ -41,11 +42,12 @@
       description:
         - title: Current Courses
           contents:
-            - (CS-503) Visual Intelligence
-            - (CS-456) Reinforcement Learning
-            - (EE-452) Network Machine Learning
-            - (COM-490) Large-Scale Data Science For Real-World Data
-            - (HUM-433) How People Learn II
+            - I am currently doing an internship at InstaDeep
+#            - (CS-503) Visual Intelligence
+#            - (CS-456) Reinforcement Learning
+#            - (EE-452) Network Machine Learning
+#            - (COM-490) Large-Scale Data Science For Real-World Data
+#            - (HUM-433) How People Learn II
 #            - (MATH-413) Statistics for Data Science
 #            - "(EE-556) Mathematics of Data: from Theory to Computation"
 #            - (CS-430) Intelligent Agents
@@ -67,7 +69,8 @@
       institution: InstaDeep, France
       year: July '23 - Present
       description:
-        - Internship about Offline Reinforcement Learning for Combinatorial Optimization at InstaDeep's Research department in Paris. The objective is to design and implement a multi-game agent trained on environments from the <a href="https://github.com/instadeepai/jumanji">Jumanji suite</a>, assessing the impact of architectural choices on performance and generalization capabilities.
+        - <b>Skills:</b> Jax, Transformers, Variational Auto-Encoders (VQ-GAN), Offline Reinforcement Learning, HDF5, Google Cloud Platform
+        - Pre-training Transformer models on a large offline <a href=https://research.google/resources/datasets/dqn-replay/>reinforcement learning dataset</a> (3.07 TB) of the classic Atari benchmark. The goal is to easily fine-tune reinforcement learning agents for downstream tasks using this pre-trained model.
     - title: Chief AI Strategist
       institution: Rounded.News, Sweden
       year: May '23 - Present
@@ -77,7 +80,7 @@
       institution: Laboratory for Information and Inference Systems @ EPFL, Switzerland
       year: Nov '22 - Present
       description:
-        - '<b>Competences:</b> Python, reinforcement learning, graph neural networks, combinatorial optimization, scheduling'
+        - '<b>Skills:</b> Python, reinforcement learning, graph neural networks, combinatorial optimization, scheduling'
         - title: Projects
           contents:
             - Co-authored research about self-supervised learning for combinatorial optimization problems and submitted it to a conference
@@ -87,7 +90,7 @@
       institution: Aucos AG, Germany
       year: Feb '21 - Aug '22
       description:
-        - '<b>Competences:</b> Python, computer vision, planning, graph representational learning, (multi-agent) reinforcement learning'
+        - '<b>Skills:</b> Python, computer vision, planning, graph representational learning, (multi-agent) reinforcement learning'
         - title: Projects
           contents:
           - Developed a pipeline for multi-camera multi-object tracking through production lines
