@@ -140,3 +140,10 @@
       year: Sep '18 - Jul '22
       description:
         - Tutoring and hosting group exam-preparation sessions for undergraduate students in computer science- and mathematics-related topics
+
+- title: References
+  type: list
+  contents:
+    - <b>Prof. Dr. Karl Tuyls</b>       |  Google DeepMind
+    - <b>Prof. Dr. Gerhard B. Weiss</b> |  Maastricht University
+    - <b>Prof. Dr. Frank Thuijsman</b>  |  Maastricht University
