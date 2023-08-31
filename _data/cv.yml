@@ -10,9 +10,9 @@
     - name: Languages
       value: English (C2), Dutch (C2), German (B1), French (A2)
     - name: Programming Languages
-      value: Python, Java, SQL, MATLAB, R, C, C++, JavaScript, PHP
+      value: Python, Java, Flutter, SQL, MATLAB, R, C, C++, JavaScript, PHP
     - name: Tools
-      value: Jax, Haiku, Optax, Flax, Pytorch, Hydra, Neptune
+      value: Jax, Haiku, Optax, Flax, PyTorch, Hydra, Neptune
     - name: References
       value: Can be found in the pdf-version of my CV (at the top of this webpage, a bit outdated)
 
@@ -25,24 +25,25 @@
 #        - Hierarchical Reinforcement Learning
 #        - Graph Representational Learning
 #    - title: Planning algorithms
-- title: Research Interests (not all-encompassing)
+- title: Research Interests
   type: list
   contents:
+    - Foundation Models - (specifically for Decision Making)
     - Deep Reinforcement Learning
-    - Transformers and LLMs
-    - Graph Neural Networks
     - Multi-Task Learning
+    - Graph Neural Networks
 
 - title: Education
   type: time_table
   contents:
     - title: MSc in Data Science
-      institution: École Polytechnique Fédérale de Lausanne (EPFL), Switzerland
+      institution: <a href="https://www.epfl.ch/education/master/programs/data-science/">École Polytechnique Fédérale de Lausanne</a> (EPFL) - Lausanne, Switzerland
       year: Sep '22 - Present
       description:
+        - 5.7/6.0 GPA
         - title: Current Courses
           contents:
-            - I am currently doing an internship at InstaDeep
+            - I am currently not taking any courses due to my internship at InstaDeep
 #            - (CS-503) Visual Intelligence
 #            - (CS-456) Reinforcement Learning
 #            - (EE-452) Network Machine Learning
@@ -53,41 +54,43 @@
 #            - (CS-430) Intelligent Agents
 #            - (CS-433) Machine Learning
 #            - (HUM-432) How People Learn
-    - title: BSc in Data Science and Artificial Intelligence,
-      institution: Maastricht University, The Netherlands
+    - title: BSc in Data Science and Artificial Intelligence
+      institution: <a href="https://curriculum.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence">Maastricht University</a> - Maastricht, The Netherlands
       year: Sep '19 - Jul '22
       description:
         - Graduated summa cum laude, 9.50/10 GPA
         - Ranked 1st out of 104 students within a similar cohort
         - Rewarded 9.5/10 for bachelor thesis "Multi-Agent Reinforcement Learning with Graph Neural Networks for Online Multi-Hoist Scheduling"
-        - Audited master-level courses surrounding Artificial Intelligence
+        - Audited graduate-level courses surrounding Artificial Intelligence
 
 - title: Experience
   type: time_table
   contents:
     - title: Research Intern
-      institution: InstaDeep, France
+      institution: <a href="https://www.instadeep.com/">InstaDeep</a> - Paris, France
       year: July '23 - Present
       description:
-        - <b>Skills:</b> Jax, Transformers, Variational Auto-Encoders (VQ-GAN), Offline Reinforcement Learning, HDF5, Google Cloud Platform
+        - <b>Skills:</b> Jax, Transformers, Variational Auto-Encoders, Offline Reinforcement Learning, HDF5, Google Cloud Platform
         - Pre-training Transformer models on a large offline <a href=https://research.google/resources/datasets/dqn-replay/>reinforcement learning dataset</a> (3.07 TB) of the classic Atari benchmark. The goal is to easily fine-tune reinforcement learning agents for downstream tasks using this pre-trained model.
     - title: Chief AI Strategist
-      institution: Rounded.News, Sweden
+      institution: <a href="http://rounded.news/">Rounded.News</a> - Stockholm, Sweden
       year: May '23 - Present
       description:
         - At Rounded.News, we're breaking filter bubbles with AI-powered news. Our platform gives you a personalized news overview that showcases a range of opinions and helps you stay informed on topics that matter most to you
     - title: Research Assistant
-      institution: Laboratory for Information and Inference Systems @ EPFL, Switzerland
+      institution: <a href="https://www.epfl.ch/labs/lions/">Laboratory for Information and Inference Systems</a> @ EPFL - Lausanne, Switzerland
       year: Nov '22 - Present
       description:
         - '<b>Skills:</b> Python, reinforcement learning, graph neural networks, combinatorial optimization, scheduling'
         - title: Projects
           contents:
-            - Co-authored research about self-supervised learning for combinatorial optimization problems and submitted it to a conference
-            - Currently working on a project about hospital staff scheduling using machine learning methods
+            - Supervised by <a href="https://scholar.google.com/citations?user=hlWhzU8AAAAJ&hl=nl">Prof. Dr. Volkan Cevher</a>, <a href="https://scholar.google.com/citations?user=1bU041kAAAAJ&hl=en">Dr. Grigorios G. Chrysos</a>, and <a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ&hl=el">Dr. Stratis Skoulakis
+              </a>
+            - Co-authored a paper about self-supervised learning for combinatorial optimization problems (in submission)
+            - Currently working on a project about hospital staff scheduling using deep reinforcement learning and graph neural networks
 
     - title: Part-Time Al Research Intern
-      institution: Aucos AG, Germany
+      institution: <a href="https://www.aucos.de/en/home-2/">Aucos AG</a> - Aachen, Germany
       year: Feb '21 - Aug '22
       description:
         - '<b>Skills:</b> Python, computer vision, planning, graph representational learning, (multi-agent) reinforcement learning'
@@ -107,10 +110,12 @@
     - title: CS-503 Visual Intelligence Best Project Award
       year: Jul '23
       description:
+        - "<b>Hunting for Insights: Investigating Predator-Prey Dynamics through Simulated Vision and Reinforcement Learning</b>"
         - Secured first place among 14 teams, winning a free conference registration. <a href="https://arvind6599.github.io/PredatorPreyWebsite/">Link to project</a>
     - title: Best Bachelor's Thesis Award 2023, Maastricht University
       year: Nov '22
       description:
+        - <a href="https://www.maastrichtuniversity.nl/lars-quaedvlieg">https://www.maastrichtuniversity.nl/lars-quaedvlieg</a>
         - University-wide award valued at 500 EUR for the best bachelor's thesis research among all other students in the programme
     - title: Honours Student, Maastricht University
       year: Feb '21 - Aug '22
@@ -121,22 +126,22 @@
   type: time_table
   contents:
     - title: Public Relations Manager
-      institution: EPFL Google Developer Student Club, Switzerland
+      institution: EPFL Google Developer Student Club - Lausanne, Switzerland
       year: Sep '22 - March '23
       description:
         - Bridging the gap between theory and practice by giving the students a platform to develop their projects and participate in workshops, seminars, hackathons, and more
     - title: Student Representative
-      institution: Department of Advanced Computing Sciences, The Netherlands
+      institution: Department of Advanced Computing Sciences - Maastricht, The Netherlands
       year: Sep '20 - Sep '22
       description:
         - One of two student representatives of 800, responsible for raising students' issues, ensuring program quality by renewing study material, extending the curriculum by adding new courses, and looking into internal regulations of the bachelor program
     - title: Board Member
-      institution: MSV Incognito, The Netherlands
+      institution: MSV Incognito - Maastricht, The Netherlands
       year: Jul '20 - Jul '22
       description:
         - Treasurer, secretary, and community manager at a department-wide study association comprised of 800 members. Organized educational and social events, and launched a series of on line sessions with academic and industry researchers
     - title: Tutor (Co-Founder)
-      institution: Inforca, The Netherlands
+      institution: Inforca - Heerlen, The Netherlands
       year: Sep '18 - Jul '22
       description:
         - Tutoring and hosting group exam-preparation sessions for undergraduate students in computer science- and mathematics-related topics
@@ -144,6 +149,7 @@
 - title: References
   type: list
   contents:
-    - <b>Prof. Dr. Karl Tuyls</b>       |  Google DeepMind
-    - <b>Prof. Dr. Gerhard B. Weiss</b> |  Maastricht University
-    - <b>Prof. Dr. Frank Thuijsman</b>  |  Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=cxRqeVwAAAAJ&hl=nl">Prof. Dr. Karl Tuyls</a></b>       |  Google DeepMind
+    - <b><a href="https://scholar.google.com/citations?user=3TofHnIAAAAJ&hl=nl">Prof. Dr. Gerhard B. Weiss</a></b> |  Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=OxPUGmwAAAAJ&hl=nl">Prof. Dr. Frank Thuijsman</a></b>  |  Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=57dQcbgAAAAJ&hl=nl">Dr. Rico Möckel</a></b> | Maastricht University
