@@ -13,8 +13,6 @@
       value: Python, Java, Flutter, SQL, MATLAB, R, C, C++, JavaScript, PHP
     - name: Tools
       value: Jax, Haiku, Optax, Flax, PyTorch, Hydra, Neptune
-    - name: References
-      value: Can be found in the pdf-version of my CV (at the top of this webpage, a bit outdated)
 
 #- title: Academic Interests
 #  type: nested_list
@@ -58,7 +56,7 @@
       institution: <a href="https://curriculum.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence">Maastricht University</a> - Maastricht, The Netherlands
       year: Sep '19 - Jul '22
       description:
-        - Graduated summa cum laude, 9.50/10 GPA
+        - Graduated summa cum laude, 9.5/10 GPA
         - Ranked 1st out of 104 students within a similar cohort
         - Rewarded 9.5/10 for bachelor thesis "Multi-Agent Reinforcement Learning with Graph Neural Networks for Online Multi-Hoist Scheduling"
         - Audited graduate-level courses at the department
