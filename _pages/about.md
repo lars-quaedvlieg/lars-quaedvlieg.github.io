@@ -18,10 +18,10 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Welcome to my personal website! I'm currently pursuing an MSc in Data Science at [École Polytechnique Fédérale de Lausanne](https://www.epfl.ch/education/master/programs/data-science/),
+Welcome to my personal website! I'm currently doing a research internship at [InstaDeep](https://www.instadeep.com/), and I am pursuing an MSc in Data Science at [École Polytechnique Fédérale de Lausanne](https://www.epfl.ch/education/master/programs/data-science/),
 where I also do research at the [Laboratory for Information and Inference Systems](https://www.epfl.ch/labs/lions/).
-My current research revolves around **graph neural networks**, **reinforcement learning**, and **self-supervised learning** 
-for combinatorial optimization problems. Prior to my master's degree, I completed a BSc in Data Science and Artificial 
+My current research revolves around **transformers** and **reinforcement learning**, with a focus on foundation models
+for decision-making problems. Prior to my master's degree, I completed a BSc in Data Science and Artificial 
 Intelligence 🎓 at [Maastricht University](https://www.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence).
 
 I am also currently involved with [Rounded.News](https://rounded.news) as the Chief AI Strategist, a start-up attempting
@@ -36,14 +36,14 @@ free to explore the [publications](/publications/) and [projects](/projects/) pa
 
 Additionally, I am committed to leveraging my skills and knowledge to create positive impact and make a difference in 
 people's lives. I believe in the power of collaboration, innovation, and entrepreneurship to drive meaningful 
-change. Through my involvement in various associations, hackathons, and initiatives, I have gained invaluable 
+change. Through my involvement in various associations, hackathons, and initiatives, I have gained 
 experience in addressing real-world challenges and contributing to sustainability efforts ♻. I am excited about 
 opportunities to further expand my horizons and contribute to projects that align with this ideology.
 
-When I'm not doing research or working on my projects, you can find me skiing down slopes ⛷, exploring scenic hiking 
-trails 🥾🏞️, or participating in field hockey 🏑. 
+When I'm not doing research or working on my projects, you can find me skiing down slopes ⛷, swimming in mountain lakes 🏖️
+, exploring scenic hiking trails 🥾🏞️, or playing field hockey 🏑. 
 
-Thank you for visiting my personal website. I welcome collaboration and invite you to reach out (see the bottom of this
+Thank you for visiting my website! I welcome collaboration and invite you to reach out (see the bottom of this
 page), whether you have ideas for impactful projects, opportunities for partnership, or simply want to connect!
 
 [//]: # (Link to your social media connections, too. This theme is set up to use [Font Awesome icons]&#40;http://fortawesome.github.io/Font-Awesome/&#41; and [Academicons]&#40;https://jpswalsh.github.io/academicons/&#41;, like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.)
