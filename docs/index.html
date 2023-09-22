@@ -137,10 +137,10 @@
           </div>
 
           <div class="clearfix">
-            <p>Welcome to my personal website! I’m currently pursuing an MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener noreferrer">École Polytechnique Fédérale de Lausanne</a>,
+            <p>Welcome to my personal website! I’m currently doing a research internship at <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a>, and I am pursuing an MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener noreferrer">École Polytechnique Fédérale de Lausanne</a>,
 where I also do research at the <a href="https://www.epfl.ch/labs/lions/" target="_blank" rel="noopener noreferrer">Laboratory for Information and Inference Systems</a>.
-My current research revolves around <strong>graph neural networks</strong>, <strong>reinforcement learning</strong>, and <strong>self-supervised learning</strong> 
-for combinatorial optimization problems. Prior to my master’s degree, I completed a BSc in Data Science and Artificial 
+My current research revolves around <strong>transformers</strong> and <strong>reinforcement learning</strong>, with a focus on foundation models
+for decision-making problems. Prior to my master’s degree, I completed a BSc in Data Science and Artificial 
 Intelligence 🎓 at <a href="https://www.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence" target="_blank" rel="noopener noreferrer">Maastricht University</a>.</p>
 
 <p>I am also currently involved with <a href="https://rounded.news" target="_blank" rel="noopener noreferrer">Rounded.News</a> as the Chief AI Strategist, a start-up attempting
@@ -155,14 +155,14 @@ free to explore the <a href="/publications/">publications</a> and <a href="/proj
 
 <p>Additionally, I am committed to leveraging my skills and knowledge to create positive impact and make a difference in 
 people’s lives. I believe in the power of collaboration, innovation, and entrepreneurship to drive meaningful 
-change. Through my involvement in various associations, hackathons, and initiatives, I have gained invaluable 
+change. Through my involvement in various associations, hackathons, and initiatives, I have gained 
 experience in addressing real-world challenges and contributing to sustainability efforts ♻. I am excited about 
 opportunities to further expand my horizons and contribute to projects that align with this ideology.</p>
 
-<p>When I’m not doing research or working on my projects, you can find me skiing down slopes ⛷, exploring scenic hiking 
-trails 🥾🏞️, or participating in field hockey 🏑.</p>
+<p>When I’m not doing research or working on my projects, you can find me skiing down slopes ⛷, swimming in mountain lakes 🏖️
+, exploring scenic hiking trails 🥾🏞️, or playing field hockey 🏑.</p>
 
-<p>Thank you for visiting my personal website. I welcome collaboration and invite you to reach out (see the bottom of this
+<p>Thank you for visiting my website! I welcome collaboration and invite you to reach out (see the bottom of this
 page), whether you have ideas for impactful projects, opportunities for partnership, or simply want to connect!</p>
 
 
@@ -207,7 +207,42 @@ paper gets accepted. Stay tuned for updates!
           <!-- Selected papers -->
           <div class="publications">
             <h2>Selected publications</h2>
-            <ol class="bibliography"><li>
+            <ol class="bibliography">
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/mis_us.png"></div>
+
+        <!-- Entry bib key -->
+        <div id="quaedvlieg2023misdp" class="col-sm-8">
+        
+          <!-- Title -->
+          <div class="title">Maximum Independent Set: Self-Training through Dynamic Programming</div>
+          <!-- Author -->
+          <div class="author">
+          
+
+          </div>
+
+          <!-- Journal/Book title and date -->
+          
+          <div class="periodical">
+            <em>Advances in neural information processing systems (NeurIPS),</em> Jul 2023
+          </div>
+        
+          <!-- Links/Buttons -->
+          <div class="links">
+            <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
+          </div>
+
+          <!-- Hidden abstract block -->
+          <div class="abstract hidden">
+            <p>This work presents a novel graph neural network (GNN) framework for solving the maximum independent set (MIS) inspired by dynamic programming (DP). Specifically, given a graph, we propose a DP-like recursive algorithm based on GNNs that firstly constructs two smaller sub-graphs,  predicts the one with the larger MIS, and then uses it in the next recursive call.  To train our algorithm, we require annotated comparisons of different graphs concerning their MIS size. Annotating the comparisons with the output of our algorithm leads to a self-training process that results in more accurate self-annotation of the comparisons and vice versa. We provide numerical evidence showing the superiority of our method vs prior methods in multiple synthetic and real-world datasets.</p>
+          </div>
+        </div>
+      </div>
+</li>
+<li>
 <!-- _layouts/bib.html -->
       <div class="row">
         <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/bsc_thesis.png"></div>
@@ -241,7 +276,8 @@ paper gets accepted. Stay tuned for updates!
           </div>
         </div>
       </div>
-</li></ol>
+</li>
+</ol>
           </div>
 
           <!-- Social -->
