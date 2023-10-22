@@ -64,6 +64,16 @@
 - title: Experience
   type: time_table
   contents:
+    - title: Research Assistant
+      institution: Caglar Gulcehre Lab for AI Research @ EPFL - Lausanne, Switzerland
+      year: Oct '23 - Present
+      description:
+        - '<b>Skills:</b> State-Space Models, Reinforcement Learning'
+        - title: Projects
+          contents:
+            - Supervised by <a href="https://scholar.google.ca/citations?user=7hwJ2ckAAAAJ">Prof. Dr. Caglar Gulcehre
+              </a>
+            - Working on foundation models for decision-making problems, specifically on efficient RL for long-horizon problems (In progress)
     - title: Research Intern
       institution: <a href="https://www.instadeep.com/">InstaDeep</a> - Paris, France
       year: July '23 - Present
@@ -71,10 +81,10 @@
         - <b>Skills:</b> Jax, Transformers, Variational Auto-Encoders, Offline Reinforcement Learning, HDF5, Google Cloud Platform
         - Pre-training Transformer models on a large offline <a href=https://research.google/resources/datasets/dqn-replay/>reinforcement learning dataset</a> (3.07 TB) of the classic Atari benchmark. The goal is to easily fine-tune reinforcement learning agents for downstream tasks using this pre-trained model.
     - title: Chief AI Strategist
-      institution: <a href="http://rounded.news/">Rounded.News</a> - Stockholm, Sweden
+      institution: <a href="https://www.asent.io/">Asentio</a> - Stockholm, Sweden
       year: May '23 - Present
       description:
-        - At Rounded.News, we're breaking filter bubbles with AI-powered news. Our platform gives you a personalized news overview that showcases a range of opinions and helps you stay informed on topics that matter most to you
+        - We develop advanced, user-friendly text analysis APIs that outperform current AI tools and aim to address bias and expand contextual understanding beyond news.
     - title: Research Assistant
       institution: <a href="https://www.epfl.ch/labs/lions/">Laboratory for Information and Inference Systems</a> @ EPFL - Lausanne, Switzerland
       year: Nov '22 - Present
@@ -82,7 +92,7 @@
         - '<b>Skills:</b> Python, reinforcement learning, graph neural networks, combinatorial optimization, scheduling'
         - title: Projects
           contents:
-            - Supervised by <a href="https://scholar.google.com/citations?user=hlWhzU8AAAAJ&hl=nl">Prof. Dr. Volkan Cevher</a>, <a href="https://scholar.google.com/citations?user=1bU041kAAAAJ&hl=en">Dr. Grigorios G. Chrysos</a>, and <a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ&hl=el">Dr. Stratis Skoulakis
+            - Supervised by <a href="https://scholar.google.com/citations?user=hlWhzU8AAAAJ">Prof. Dr. Volkan Cevher</a>, <a href="https://scholar.google.com/citations?user=1bU041kAAAAJ&hl=en">Dr. Grigorios G. Chrysos</a>, and <a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ&hl=el">Dr. Stratis Skoulakis
               </a>
             - Co-authored a paper about self-supervised learning for combinatorial optimization problems (in submission)
             - Currently working on a project about hospital staff scheduling using deep reinforcement learning and graph neural networks
