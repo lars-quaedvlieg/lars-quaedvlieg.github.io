@@ -4,7 +4,7 @@ layout: about
 title: About
 permalink: /
 nav_order: 0
-subtitle: <h5>Affiliated with <b>InstaDeep</b>, <b>EPFL</b>, <b>Rounded.News</b>, Aucos AG, Maastricht University</h5>
+subtitle: <h5>Affiliated with <b>InstaDeep</b>, <b>EPFL</b>, <b>Asentio</b>, Aucos AG, Maastricht University</h5>
 
 profile:
   align: right
