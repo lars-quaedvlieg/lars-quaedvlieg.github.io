@@ -26,10 +26,10 @@
 - title: Research Interests
   type: list
   contents:
-    - Foundation Models - (specifically for Decision Making)
+    - Foundation Models - (specifically for Sequential Decision-Making)
+    - Large Language Models
     - Deep Reinforcement Learning
     - Multi-Task Learning
-    - Graph Neural Networks
 
 - title: Education
   type: time_table
@@ -39,18 +39,17 @@
       year: Sep '22 - Present
       description:
         - 5.7/6.0 GPA
-        - title: Current Courses
+        - title: Relevant Courses
           contents:
-            - I am currently not taking any courses due to my internship at InstaDeep
-#            - (CS-503) Visual Intelligence
-#            - (CS-456) Reinforcement Learning
-#            - (EE-452) Network Machine Learning
-#            - (COM-490) Large-Scale Data Science For Real-World Data
+            - (CS-503) Visual Intelligence
+            - (CS-456) Reinforcement Learning
+            - (EE-452) Network Machine Learning
+            - (COM-490) Large-Scale Data Science For Real-World Data
 #            - (HUM-433) How People Learn II
-#            - (MATH-413) Statistics for Data Science
-#            - "(EE-556) Mathematics of Data: from Theory to Computation"
-#            - (CS-430) Intelligent Agents
-#            - (CS-433) Machine Learning
+            - (MATH-413) Statistics for Data Science
+            - "(EE-556) Mathematics of Data: from Theory to Computation"
+            - (CS-430) Intelligent Agents
+            - (CS-433) Machine Learning
 #            - (HUM-432) How People Learn
     - title: BSc in Data Science and Artificial Intelligence
       institution: <a href="https://curriculum.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence">Maastricht University</a> - Maastricht, The Netherlands
@@ -68,26 +67,21 @@
       institution: Caglar Gulcehre Lab for AI Research @ EPFL - Lausanne, Switzerland
       year: Oct '23 - Present
       description:
-        - '<b>Skills:</b> State-Space Models, Reinforcement Learning'
+        - '<b>Skills:</b> Large Language Models, State-Space Models, Reinforcement Learning'
         - title: Projects
           contents:
             - Supervised by <a href="https://scholar.google.ca/citations?user=7hwJ2ckAAAAJ">Prof. Dr. Caglar Gulcehre
               </a>
-            - Working on foundation models for decision-making problems, specifically on efficient RL for long-horizon problems (In progress)
+            - Working on foundation models for decision-making problems, specifically on efficient RL for long-horizon problems with algorithm distillation (In progress)
     - title: Research Intern
       institution: <a href="https://www.instadeep.com/">InstaDeep</a> - Paris, France
-      year: July '23 - Present
+      year: July '23 - Jan '24
       description:
         - <b>Skills:</b> Jax, Transformers, Variational Auto-Encoders, Offline Reinforcement Learning, HDF5, Google Cloud Platform
-        - Pre-training Transformer models on a large offline <a href=https://research.google/resources/datasets/dqn-replay/>reinforcement learning dataset</a> (3.07 TB) of the classic Atari benchmark. The goal is to easily fine-tune reinforcement learning agents for downstream tasks using this pre-trained model.
-    - title: Chief AI Strategist
-      institution: <a href="https://www.asent.io/">Asentio</a> - Stockholm, Sweden
-      year: May '23 - Present
-      description:
-        - We develop advanced, user-friendly text analysis APIs that outperform current AI tools and aim to address bias and expand contextual understanding beyond news.
-    - title: Research Assistant
+        - Pre-training Transformer models on a large offline <a href=https://research.google/resources/datasets/dqn-replay/>reinforcement learning dataset</a> (1+ billion transitions) of the classic Atari benchmark. The goal is to easily fine-tune reinforcement learning agents for downstream tasks using this pre-trained model
+    - title: Research Assistant (Unofficial)
       institution: <a href="https://www.epfl.ch/labs/lions/">Laboratory for Information and Inference Systems</a> @ EPFL - Lausanne, Switzerland
-      year: Nov '22 - Present
+      year: Nov '22 - Oct '23
       description:
         - '<b>Skills:</b> Python, reinforcement learning, graph neural networks, combinatorial optimization, scheduling'
         - title: Projects
@@ -97,7 +91,7 @@
             - Co-authored a paper about self-supervised learning for combinatorial optimization problems (in submission)
             - Currently working on a project about hospital staff scheduling using deep reinforcement learning and graph neural networks
 
-    - title: Part-Time Al Research Intern
+    - title: AI Research Intern
       institution: <a href="https://www.aucos.de/en/home-2/">Aucos AG</a> - Aachen, Germany
       year: Feb '21 - Aug '22
       description:
@@ -111,8 +105,20 @@
 - title: Awards and Honours
   type: time_table
   contents:
+    - title: Talent bursary, Alberta Machine Intelligence Institute
+      year: May '24
+      description:
+        - Bursary, valued at 2,750 CAD, awarded to talented academics for travelling to Edmonton, Alberta for the <a href="https://www.upperbound.ai/">Upper Bound conference</a>
+    - title: Research Scholar Assistant
+      year: Feb '24 - Feb '25
+      description:
+        - "Highly competitive research program. I will be working part-time at the Caglar Gulcerhe's Lab for AI Research (CLAIRE) from February 2024 until January 2025. <a href='https://www.epfl.ch/schools/ic/education/master/research-scholars/'>Link to the scholar programme</a>"
+    - title: Scholar Award, NeurIPS
+      year: Dec '23
+      description:
+        - Travel award, valued at approximately 2,500 USD, covering registration and hotel costs to come to NeurIPS 2023 in-person
     - title: Master's Excellence Fellowship, EPFL
-      year: Sep '23, Sep '22
+      year: Sep '22 - Sep '24
       description:
         - Two-year fellowship valued at 40,000 CHF, awarded to ~3% of EPFL master students based on outstanding academic records
     - title: CS-503 Visual Intelligence Best Project Award
@@ -157,7 +163,9 @@
 - title: References
   type: list
   contents:
-    - <b><a href="https://scholar.google.com/citations?user=cxRqeVwAAAAJ&hl=nl">Prof. Dr. Karl Tuyls</a></b>       |  Google DeepMind & University of Liverpool
-    - <b><a href="https://scholar.google.com/citations?user=3TofHnIAAAAJ&hl=nl">Prof. Dr. Gerhard B. Weiss</a></b> |  Maastricht University
-    - <b><a href="https://scholar.google.com/citations?user=OxPUGmwAAAAJ&hl=nl">Prof. Dr. Frank Thuijsman</a></b>  |  Maastricht University
-    - <b><a href="https://scholar.google.com/citations?user=57dQcbgAAAAJ&hl=nl">Dr. Rico Möckel</a></b> | Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=cxRqeVwAAAAJ">Prof. Dr. Karl Tuyls</a></b>       |  Google DeepMind & University of Liverpool
+    - <b><a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ">Dr. Stratis Skoulakis</a></b> |  EPFL
+    - <b><a href="https://scholar.google.com/citations?user=3TofHnIAAAAJ">Prof. Dr. Gerhard B. Weiss</a></b> |  Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=OxPUGmwAAAAJ">Prof. Dr. Frank Thuijsman</a></b>  |  Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=57dQcbgAAAAJ">Prof. Dr. Rico Möckel</a></b> | Maastricht University
+    - <b><a href="https://scholar.google.com/citations?user=4PexEGMAAAAJ">Prof. Dr. Mirela Popa</a></b> | Maastricht University
