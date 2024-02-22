@@ -105,7 +105,43 @@
             <!-- _pages/publications.md -->
 <div class="publications">
   <h2 class="year">2023</h2>
-  <ol class="bibliography"><li>
+  <ol class="bibliography">
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/pasta.png"></div>
+
+        <!-- Entry bib key -->
+        <div id="boige2023pasta" class="col-sm-8">
+        
+          <!-- Title -->
+          <div class="title">(I will be added to the list of authors on the updated version)<br>PASTA: Pretrained Action-State Transformer Agents</div>
+          <!-- Author -->
+          <div class="author">
+          
+
+          Raphael Boige, Yannis Flet-Berliac, Arthur Flajolet, Guillaume Richard, and Thomas Pierrot</div>
+
+          <!-- Journal/Book title and date -->
+          
+          <div class="periodical">
+            <em>arXiv preprint arXiv:2304.04093,</em> Dec 2023
+          </div>
+        
+          <!-- Links/Buttons -->
+          <div class="links">
+            <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
+            <a href="https://arxiv.org/pdf/2307.10936.pdf" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener noreferrer">PDF</a>
+          </div>
+
+          <!-- Hidden abstract block -->
+          <div class="abstract hidden">
+            <p>Self-supervised learning has brought about a revolutionary paradigm shift in various computing domains, including NLP, vision, and biology. Recent approaches involve pre-training transformer models on vast amounts of unlabeled data, serving as a starting point for efficiently solving downstream tasks. In reinforcement learning, researchers have recently adapted these approaches, developing models pre-trained on expert trajectories. This advancement enables the models to tackle a broad spectrum of tasks, ranging from robotics to recommendation systems. However, existing methods mostly rely on intricate pre-training objectives tailored to specific downstream applications. This paper conducts a comprehensive investigation of models, referred to as pre-trained action-state transformer agents (PASTA). Our study covers a unified methodology and covers an extensive set of general downstream tasks including behavioral cloning, offline RL, sensor failure robustness, and dynamics change adaptation. Our objective is to systematically compare various design choices and offer valuable insights that will aid practitioners in developing robust models. Key highlights of our study include tokenization at the component level for actions and states, the use of fundamental pre-training objectives such as next token prediction or masked language modeling, simultaneous training of models across multiple domains, and the application of various fine-tuning strategies. In this study, the developed models contain fewer than 7 million parameters allowing a broad community to use these models and reproduce our experiments. We hope that this study will encourage further research into the use of transformers with first principle design choices to represent RL trajectories and contribute to robust policy learning.</p>
+          </div>
+        </div>
+      </div>
+</li>
+<li>
 <!-- _layouts/bib.html -->
       <div class="row">
         <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/mis_us.png"></div>
@@ -130,6 +166,7 @@
           <!-- Links/Buttons -->
           <div class="links">
             <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
+            <a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/7fe3170d88a8310ca86df2843f54236c-Paper-Conference.pdf" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener noreferrer">PDF</a>
           </div>
 
           <!-- Hidden abstract block -->
@@ -138,7 +175,8 @@
           </div>
         </div>
       </div>
-</li></ol>
+</li>
+</ol>
 
   <h2 class="year">2022</h2>
   <ol class="bibliography"><li>
