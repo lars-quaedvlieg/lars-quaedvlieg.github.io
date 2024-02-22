@@ -36,11 +36,6 @@
     
     <!-- Dark Mode -->
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/monokai.css" media="none" id="highlight_theme_dark" />
-
-    <script src="/assets/js/theme.js"></script>
-    <script src="/assets/js/dark_mode.js"></script>
-    
 
   </head>
 
@@ -81,14 +76,6 @@
               <li class="nav-item ">
                 <a class="nav-link" href="/cv/">Curriculum Vitae</a>
               </li>
-
-              <!-- Toogle theme mode -->
-              <li class="toggle-container">
-                <button id="light-toggle" title="Change theme">
-                  <i class="fas fa-moon"></i>
-                  <i class="fas fa-sun"></i>
-                </button>
-              </li>
             </ul>
           </div>
         </div>
@@ -111,7 +98,7 @@
           <h1 class="post-title">
            Lars C.P.M. Quaedvlieg
           </h1>
-          <p class="desc"><b>MSc Student in Data Science @ EPFL, Research Intern @ InstaDeep</b></p>
+          <p class="desc"><b>MSc Student in Data Science @ <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener noreferrer">EPFL</a> | Research Scholar @ <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener noreferrer">CLAIRE</a> | Ex Research Intern @ <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a></b></p>
         </header>
 
         <article>
@@ -130,156 +117,57 @@
 </figure>
 
             <div class="address">
-              <p>Lausanne, Switzerland ⛰️
+              <p>Lausanne, Switzerland <img src="assets/icons/swiss-flag.png" style="display:inline-block;height:1em; width:auto; transform:translate(0, -0.2em)">
 
             </p>
 </div>
           </div>
 
           <div class="clearfix">
-            <p><b>Research interests:</b> Foundation Models, Sequential Decision-Making, Multi-Task Learning.</p>
+            <p><b>Research interests:</b> Foundation Models, Sequential Decision-Making, Multi-Task Learning, AI4Mathematics</p>
 
 <p>Welcome to my personal website! I am pursuing an MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener noreferrer">École Polytechnique Fédérale de Lausanne</a>,
-where I am a part-time <strong>Research Assistant</strong> at the <strong>Caglar Gulcehre Lab for AI Research</strong> (previously I was at the <a href="https://www.epfl.ch/labs/lions/" target="_blank" rel="noopener noreferrer">Laboratory for Information and Inference Systems</a>).
-My current research revolves around <em>transformers</em> and <em>reinforcement learning</em>, with a focus on foundation models
-for decision-making problems. Earlier this year, I did a research internship at <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a>, and prior to my master’s degree, I completed a BSc in Data Science and Artificial 
-Intelligence 🎓 at <a href="https://www.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence" target="_blank" rel="noopener noreferrer">Maastricht University</a>.</p>
+where I am a <strong><a href="https://www.epfl.ch/schools/ic/education/master/research-scholars/" target="_blank" rel="noopener noreferrer">Research Scholar Assistant</a></strong> 
+at the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener noreferrer">Caglar Gulcehre Lab for AI Research</a>. I am also a recipient of the <strong><a href="https://www.epfl.ch/education/master/master-excellence-fellowships/" target="_blank" rel="noopener noreferrer">EPFL Excellence Fellowship</a></strong>.
+My current research projects revolve around foundation models and reinforcement learning, with a focus on <strong>AI4Mathematics</strong> 
+and <strong>Sequential Decision-Making</strong>. Earlier this year, I did a research internship at <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a>.</p>
 
-<p>During my bachelor’s studies, I had the opportunity to delve into applied research in various areas. As an AI research 
-intern at Aucos AG, I worked on projects involving <em>multi-camera multi-object tracking</em>, and <em>multi-agent systems</em>.</p>
+<p>I’ve had the privilege of exploring diverse research areas and engaging in a multitude of extracurricular 
+activities. I’ve created an interactive timeline below to share these experiences. Feel free to navigate through it 
+and click on any activity that piques your interest to discover more! For more detail, feel free to explore the 
+<a href="/publications/">publications</a> and <a href="/projects/">projects</a> pages!</p>
 
-<p>My primary research interests lie within the exciting fields of machine learning and artificial intelligence, with a 
-particular emphasis on reinforcement learning and multi-task learning. For more in-depth information about my work, feel
-free to explore the <a href="/publications/">publications</a> and <a href="/projects/">projects</a> pages!</p>
+<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
 
-<p>Additionally, I am committed to leveraging my skills and knowledge to create positive impact and make a difference in 
-people’s lives. I believe in the power of collaboration, innovation, and entrepreneurship to drive meaningful 
-change. Through my involvement in various associations, hackathons, and initiatives, I have gained 
-experience in addressing real-world challenges and contributing to sustainability efforts ♻. I am excited about 
-opportunities to further expand my horizons and contribute to projects that align with this ideology.</p>
+<script src="assets/js/timeline/timeline.js"></script>
 
-<p>When I’m not doing research or working on my projects, you can find me skiing down slopes ⛷, swimming in mountain lakes 🏖️
-, exploring scenic hiking trails 🥾🏞️, or playing field hockey 🏑.</p>
+<div id="timeline-embed" style="width: 100%; height: 600px"></div>
 
-<p>Thank you for visiting my website! I welcome collaboration and invite you to reach out (see the bottom of this
-page), whether you have ideas for impactful projects, opportunities for partnership, or simply want to connect!</p>
+<script type="text/javascript">
+    var additionalOptions = {
+      start_at_end: true,
+      initial_zoom: 3,
+      timenav_position: "bottom",
+      default_bg_color: "white", 
+    }
+    
+    timeline = new TL.Timeline('timeline-embed',
+    'https://docs.google.com/spreadsheets/d/1vfb38Mi1ox5uSLxw1nuTH-0lMjcB_U8V_gy5B0FtoeY/',
+    additionalOptions);
+</script>
+<p><br></p>
+
+<p>When I’m not doing research or working on my projects, you can find me skiing down slopes ⛷, swimming in mountain lakes 🏖️,
+exploring scenic hiking trails 🥾🏞️, or playing field hockey 🏑.</p>
+
+<p>Thank you for visiting my website! I welcome collaboration and invite you to reach out (see the bottom of this page), 
+whether you have ideas for impactful projects, opportunities for partnership, or simply want to connect!</p>
 
 
           </div>
 
-          <!-- News -->          
           
-
           
-          <div class="news">
-            <h2>News</h2>
-            <div class="table-responsive" style="max-height: 10vw">
-              <table class="table table-sm table-borderless">
-              
-                
-                <tr>
-                  <th scope="row">Jan 12, 2024</th>
-                  <td>
-                    I am happy to announce that I will be working at the Caglar Gulcehre Lab for AI Research (CLAIRE) on an <a href="https://www.epfl.ch/schools/ic/education/master/research-scholars/" target="_blank" rel="noopener noreferrer">EPFL Master’s 
-Research Scholarship</a>. Stay tuned for updates on the
-cool projects that we’re going to take on!
- 
-                  </td>
-                </tr>
-                
-                
-                <tr>
-                  <th scope="row">Jul 13, 2023</th>
-                  <td>
-                    I’m very excited to announce that I will be joining <a href="https://www.instadeep.com/" target="_blank" rel="noopener noreferrer">InstaDeep</a> in Paris for the upcoming 
-six months as a Research Intern. Together with the team, I will be working on the development of a general agent for
-multiple combinatorial optimization problems!
- 
-                  </td>
-                </tr>
-                 
-              </table>
-            </div>
-          </div>
-          
-
-          <!-- Selected papers -->
-          <div class="publications">
-            <h2>Selected publications</h2>
-            <ol class="bibliography">
-<li>
-<!-- _layouts/bib.html -->
-      <div class="row">
-        <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/mis_us.png"></div>
-
-        <!-- Entry bib key -->
-        <div id="quaedvlieg2023misdp" class="col-sm-8">
-        
-          <!-- Title -->
-          <div class="title">Maximum Independent Set: Self-Training through Dynamic Programming</div>
-          <!-- Author -->
-          <div class="author">
-          
-
-          <b>L.C.P.M.</b> <b>Quaedvlieg</b>*, L. Brusca*, S. Skoulakis, G. Chrysos, and V. Cevher</div>
-
-          <!-- Journal/Book title and date -->
-          
-          <div class="periodical">
-            <em>Advances in Neural Information Processing Systems (NeurIPS),</em> Jul 2023
-          </div>
-        
-          <!-- Links/Buttons -->
-          <div class="links">
-            <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
-          </div>
-
-          <!-- Hidden abstract block -->
-          <div class="abstract hidden">
-            <p>This work presents a novel graph neural network (GNN) framework for solving the maximum independent set (MIS) inspired by dynamic programming (DP). Specifically, given a graph, we propose a DP-like recursive algorithm based on GNNs that firstly constructs two smaller sub-graphs,  predicts the one with the larger MIS, and then uses it in the next recursive call.  To train our algorithm, we require annotated comparisons of different graphs concerning their MIS size. Annotating the comparisons with the output of our algorithm leads to a self-training process that results in more accurate self-annotation of the comparisons and vice versa. We provide numerical evidence showing the superiority of our method vs prior methods in multiple synthetic and real-world datasets.</p>
-          </div>
-        </div>
-      </div>
-</li>
-<li>
-<!-- _layouts/bib.html -->
-      <div class="row">
-        <div class="col-sm-2 preview"><img class="preview z-depth-1 rounded" src="/assets/img/publication_preview/bsc_thesis.png"></div>
-
-        <!-- Entry bib key -->
-        <div id="quaedvlieg2022marl" class="col-sm-8">
-        
-          <!-- Title -->
-          <div class="title">Multi-Agent Reinforcement Learning with Graph Neural Networks for Online Multi-Hoist Scheduling</div>
-          <!-- Author -->
-          <div class="author">
-          
-
-          <b>L.C.P.M.</b> <b>Quaedvlieg</b>
-</div>
-
-          <!-- Journal/Book title and date -->
-          
-          <div class="periodical">
-            <em>Bachelor’s Thesis,</em> Jul 2022
-          </div>
-        
-          <!-- Links/Buttons -->
-          <div class="links">
-            <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
-            <a href="/assets/pdf/bsc_thesis.pdf" class="btn btn-sm z-depth-0" role="button">PDF</a>
-          </div>
-
-          <!-- Hidden abstract block -->
-          <div class="abstract hidden">
-            <p>This thesis explores an approach to solving the online multi-hoist scheduling problem by combining graph neural networks and multi-agent reinforcement learning. It approaches the problem by creating two sets of agents: source agents and hoists. When requested, a source agent selects a job from a queue of jobs in a source station to give to hoists. The hoists are responsible for picking up and dropping off jobs at stations, and coordinate with each other to avoid scenarios that would result in a deadlock. The devised algorithms are trained and benchmarked against other approaches, such as random and heuristic algorithms. Further insights into the methods are obtained from an analysis using dimensionality reduction on neural activations of the environment states. The results indicate that deadlocks are avoided in all experimental results. Furthermore, the approach in this thesis outperforms the other approaches in the benchmark by 7.50% to 10%. By analyzing the neural activations, it is shown that the hoist agents estimate that situations with many jobs being processed yield a higher job throughput than situations with less. Further research into the overall approach is recommended, but the results show potential to perform well against other approaches in existing literature.</p>
-          </div>
-        </div>
-      </div>
-</li>
-</ol>
-          </div>
-
           <!-- Social -->
           <div class="social">
             <div class="contact-icons">
