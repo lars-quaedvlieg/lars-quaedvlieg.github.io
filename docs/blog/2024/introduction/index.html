@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <!-- Head -->
+<!-- _layouts/distill.html -->
+<html>
   <head>    <!-- Metadata, OpenGraph and Schema.org -->
     
 
@@ -9,9 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>project 2 | Lars C.P.M. Quaedvlieg</title>
+    <title>Foundations of Deep Learning Series - Introduction | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="a project with a background image" />
+    <meta name="description" content="In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities." />
 
 
     <!-- Bootstrap & MDB -->
@@ -31,15 +30,86 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="http://localhost:4000/projects/2_project/">
+    <link rel="canonical" href="http://localhost:4000/blog/2024/introduction/">
     
     <!-- Dark Mode -->
     
 
+
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    <!-- Distill js -->
+    <script src="/assets/js/distillpub/template.v2.js"></script>
+    <script src="/assets/js/distillpub/transforms.v2.js"></script>
+    <script src="/assets/js/distillpub/overrides.js"></script>
+    
+    <!-- Page/Post style -->
+    <style type="text/css">
+      .fake-img {
+  background: #bbb;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+} .fake-img p {
+  font-family: monospace;
+  color: white;
+  text-align: left;
+  margin: 12px 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+    </style>
   </head>
 
-  <!-- Body -->
-  <body class="fixed-top-nav ">
+  <d-front-matter>
+    <script async type="text/json">{
+      "title": "Foundations of Deep Learning Series - Introduction",
+      "description": "In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.",
+      "published": "February 26, 2024",
+      "authors": [
+        {
+          "author": "Lars C.P.M. Quaedvlieg",
+          "authorURL": "https://en.wikipedia.org/wiki/Albert_Einstein",
+          "affiliations": [
+            {
+              "name": "EPFL",
+              "url": ""
+            }
+          ]
+        }
+        
+      ],
+      "katex": {
+        "delimiters": [
+          {
+            "left": "$",
+            "right": "$",
+            "display": false
+          },
+          {
+            "left": "$$",
+            "right": "$$",
+            "display": true
+          }
+        ]
+      }
+    }</script>
+  </d-front-matter>
+
+  <body class="fixed-top-nav">
 
     <!-- Header -->
     <header>
@@ -93,156 +163,96 @@
 
 
     <!-- Content -->
-    <div class="container mt-5">
-      <!-- page.html -->
-        <div class="post">
+    <div class="post distill">
 
-          <header class="post-header">
-            <h1 class="post-title">project 2</h1>
+      <d-title>
+        <h1>Foundations of Deep Learning Series - Introduction</h1>
+        <p>In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.</p>
+      </d-title>
+
+      <d-byline></d-byline>
+
+      <d-article>
+        <d-contents>
+          <nav class="l-text figcaption">
+          <h3>Contents</h3>
+            <div><a href="#introduction">Introduction</a></div>
+            <div><a href="#topics">Topics</a></div>
             
-            
-            <p class="post-description">a project with a background image</p>
-          </header>
+          </nav>
+        </d-contents>
 
-          <article>
-            <p>Every project has a beautiful feature showcase page.
-It’s easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.</p>
+        <h2 id="introduction">Introduction</h2>
 
-<p>To give your project a background in the portfolio page, just add the img tag to the front matter like so:</p>
+<p>The <a href="https://theory.epfl.ch/readinggroup/" target="_blank" rel="noopener noreferrer">Foundations of Deep Learning</a> reading group at EPFL is organized by 
+<a href="https://theory.epfl.ch/kapralov/" target="_blank" rel="noopener noreferrer">Michael Kapralov</a> and <a href="https://theory.epfl.ch/osven/" target="_blank" rel="noopener noreferrer">Ola Svensson</a> from February 
+28th to May 29th.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
-layout: page
-title: project
-description: a project with a background image
-img: /assets/img/12.jpg
----
-</code></pre></div></div>
+<p>The goal of the group is to delve into recent works that aim to lay down a theoretical foundation for deep 
+neural networks, tackling the challenges presented by their significant computational demands, the opacity of their 
+outputs, and the privacy concerns they raise. This initiative is driven by the recent advances in machine learning that
+have led to notable breakthroughs in fields such as natural language processing and vision.</p>
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
+<p>In this series, I will discuss every session of this meeting group, talking about current advancements in state-of-the-art
+deep learning research. I hope to do things like review papers, analyze groundbreaking techniques, and share insights 
+on overcoming the challenges that come with deep learning nowadays.</p>
 
-  <picture>
-    
+<hr>
 
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+<h2 id="topics">Topics</h2>
 
-  </picture>
+<p>The reading group will sequentially discuss 4 research topics:</p>
+<ol>
+  <li>
+<strong>Transformers</strong>: the transformer architecture, as well as (some of) the recent works on subquadratic attention mechanisms (xformers, State Space models, Hyena etc).
+    <ul>
+      <li>Basics of the Transformer architecture.</li>
+      <li>Xformers (subquadratic attention mechanisms).</li>
+      <li>More xformers (polysketchformer, hyperattention).</li>
+      <li>State space models.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Which functions can transformers learn</strong>: classes of functions that transformers can provably learn in-context.
+    <ul>
+      <li>Which functions can transformers learn in-context (RASP, RASP-L)</li>
+      <li>In-context learning of linear regression, part i.</li>
+      <li>In-context learning of linear regression, part ii.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Graph neural networks</strong>: expressivity of graph neural networks (connections to the Weissfeiler-Lehman test), information bottlenecks in graph neural networks.
+    <ul>
+      <li>Graph embeddings.</li>
+      <li>Basics of graph neural networks.</li>
+      <li>Graph neural networks and the Weisfeiler Lehmann test.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Reinforement learning</strong>: algorithmic foundations of reinforcement learning, including Markov Decision Processes and Monte Carlo Tree Search.
+    <ul>
+      <li>Reinforcement learning, Markov Decision Processes, Monte-Carlo tree search.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Other</strong>.
+    <ul>
+      <li>ADAM.</li>
+      <li>Differentially private training of neural networks.</li>
+    </ul>
+  </li>
+</ol>
 
-</figure>
+<p>I am excited to start discussing these topics in greater detail! Check this page regularly for updates!</p>
 
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
+<hr>
 
-  <picture>
-    
+      </d-article>
 
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/3.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/5.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/5.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
-
-<p>You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, <em>bled</em> for your project, and then… you reveal its glory in the next row of images.</p>
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/6.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/11.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
-
-<p>The code is simple.
-Just wrap your images with <code class="language-plaintext highlighter-rouge">&lt;div class="col-sm"&gt;</code> and place them inside <code class="language-plaintext highlighter-rouge">&lt;div class="row"&gt;</code> (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/" target="_blank" rel="noopener noreferrer">Bootstrap Grid</a> system).
-To make images responsive, add <code class="language-plaintext highlighter-rouge">img-fluid</code> class to each; for rounded corners and shadows use <code class="language-plaintext highlighter-rouge">rounded</code> and <code class="language-plaintext highlighter-rouge">z-depth-1</code> classes.
-Here’s the code for the last row of images above:</p>
-
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row justify-content-sm-center"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-8 mt-3 mt-md-0"</span><span class="nt">&gt;</span>
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-4 mt-3 mt-md-0"</span><span class="nt">&gt;</span>
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div></div>
-
-
-          </article>
-
-        </div>
+      <d-appendix>
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+      </d-appendix>
 
     </div>
 
@@ -254,34 +264,11 @@ Here’s the code for the last row of images above:</p>
       </div>
     </footer>
 
-    <!-- JavaScripts -->
-    <!-- jQuery -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
+    <d-bibliography src="/assets/bibliography/"></d-bibliography>
+    
     <!-- Bootsrap & MDB scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
-
-    <!-- Masonry & imagesLoaded -->
-  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
-    
-  <!-- Medium Zoom JS -->
-  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
-  <script defer src="/assets/js/zoom.js"></script><!-- Load Common JS -->
-  <script defer src="/assets/js/common.js"></script>
-
-    <!-- MathJax -->
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        tags: 'ams'
-      }
-    };
-  </script>
-  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
-  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
     
     
