@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: "CS-330 Lecture 1: Multi-Task Learning"
-description: This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.
+description: This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.
 date: 2024-03-02
 tags: course
 categories: deep-multi-task-and-meta-learning
@@ -97,6 +97,14 @@ Some examples of tasks:
    </ul>
 </ul>
 
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/8.jpg" class="img-fluid rounded" zoomable=true %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/10.jpg" class="img-fluid rounded" zoomable=true %}
+    </div>
+</div>
 
 It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
 continuous data or if there are multiple metrics that you care about.
@@ -128,7 +136,7 @@ On the other extreme, you could simply concatenate $z_i$ with the input and/or a
 all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).
 
 This give rise to a question: can you phrase the multi-task learning objective parameters $\theta = \theta_\mathrm{sh} 
-\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters. Our 
+\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters? Our 
 objective function becomes the following:
 
 $$
@@ -241,10 +249,9 @@ The framework is constructed as follows:
 
 The procedure is the following:
 
-1. Generate a few hundred of **candidate videos** (by pooling videos from multiple candidate generation algorithms such
-2. as matching topics of the query video, videos frequently watched with the query video, and others).
-3. **Rank** the candidates
-4. **Serve** the top ranking videos to the user
+1. Generate a few hundred of **candidate videos** (by pooling videos from multiple candidate generation algorithms such as matching topics of the query video, videos frequently watched with the query video, and others).
+2. **Rank** the candidates.
+3. **Serve** the top ranking videos to the user.
 
 The central topic of this paper is the ranking system. The authors decide that the inputs to the ranking model are the 
 **query video**, **candidate video**, and **context features**. The model attempts to output a weighted combination of 

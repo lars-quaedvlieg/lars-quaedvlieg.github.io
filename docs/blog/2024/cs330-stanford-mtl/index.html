@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>CS-330 Lecture 1: Multi-Task Learning | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems." />
+    <meta name="description" content="This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems." />
 
 
     <!-- Bootstrap & MDB -->
@@ -77,7 +77,7 @@
   <d-front-matter>
     <script async type="text/json">{
       "title": "CS-330 Lecture 1: Multi-Task Learning",
-      "description": "This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.",
+      "description": "This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.",
       "published": "March 2, 2024",
       "authors": [
         {
@@ -167,7 +167,7 @@
 
       <d-title>
         <h1>CS-330 Lecture 1: Multi-Task Learning</h1>
-        <p>This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.</p>
+        <p>This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.</p>
       </d-title>
 
       <d-byline></d-byline>
@@ -244,6 +244,37 @@ task datasets are $\mathcal{D}_i^\mathrm{tr} := \mathcal{D}_i$ and $\mathcal{D}_
    </ul>
 </ul>
 
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/8.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/10.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+
 <p>It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
 continuous data or if there are multiple metrics that you care about.</p>
 
@@ -274,7 +305,7 @@ independent training with a single network per tasks; there are no shared parame
 all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).</p>
 
 <p>This give rise to a question: can you phrase the multi-task learning objective parameters $\theta = \theta_\mathrm{sh} 
-\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters. Our 
+\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters? Our 
 objective function becomes the following:</p>
 
 \[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
@@ -441,12 +472,11 @@ objectives, as well as implicit selection biases in user feedback.</p>
 <p>The procedure is the following:</p>
 
 <ol>
-  <li>Generate a few hundred of <strong>candidate videos</strong> (by pooling videos from multiple candidate generation algorithms such</li>
-  <li>as matching topics of the query video, videos frequently watched with the query video, and others).</li>
+  <li>Generate a few hundred of <strong>candidate videos</strong> (by pooling videos from multiple candidate generation algorithms such as matching topics of the query video, videos frequently watched with the query video, and others).</li>
   <li>
-<strong>Rank</strong> the candidates</li>
+<strong>Rank</strong> the candidates.</li>
   <li>
-<strong>Serve</strong> the top ranking videos to the user</li>
+<strong>Serve</strong> the top ranking videos to the user.</li>
 </ol>
 
 <p>The central topic of this paper is the ranking system. The authors decide that the inputs to the ranking model are the 

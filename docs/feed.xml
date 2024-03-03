@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-03T11:41:33+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-03T12:09:33+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
 </subtitle><entry><title type="html">CS-330 Lecture 1: Multi-Task Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-mtl/" rel="alternate" type="text/html" title="CS-330 Lecture 1: Multi-Task Learning" /><published>2024-03-02T00:00:00+01:00</published><updated>2024-03-02T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-mtl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-mtl/"><![CDATA[<p>The goal of this lecture is to understand the key design decisions when building multi-task learning systems. Since I am
 still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow of information, or 
 whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
@@ -51,6 +51,37 @@ task datasets are $\mathcal{D}_i^\mathrm{tr} := \mathcal{D}_i$ and $\mathcal{D}_
    </ul>
 </ul>
 
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/8.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/10.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+
 <p>It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
 continuous data or if there are multiple metrics that you care about.</p>
 
@@ -81,7 +112,7 @@ independent training with a single network per tasks; there are no shared parame
 all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).</p>
 
 <p>This give rise to a question: can you phrase the multi-task learning objective parameters $\theta = \theta_\mathrm{sh} 
-\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters. Our 
+\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters? Our 
 objective function becomes the following:</p>
 
 \[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
@@ -245,10 +276,9 @@ objectives, as well as implicit selection biases in user feedback.</p>
 <p>The procedure is the following:</p>
 
 <ol>
-  <li>Generate a few hundred of <strong>candidate videos</strong> (by pooling videos from multiple candidate generation algorithms such</li>
-  <li>as matching topics of the query video, videos frequently watched with the query video, and others).</li>
-  <li><strong>Rank</strong> the candidates</li>
-  <li><strong>Serve</strong> the top ranking videos to the user</li>
+  <li>Generate a few hundred of <strong>candidate videos</strong> (by pooling videos from multiple candidate generation algorithms such as matching topics of the query video, videos frequently watched with the query video, and others).</li>
+  <li><strong>Rank</strong> the candidates.</li>
+  <li><strong>Serve</strong> the top ranking videos to the user.</li>
 </ol>
 
 <p>The central topic of this paper is the ranking system. The authors decide that the inputs to the ranking model are the 
@@ -287,7 +317,7 @@ model <strong>computational efficiency matters</strong>.</p>
 and there is a bias to some expert(s). They utilized drop-out on the experts to counteract this problem.</p>
 </div>
 
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.]]></summary></entry><entry><title type="html">CS-330: Deep Multi-Task and Meta Learning - Introduction</title><link href="http://localhost:4000/blog/2024/cs330-stanford-introduction/" rel="alternate" type="text/html" title="CS-330: Deep Multi-Task and Meta Learning - Introduction" /><published>2024-03-01T00:00:00+01:00</published><updated>2024-03-01T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.]]></summary></entry><entry><title type="html">CS-330: Deep Multi-Task and Meta Learning - Introduction</title><link href="http://localhost:4000/blog/2024/cs330-stanford-introduction/" rel="alternate" type="text/html" title="CS-330: Deep Multi-Task and Meta Learning - Introduction" /><published>2024-03-01T00:00:00+01:00</published><updated>2024-03-01T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
 
 <p>The course <a href="https://cs330.stanford.edu/">CS 330: Deep Multi-Task and Meta Learning</a>, by <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a>, is taught
 on a yearly basis and discusses the foundations and current state of multi-task learning and meta learning.</p>
@@ -393,62 +423,4 @@ can be shared among many tasks.</p>
 learning. However, what if you want to learn new tasks? And how do you tell the model which task to do? And what if 
 aggregating doesn’t work?</p>
 
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[I have been incredibly interested in the recent wave of multimodal foundation models, especially in robotics and sequential decision-making. Since I never had a formal introduction to this topic, I decided to audit the Deep Multi-Task and Meta Learning course, which is taught yearly by Chelsea Finn at Stanford. I will mainly document my takes on the lectures, hopefully making it a nice read for people who would like to learn more about this topic!]]></summary></entry><entry><title type="html">Foundations of Deep Learning Series - Introduction</title><link href="http://localhost:4000/blog/2024/foundations-dl-introduction/" rel="alternate" type="text/html" title="Foundations of Deep Learning Series - Introduction" /><published>2024-02-26T00:00:00+01:00</published><updated>2024-02-26T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/foundations-dl-introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/foundations-dl-introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
-
-<p>The <a href="https://theory.epfl.ch/readinggroup/">Foundations of Deep Learning</a> reading group at EPFL is organized by 
-<a href="https://theory.epfl.ch/kapralov/">Michael Kapralov</a> and <a href="https://theory.epfl.ch/osven/">Ola Svensson</a> from February 
-28th to May 29th.</p>
-
-<p>The goal of the group is to delve into recent works that aim to lay down a theoretical foundation for deep 
-neural networks, tackling the challenges presented by their significant computational demands, the opacity of their 
-outputs, and the privacy concerns they raise. This initiative is driven by the recent advances in machine learning that
-have led to notable breakthroughs in fields such as natural language processing and vision.</p>
-
-<p>In this series, I will discuss every session of this meeting group, talking about current advancements in state-of-the-art
-deep learning research. I hope to do things like review papers, analyze groundbreaking techniques, and share insights 
-on overcoming the challenges that come with deep learning nowadays.</p>
-
-<hr />
-
-<h2 id="topics">Topics</h2>
-
-<p>The reading group will sequentially discuss 4 research topics:</p>
-<ol>
-  <li><strong>Transformers</strong>: the transformer architecture, as well as (some of) the recent works on subquadratic attention mechanisms (xformers, State Space models, Hyena etc).
-    <ul>
-      <li>Basics of the Transformer architecture.</li>
-      <li>Xformers (subquadratic attention mechanisms).</li>
-      <li>More xformers (polysketchformer, hyperattention).</li>
-      <li>State space models.</li>
-    </ul>
-  </li>
-  <li><strong>Which functions can transformers learn</strong>: classes of functions that transformers can provably learn in-context.
-    <ul>
-      <li>Which functions can transformers learn in-context (RASP, RASP-L)</li>
-      <li>In-context learning of linear regression, part i.</li>
-      <li>In-context learning of linear regression, part ii.</li>
-    </ul>
-  </li>
-  <li><strong>Graph neural networks</strong>: expressivity of graph neural networks (connections to the Weissfeiler-Lehman test), information bottlenecks in graph neural networks.
-    <ul>
-      <li>Graph embeddings.</li>
-      <li>Basics of graph neural networks.</li>
-      <li>Graph neural networks and the Weisfeiler Lehmann test.</li>
-    </ul>
-  </li>
-  <li><strong>Reinforement learning</strong>: algorithmic foundations of reinforcement learning, including Markov Decision Processes and Monte Carlo Tree Search.
-    <ul>
-      <li>Reinforcement learning, Markov Decision Processes, Monte-Carlo tree search.</li>
-    </ul>
-  </li>
-  <li><strong>Other</strong>.
-    <ul>
-      <li>ADAM.</li>
-      <li>Differentially private training of neural networks.</li>
-    </ul>
-  </li>
-</ol>
-
-<p>I am excited to start discussing these topics in greater detail! Check this page regularly for updates!</p>
-
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="foundations-of-deep-learning" /><category term="paper-review" /><summary type="html"><![CDATA[In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.]]></summary></entry></feed>
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[I have been incredibly interested in the recent wave of multimodal foundation models, especially in robotics and sequential decision-making. Since I never had a formal introduction to this topic, I decided to audit the Deep Multi-Task and Meta Learning course, which is taught yearly by Chelsea Finn at Stanford. I will mainly document my takes on the lectures, hopefully making it a nice read for people who would like to learn more about this topic!]]></summary></entry></feed>
