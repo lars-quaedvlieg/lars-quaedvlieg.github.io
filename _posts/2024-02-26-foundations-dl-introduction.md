@@ -9,7 +9,7 @@ comments: false
 
 authors:
   - name: Lars C.P.M. Quaedvlieg
-    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
+    url: "https://lars-quaedvlieg.github.io/"
     affiliations:
       name: EPFL
 
