@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-03T12:09:33+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-03T12:19:17+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
 </subtitle><entry><title type="html">CS-330 Lecture 1: Multi-Task Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-mtl/" rel="alternate" type="text/html" title="CS-330 Lecture 1: Multi-Task Learning" /><published>2024-03-02T00:00:00+01:00</published><updated>2024-03-02T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-mtl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-mtl/"><![CDATA[<p>The goal of this lecture is to understand the key design decisions when building multi-task learning systems. Since I am
 still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow of information, or 
 whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
@@ -51,37 +51,6 @@ task datasets are $\mathcal{D}_i^\mathrm{tr} := \mathcal{D}_i$ and $\mathcal{D}_
    </ul>
 </ul>
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/8.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/10.jpg" class="img-fluid rounded" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-
 <p>It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
 continuous data or if there are multiple metrics that you care about.</p>
 
@@ -96,17 +65,15 @@ how the objective should be optimized.</p>
 
 <h3 id="model">Model</h3>
 
-<div>
-<figure class="figure col-sm-8 float-right">
+<figure class="figure col-sm-10 float-right">
     <img src="/assets/img/blog/cs330/2/mult_gating.png" class="img-fluid" alt="Alt text." />
     <figcaption class="figure-caption text-center">Network architecture for task-specific independent subnetworks.</figcaption>
 </figure>
 
-<p>Let’s first think about how we can condition on the task in order to share <b>as little information</b> as possible. The
+<p>Let’s first think about how we can condition on the task in order to share <strong>as little information</strong> as possible. The
 answer to this is simple: you can create a function that uses multiplicative gating with a one-hot encoding of the task
 . The model function would be $f_\theta(y \vert x, z_i) = \sum_j \mathbb{1}(z_i=j)f_{\theta_i}(x)$. This results in
 independent training with a single network per tasks; there are no shared parameters. This can be seen in the figure above.</p>
-</div>
 
 <p>On the other extreme, you could simply concatenate $z_i$ with the input and/or activations in the model. In this case, 
 all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).</p>
@@ -286,7 +253,7 @@ objectives, as well as implicit selection biases in user feedback.</p>
 <strong>engagement</strong> and <strong>satisfaction</strong> predictions, which results in a ranking score. The score weights are manually tuned.</p>
 
 <div>
-<figure class="figure col-sm-6 float-right">
+<figure class="figure col-sm-7 float-right">
     <img src="/assets/img/blog/cs330/2/expert_model.png" class="img-fluid" alt="Alt text." />
     <figcaption class="figure-caption text-center">Multi-gate Mixture-of-Expert architecture.</figcaption>
 </figure>
@@ -307,7 +274,7 @@ They perform online A/B testing in comparison to the production system based on 
 model <strong>computational efficiency matters</strong>.</p>
 
 <div>
-<figure class="figure col-sm-6 float-right">
+<figure class="figure col-sm-7 float-right">
     <img src="/assets/img/blog/cs330/2/paper_results.png" class="img-fluid" alt="Alt text." />
     <figcaption class="figure-caption text-center">Results from different model configurations.</figcaption>
 </figure>

@@ -97,15 +97,6 @@ Some examples of tasks:
    </ul>
 </ul>
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/8.jpg" class="img-fluid rounded" zoomable=true %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/10.jpg" class="img-fluid rounded" zoomable=true %}
-    </div>
-</div>
-
 It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
 continuous data or if there are multiple metrics that you care about.
 
@@ -120,17 +111,15 @@ how the objective should be optimized.
 
 ### Model
 
-<div>
-<figure class="figure col-sm-8 float-right">
+<figure class="figure col-sm-10 float-right">
     <img src="/assets/img/blog/cs330/2/mult_gating.png" class="img-fluid" alt="Alt text.">
     <figcaption class="figure-caption text-center">Network architecture for task-specific independent subnetworks.</figcaption>
 </figure>
 
-<p>Let’s first think about how we can condition on the task in order to share <b>as little information</b> as possible. The
+Let’s first think about how we can condition on the task in order to share **as little information** as possible. The
 answer to this is simple: you can create a function that uses multiplicative gating with a one-hot encoding of the task
 . The model function would be $f_\theta(y \vert x, z_i) = \sum_j \mathbb{1}(z_i=j)f_{\theta_i}(x)$. This results in
-independent training with a single network per tasks; there are no shared parameters. This can be seen in the figure above.</p>
-</div>
+independent training with a single network per tasks; there are no shared parameters. This can be seen in the figure above.
 
 On the other extreme, you could simply concatenate $z_i$ with the input and/or activations in the model. In this case, 
 all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).
@@ -258,7 +247,7 @@ The central topic of this paper is the ranking system. The authors decide that t
 **engagement** and **satisfaction** predictions, which results in a ranking score. The score weights are manually tuned.
 
 <div>
-<figure class="figure col-sm-6 float-right">
+<figure class="figure col-sm-7 float-right">
     <img src="/assets/img/blog/cs330/2/expert_model.png" class="img-fluid" alt="Alt text.">
     <figcaption class="figure-caption text-center">Multi-gate Mixture-of-Expert architecture.</figcaption>
 </figure>
@@ -279,7 +268,7 @@ They perform online A/B testing in comparison to the production system based on 
 model **computational efficiency matters**.
 
 <div>
-<figure class="figure col-sm-6 float-right">
+<figure class="figure col-sm-7 float-right">
     <img src="/assets/img/blog/cs330/2/paper_results.png" class="img-fluid" alt="Alt text.">
     <figcaption class="figure-caption text-center">Results from different model configurations.</figcaption>
 </figure>
