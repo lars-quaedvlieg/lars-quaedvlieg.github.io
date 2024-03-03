@@ -74,7 +74,7 @@ This course will focus on solving problems that are composed of multiple tasks, 
 The lecture schedule of the course is as follows:
 1. [Multi-task learning](/blog/2024/cs330-stanford-mtl/)
 2. [Transfer learning & meta learning](/blog/2024/cs330-stanford-tl-ml/)
-3. Black-box meta-learning & in-context learning
+3. [Black-box meta-learning & in-context learning](/blog/2024/cs330-stanford-bbml-icl/)
 4. Optimization-based meta-learning
 5. Few-shot learning via metric learning
 6. Unsupervised pre-training for few-shot learning (contrastive)
