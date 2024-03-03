@@ -118,12 +118,25 @@
         <div id="boige2023pasta" class="col-sm-8">
         
           <!-- Title -->
-          <div class="title">(I will be added to the list of authors on the updated version)<br>PASTA: Pretrained Action-State Transformer Agents</div>
+          <div class="title">(Submitted the updated version to RLC 2024)<br>PASTA: Pretrained Action-State Transformer Agents</div>
           <!-- Author -->
           <div class="author">
           
 
-          Raphael Boige, Yannis Flet-Berliac, Arthur Flajolet, Guillaume Richard, and Thomas Pierrot</div>
+          Raphael Boige, Yannis Flet-Berliac, <b>Lars C.P.M.</b> <b>Quaedvlieg</b>, Arthur Flajolet, Guillaume Richard, and
+            <span class="more-authors" title="click to view 1 more author" onclick="
+                  var element = $(this);
+                  element.attr('title', '');
+                  var more_authors_text = element.text() == '1 more author' ? 'Thomas Pierrot' : '1 more author';
+                  var cursorPosition = 0;
+                  var textAdder = setInterval(function(){
+                    element.text(more_authors_text.substring(0, cursorPosition + 1));
+                    if (++cursorPosition == more_authors_text.length){
+                      clearInterval(textAdder);
+                    }
+                }, '10');
+                ">1 more author</span>
+</div>
 
           <!-- Journal/Book title and date -->
           
@@ -158,7 +171,7 @@
           <div class="author">
           
 
-          <b>L.C.P.M.</b> <b>Quaedvlieg</b>*, L. Brusca*, S. Skoulakis, G. Chrysos, and V. Cevher</div>
+          <b>Lars C.P.M.</b> <b>Quaedvlieg</b>*, L. Brusca*, S. Skoulakis, G. Chrysos, and V. Cevher</div>
 
           <!-- Journal/Book title and date -->
           
@@ -196,7 +209,7 @@
           <div class="author">
           
 
-          <b>L.C.P.M.</b> <b>Quaedvlieg</b>
+          <b>Lars C.P.M.</b> <b>Quaedvlieg</b>
 </div>
 
           <!-- Journal/Book title and date -->

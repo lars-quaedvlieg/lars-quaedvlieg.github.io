@@ -1,5 +1,399 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-02-26T11:19:00+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
-</subtitle><entry><title type="html">Foundations of Deep Learning Series - Introduction</title><link href="http://localhost:4000/blog/2024/introduction/" rel="alternate" type="text/html" title="Foundations of Deep Learning Series - Introduction" /><published>2024-02-26T00:00:00+01:00</published><updated>2024-02-26T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-03T11:37:01+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
+</subtitle><entry><title type="html">CS-330 Lecture 1: Multi-Task Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-mtl/" rel="alternate" type="text/html" title="CS-330 Lecture 1: Multi-Task Learning" /><published>2024-03-02T00:00:00+01:00</published><updated>2024-03-02T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-mtl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-mtl/"><![CDATA[<p>The goal of this lecture is to understand the key design decisions when building multi-task learning systems. Since I am
+still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow of information, or 
+whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
+
+<p>The link to the lecture slides can be found <a href="https://cs330.stanford.edu/materials/cs330_multitask_transfer_2023.pdf">here</a>.</p>
+
+<h2 id="problem-statement">Problem statement</h2>
+
+<p>We will first establish some notation that will be used throughout the course. Let’s first introduce the single-task 
+supervised learning problem.</p>
+
+\[\min_\theta \mathcal{L}(\theta, \mathcal{D}), \quad \text{s.t.} \quad \mathcal{D} = \{(x,y)_k\}\;.\]
+
+<p>Here, $\mathcal{L}$ is the loss function, $\theta$ are the model parameters and $\mathcal{D}$ is the dataset. A typical 
+example of a loss function would be the negative log-likelihood function $\mathcal{L}(\theta, \mathcal{D}) = - \mathbb{E}\left[\log f_\theta(y\vert x)\right]$.</p>
+
+<p>We can formally define a <strong>task</strong> as follows<strong>:</strong></p>
+
+\[\mathcal{T}_i := \{p_i(x), p_i(y\vert x), \mathcal{L}_i\}\;.\]
+
+<p>Here, $p_i(x)$ is the input data distribution, $p_i(y\vert x)$ is the distribution of the target variable(s), and 
+$\mathcal{L}_i$ is a task-specific loss function (can of course be the same for different tasks). The corresponding 
+task datasets are $\mathcal{D}_i^\mathrm{tr} := \mathcal{D}_i$ and $\mathcal{D}_i^\mathrm{test}$.</p>
+
+<p>Some examples of tasks:</p>
+
+<ul>
+   <li>Multi-task classification ($\mathcal{L_i}$ the same for each task)</li>
+   <ul>
+      <li>Per-language handwriting recognition.</li>
+      <li>Personalized spam filter.</li>
+   </ul>
+   <li>Multi-label learning ($\mathcal{L_i}$ and $p_i(x)$ the same for each task)</li>
+   <ul>
+      <li>Face attribute recognition.</li>
+      <li>Scene understanding.
+      <div class="col-sm-5 mt-3 mt-md-0"><figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/2/weighted_mtl_objective.png" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+</div>
+      </li>
+   </ul>
+</ul>
+
+<p>It is important to realize that $\mathcal{L}_i$ might change across tasks, for example when mixing discrete from
+continuous data or if there are multiple metrics that you care about.</p>
+
+<hr />
+
+<h2 id="models-objectives-optimization">Models, objectives, optimization</h2>
+
+<p>One way of helping a model identify different tasks would be to condition the model function by a task descriptor 
+$z_i$: $f_\theta(y\vert x, z_i)$. This could be anything ranging from user features, language descriptions, or formal 
+task specifications. The next subsections will focus on how to condition the model, which objective should be used, and 
+how the objective should be optimized.</p>
+
+<h3 id="model">Model</h3>
+
+<div>
+<figure class="figure col-sm-8 float-right">
+    <img src="/assets/img/blog/cs330/2/mult_gating.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Network architecture for task-specific independent subnetworks.</figcaption>
+</figure>
+
+<p>Let’s first think about how we can condition on the task in order to share <b>as little information</b> as possible. The
+answer to this is simple: you can create a function that uses multiplicative gating with a one-hot encoding of the task
+. The model function would be $f_\theta(y \vert x, z_i) = \sum_j \mathbb{1}(z_i=j)f_{\theta_i}(x)$. This results in
+independent training with a single network per tasks; there are no shared parameters. This can be seen in the figure above.</p>
+</div>
+
+<p>On the other extreme, you could simply concatenate $z_i$ with the input and/or activations in the model. In this case, 
+all parameters are shared (except the ones directly following $z_i$, in case it is one-hot).</p>
+
+<p>This give rise to a question: can you phrase the multi-task learning objective parameters $\theta = \theta_\mathrm{sh} 
+\cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters. Our 
+objective function becomes the following:</p>
+
+\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
+
+<p>In this case, choosing how to condition on $z_i$ is equivalent to choosing how and where to share model parameters. We 
+will now look into some basic ways to condition a model.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/2/concat_cond.png" class="img-fluid" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+        <figcaption class="figure-caption text-center">Concatenation-based conditioning.</figcaption>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/2/additive_cond.png" class="img-fluid" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+        <figcaption class="figure-caption text-center">Additive conditioning.</figcaption>
+    </div>
+</div>
+
+<p><br />Can you see why additive conditioning in this way is equivalent to concatenation-based conditioning? Hint: think about 
+how matrix multiplication splits the parameters when concatenating<d-footnote>You can find the solution to this question in the <a href="https://cs330.stanford.edu/materials/cs330_multitask_transfer_2023.pdf">lecture slides</a> (slide 13).</d-footnote>.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/2/multi_head.png" class="img-fluid" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+        <figcaption class="figure-caption text-center">Multi-head architecture conditioning.</figcaption>
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/2/mult_cond.png" class="img-fluid" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+        <figcaption class="figure-caption text-center">Multiplicative conditioning.</figcaption>
+    </div>
+</div>
+<p><br /></p>
+
+<p>One benefit of multiplicative conditioning is that you have this multiplicative gating, allowing more expressiveness 
+per layer. It generalizes independent networks and independent heads.</p>
+
+<p>There are more complex conditioning techniques, and a lot of research has gone into this topic, such as Cross-Stitch Networks <d-cite key="misra2016cross"></d-cite>, 
+Multi-Task Attention Network <d-cite key="liu2019end"></d-cite>, Deep Relation Networks <d-cite key="dai2017detecting"></d-cite>, 
+Perceiver IO <d-cite key="jaegle2021perceiver"></d-cite>, and more.</p>
+
+<p>Unfortunately, these design choices are <strong>problem dependent</strong>, largely guided by <strong>intuition</strong> or <strong>knowledge</strong> about 
+the problem, and currently more of an <strong>art</strong> than a science.</p>
+
+<h3 id="objectives">Objectives</h3>
+
+<p>We already saw a previous example of a multi-task objective function. Let’s start with the vanilla multi-task learning 
+(MTL) objective: $\min_\theta \sum_{i=1}^T \mathcal{L}_i(\theta, \mathcal{D_i})$. Let’s now show some other ways to 
+construct multi-task objective functions.</p>
+
+<ol>
+  <li>
+    <p>Weighted multi-task learning (manually based on priority or dynamically adjust weights throughout training):</p>
+
+\[\min_\theta \sum_{i=1}^T w_i \mathcal{L}_i(\theta, \mathcal{D_i})\;.\]
+  </li>
+  <li>
+    <p>Minimax multi-task learning to optimize for the worst-case task loss (useful in robustness or fairness):</p>
+
+\[\min_\theta \max_i \mathcal{L}_i(\theta, \mathcal{D_i})\;.\]
+  </li>
+  <li>
+    <p>You can use various <strong>heuristics</strong> to construct your objective function. One example is to encourage gradients to have similar magnitudes across tasks.</p>
+  </li>
+</ol>
+
+<h3 id="optimization">Optimization</h3>
+
+<p>For the vanilla MTL objective, a basic training approach follows the following steps:</p>
+
+<ol>
+  <li>Sample mini-batch of tasks $\mathcal{B} = {\mathcal{T}_i}$.</li>
+  <li>Sample mini-batch of datapoints for each task $\mathcal{D}^b_i \sim \mathcal{D}_i$.</li>
+  <li>Compute mini-batch loss $\hat{\mathcal{L}}(\theta, \mathcal{B}) = \sum_{\mathcal{T}_k \in \mathcal{B}} \mathcal{L}_k(\theta, \mathcal{D}_k^b)$.</li>
+  <li>Backpropagate the loss to compute $\nabla_\theta \hat{\mathcal{L}}$.</li>
+  <li>Perform a step of gradient descent with some optimizer.</li>
+  <li>Repeat from step 1.</li>
+</ol>
+
+<p>This process ensures that tasks are sampled uniformly, regardless of data quantities. However, it is important to ensure 
+that the task labels, and the loss function, are on the same scale.</p>
+
+<hr />
+
+<h2 id="challenges">Challenges</h2>
+
+<p>There are multiple challenges that come with multi-task learning.</p>
+
+<ol>
+  <li>
+    <p><strong>Negative transfer</strong>: Sometimes independent subnetworks work better than parameter sharing. This could be due to <strong>optimization challenges</strong> (cross-task interference or tasks learning at different rates), or <strong>limited representational capacity</strong> (multi-task networks often need to be <em>much larger</em> than their single-task counterparts).</p>
+
+    <p>In the case of negative transfer, you should share less across tasks. You can also add a regularization term to the objective function, to allow <em>soft parameter sharing</em>:</p>
+
+\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.\]
+
+    <p>This allows for more fluid degrees of parameters sharing. However, it does add another set of hyperparameters, and it more memory intensive.</p>
+  </li>
+  <li><strong>Overfitting</strong>: You might not be sharing enough parameters. Since multi-task learning is equivalent to a form of regularization, the solution could be to share more parameters.</li>
+  <li><strong>Having many tasks</strong>: You might wonder how to train all tasks together and which ones will be complementary. Unfortunately, no closed-form solution exists for measuring task similarity. Nevertheless, there are ways to approximate it from one training run <d-cite key="fifty2021efficiently"></d-cite> <d-cite key="xie2024doremi"></d-cite>.</li>
+</ol>
+
+<hr />
+
+<h2 id="case-study-of-real-world-multi-task-learning">Case study of real-world multi-task learning</h2>
+
+<p>In this case study, we will discuss the paper “Recommending What Video to Watch Next: A Multitask Ranking System” <d-cite key="zhao2019recommending"></d-cite>. They 
+introduce a large scale multi-objective ranking system for recommending what video to watch next on an industrial video 
+sharing platform. The system faces many real-world challenges, including the presence of multiple competing ranking 
+objectives, as well as implicit selection biases in user feedback.</p>
+
+<p>The framework is constructed as follows:</p>
+
+<ul>
+  <li><strong>Inputs</strong>: What the user is currently watching (query video) and user features</li>
+</ul>
+
+<p>The procedure is the following:</p>
+
+<ol>
+  <li>Generate a few hundred of <strong>candidate videos</strong> (by pooling videos from multiple candidate generation algorithms such</li>
+  <li>as matching topics of the query video, videos frequently watched with the query video, and others).</li>
+  <li><strong>Rank</strong> the candidates</li>
+  <li><strong>Serve</strong> the top ranking videos to the user</li>
+</ol>
+
+<p>The central topic of this paper is the ranking system. The authors decide that the inputs to the ranking model are the 
+<strong>query video</strong>, <strong>candidate video</strong>, and <strong>context features</strong>. The model attempts to output a weighted combination of 
+<strong>engagement</strong> and <strong>satisfaction</strong> predictions, which results in a ranking score. The score weights are manually tuned.</p>
+
+<div>
+<figure class="figure col-sm-6 float-right">
+    <img src="/assets/img/blog/cs330/2/expert_model.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Multi-gate Mixture-of-Expert architecture.</figcaption>
+</figure>
+
+<p>On choice for the model architecture is a “shared-bottom model”, which has some shared bottom layers which split into
+separate heads for each task. However, this will harm learning when the correlation between tasks is low. Instead, they
+opt for a form of soft-parameter sharing that they call <b>Multi-gate Mixture-of-Experts</b> (MMoE). As you can see in the
+figure, this architecture allows different parts of the network to “specialize” in certain tasks as experts. For each
+task, an attention-like score is computed that decides which combination of experts should be used.</p>
+</div>
+
+<p>Formally, let’s call the expert networks $f_i(x)$. We then decide which expert to use for input $x$ and task $k$ by 
+computing $g^k(x) = \mathrm{softmax}(W_{g^k}x)$. The features are then computed from the selected experts as 
+$f_k(x) = \sum_{i=1}^n g_{(i)}^k(x)f_i(x)$. The output can finally be denoted by $y_k = h^k(f^k(x))$.</p>
+
+<p>In the paper, they trained them model in temporal order, running training continuously to consume newly arriving data. 
+They perform online A/B testing in comparison to the production system based on some live metrics, and stress that
+model <strong>computational efficiency matters</strong>.</p>
+
+<div>
+<figure class="figure col-sm-6 float-right">
+    <img src="/assets/img/blog/cs330/2/paper_results.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Results from different model configurations.</figcaption>
+</figure>
+
+<p>From the results, you can see that this sort of architecture definitely helps. Furthermore, they found that there was a 
+20% change of <b>gating polarization</b> during distributed training. This means that not all experts are utilized equally
+and there is a bias to some expert(s). They utilized drop-out on the experts to counteract this problem.</p>
+</div>
+
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finnin Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems.]]></summary></entry><entry><title type="html">CS-330: Deep Multi-Task and Meta Learning - Introduction</title><link href="http://localhost:4000/blog/2024/cs330-stanford-introduction/" rel="alternate" type="text/html" title="CS-330: Deep Multi-Task and Meta Learning - Introduction" /><published>2024-03-01T00:00:00+01:00</published><updated>2024-03-01T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
+
+<p>The course <a href="https://cs330.stanford.edu/">CS 330: Deep Multi-Task and Meta Learning</a>, by <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a>, is taught
+on a yearly basis and discusses the foundations and current state of multi-task learning and meta learning.</p>
+
+<p><strong>:warning: Note:</strong> I am discussing the content of the edition in Fall 2023, which no longer includes reinforcement learning.
+If you are interested in this, I will be auditing <a href="https://cs224r.stanford.edu/">CS 224R Deep Reinforcement Learning</a>
+later this spring, which is also taught by <a href="https://ai.stanford.edu/~cbfinn/">Chelsea Finn</a>.</p>
+
+<p>In an attempt to improve my writing skills and provide useful summaries/voice my opinions, I have decided to discuss 
+the content of every lecture in this blog. In this post, I will give an overview of the course and why it is important 
+for AI, especially now.</p>
+
+<p>This course will focus on solving problems that are composed of multiple tasks, and studies how structure that arises from these multiple tasks can be leveraged to learn more efficiently/effectively, including:</p>
+
+<ul>
+  <li>Self-supervised pre-training for downstream few-shot learning and transfer learning.</li>
+  <li>Meta-learning methods that aim to learn efficient learning algorithms that can learn new tasks quickly.</li>
+  <li>Curriculum and lifelong learning, where the problem requires learning a sequence of tasks, leveraging their shared structure to enable knowledge transfer.</li>
+</ul>
+
+<hr />
+
+<h2 id="lectures">Lectures</h2>
+
+<p>The lecture schedule of the course is as follows:</p>
+<ol>
+  <li>Multi-task learning</li>
+  <li>Transfer learning &amp; fine-tuning</li>
+  <li>Black-box meta-learning &amp; in-context learning</li>
+  <li>Optimization-based meta-learning</li>
+  <li>Few-shot learning via metric learning</li>
+  <li>Unsupervised pre-training for few-shot learning (contrastive)</li>
+  <li>Unsupervised pre-training for few-shot learning (generative)</li>
+  <li>Advanced meta-learning topics (task construction)</li>
+  <li>Variational inference</li>
+  <li>Bayesian meta-learning</li>
+  <li>Advanced meta-learning topics (large-scale meta-optimization)</li>
+  <li>Lifelong learning</li>
+  <li>Domain Adaptation and Domain Generalization</li>
+  <li>Frontiers &amp; Open Challenges</li>
+</ol>
+
+<p>I am excited to start discussing these topics in greater detail! Check this page regularly for updates, since I will 
+link to new posts whenever they are available!</p>
+
+<hr />
+
+<h2 id="why-multi-task-and-meta-learning">Why multi-task and meta-learning?</h2>
+
+<figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/blog/cs330/1/robotics_example.png" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+<p>Robots are embodied in the real world, and must generalize across tasks. In order to do so, they need some common sense 
+understanding and supervision can’t be taken for granted.</p>
+
+<p>Earlier robotics and reinforcement research mainly focused on problems that required learning a task from scratch. This 
+problem is even present in other fields, such as object detection or speech recognition. However, as opposed to these 
+problems, <strong>humans are generalists</strong> that exploit common structures to solve new problems more efficiently.</p>
+
+<p>Going beyond the case of generalist agents, deep multi-task and meta learning useful for any problems where a <strong>common 
+structure</strong> can benefit the efficiency or effectiveness of a model. It can be impractical to develop models for each
+specific task (e.g. each robot, person, or disease), especially if the data that you have access to for these individual
+tasks is <strong>scarce</strong>.</p>
+
+<p>If you need to <strong>quickly learn something new</strong>, you need to utilize prior experiences (e.g. few-shot learning) to make 
+decisions.</p>
+
+<p>But why now? Right now, with the speed of research advancements in AI, many researchers are looking into utilizing 
+multi-model information to develop their models. Especially in robotics, foundation models seem <strong>the</strong> topic in 2024,
+and many advancements have been made in the past year <d-cite key="zhao2023learning"></d-cite>, <d-cite key="open_x_embodiment_rt_x_2023"></d-cite>, <d-cite key="octo_2023"></d-cite>, <d-cite key="brohan2023rt"></d-cite>.</p>
+
+<hr />
+
+<h2 id="what-are-tasks">What are tasks?</h2>
+
+<p>Given a dataset $\mathcal{D}$ and loss function $\mathcal{L}$, we hope to develop a model $f_\theta$. Different tasks 
+can be used to train this model, with some simple examples being objects, people, objectives, lighting conditions, 
+words, languages, etc.</p>
+
+<p>The <strong>critical assumption</strong> here is that different tasks must share some common structure. However, in practice, this 
+is very often the case, even for tasks that seem unrelated. For example the laws of physics and the rules of English
+can be shared among many tasks.</p>
+
+<ol>
+  <li>The multi-task problem: Learn <strong>a set of tasks</strong> more quickly or more proficiently than learning them independently.</li>
+  <li>Given data on previous task(s), learn <strong>a new task</strong> more quickly and/or more proficiently.</li>
+</ol>
+
+<blockquote>
+  <p>Doesn’t multi-task learning reduce to single-task learning?</p>
+</blockquote>
+
+<p>This is indeed the case when aggregating data across multiple tasks, which is actually one approach to multi-task 
+learning. However, what if you want to learn new tasks? And how do you tell the model which task to do? And what if 
+aggregating doesn’t work?</p>
+
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[I have been incredibly interested in the recent wave of multimodal foundation models, especially in robotics and sequential decision-making. Since I never had a formal introduction to this topic, I decided to audit the Deep Multi-Task and Meta Learning course, which is taught yearly by Chelsea Finn at Stanford. I will mainly document my takes on the lectures, hopefully making it a nice read for people who would like to learn more about this topic!]]></summary></entry><entry><title type="html">Foundations of Deep Learning Series - Introduction</title><link href="http://localhost:4000/blog/2024/foundations-dl-introduction/" rel="alternate" type="text/html" title="Foundations of Deep Learning Series - Introduction" /><published>2024-02-26T00:00:00+01:00</published><updated>2024-02-26T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/foundations-dl-introduction</id><content type="html" xml:base="http://localhost:4000/blog/2024/foundations-dl-introduction/"><![CDATA[<h2 id="introduction">Introduction</h2>
 
 <p>The <a href="https://theory.epfl.ch/readinggroup/">Foundations of Deep Learning</a> reading group at EPFL is organized by 
 <a href="https://theory.epfl.ch/kapralov/">Michael Kapralov</a> and <a href="https://theory.epfl.ch/osven/">Ola Svensson</a> from February 
@@ -57,4 +451,119 @@ on overcoming the challenges that come with deep learning nowadays.</p>
 
 <p>I am excited to start discussing these topics in greater detail! Check this page regularly for updates!</p>
 
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="foundations-of-deep-learning" /><category term="paper-review" /><summary type="html"><![CDATA[In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.]]></summary></entry></feed>
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="foundations-of-deep-learning" /><category term="paper-review" /><summary type="html"><![CDATA[In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.]]></summary></entry><entry><title type="html">a post with images</title><link href="http://localhost:4000/blog/2015/images/" rel="alternate" type="text/html" title="a post with images" /><published>2015-05-15T23:01:00+02:00</published><updated>2015-05-15T23:01:00+02:00</updated><id>http://localhost:4000/blog/2015/images</id><content type="html" xml:base="http://localhost:4000/blog/2015/images/"><![CDATA[<p>This is an example post with image galleries.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/9.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/7.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    A simple, elegant caption looks good between image rows, after each row, or doesn't have to be there at all.
+</div>
+
+<p>Images can be made zoomable.
+Simply add <code class="language-plaintext highlighter-rouge">data-zoomable</code> to <code class="language-plaintext highlighter-rouge">&lt;img&gt;</code> tags that you want to make zoomable.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/8.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/10.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>
+
+<p>The rest of the images in this post are all zoomable, arranged into different mini-galleries.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/11.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/12.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        <figure>
+
+  <picture>
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/assets/img/7.jpg" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture>
+
+</figure>
+
+    </div>
+</div>]]></content><author><name></name></author><category term="sample-posts" /><category term="formatting" /><category term="images" /><summary type="html"><![CDATA[this is what included images could look like]]></summary></entry></feed>

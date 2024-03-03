@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<!-- _layouts/distill.html -->
-<html>
+<html lang="en">
+
+  <!-- Head -->
   <head>    <!-- Metadata, OpenGraph and Schema.org -->
     
 
@@ -8,9 +9,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Foundations of Deep Learning Series - Introduction | Lars C.P.M. Quaedvlieg</title>
+    <title>images | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities." />
+    <meta name="description" content="The portfolio website of Lars C.P.M. Quaedvlieg
+" />
 
 
     <!-- Bootstrap & MDB -->
@@ -30,86 +32,15 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="http://localhost:4000/blog/2024/introduction/">
+    <link rel="canonical" href="http://localhost:4000/blog/tag/images/">
     
     <!-- Dark Mode -->
     
 
-
-    <!-- jQuery -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
-    <!-- MathJax -->
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        tags: 'ams'
-      }
-    };
-  </script>
-  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
-  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-
-    <!-- Distill js -->
-    <script src="/assets/js/distillpub/template.v2.js"></script>
-    <script src="/assets/js/distillpub/transforms.v2.js"></script>
-    <script src="/assets/js/distillpub/overrides.js"></script>
-    
-    <!-- Page/Post style -->
-    <style type="text/css">
-      .fake-img {
-  background: #bbb;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 12px;
-} .fake-img p {
-  font-family: monospace;
-  color: white;
-  text-align: left;
-  margin: 12px 0;
-  text-align: center;
-  font-size: 16px;
-}
-
-    </style>
   </head>
 
-  <d-front-matter>
-    <script async type="text/json">{
-      "title": "Foundations of Deep Learning Series - Introduction",
-      "description": "In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.",
-      "published": "February 26, 2024",
-      "authors": [
-        {
-          "author": "Lars C.P.M. Quaedvlieg",
-          "authorURL": "https://en.wikipedia.org/wiki/Albert_Einstein",
-          "affiliations": [
-            {
-              "name": "EPFL",
-              "url": ""
-            }
-          ]
-        }
-        
-      ],
-      "katex": {
-        "delimiters": [
-          {
-            "left": "$",
-            "right": "$",
-            "display": false
-          },
-          {
-            "left": "$$",
-            "right": "$$",
-            "display": true
-          }
-        ]
-      }
-    }</script>
-  </d-front-matter>
-
-  <body class="fixed-top-nav">
+  <!-- Body -->
+  <body class="fixed-top-nav ">
 
     <!-- Header -->
     <header>
@@ -163,96 +94,30 @@
 
 
     <!-- Content -->
-    <div class="post distill">
+    <div class="container mt-5">
+      <div class="post">
 
-      <d-title>
-        <h1>Foundations of Deep Learning Series - Introduction</h1>
-        <p>In this series, in which I hope to kick off this blog, I will create detailed posts on the Foundations of Deep Learning reading group at EPFL. This introduction contains information about the content and technicalities.</p>
-      </d-title>
+  <header class="post-header">
+    <h1 class="post-title"> <i class="fas fa-hashtag fa-sm"></i> images </h1>
+    <p class="post-description"> an archive of posts with this tag </p>
+  </header>
 
-      <d-byline></d-byline>
+  <article>
+    <div class="table-responsive">
+      <table class="table table-sm table-borderless">
+        
+        <tr>
+          <th scope="row">May 15, 2015</th>
+          <td>
+              <a class="post-link" href="/blog/2015/images/">a post with images</a>
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  </article>
 
-      <d-article>
-        <d-contents>
-          <nav class="l-text figcaption">
-          <h3>Contents</h3>
-            <div><a href="#introduction">Introduction</a></div>
-            <div><a href="#topics">Topics</a></div>
-            
-          </nav>
-        </d-contents>
-
-        <h2 id="introduction">Introduction</h2>
-
-<p>The <a href="https://theory.epfl.ch/readinggroup/" target="_blank" rel="noopener noreferrer">Foundations of Deep Learning</a> reading group at EPFL is organized by 
-<a href="https://theory.epfl.ch/kapralov/" target="_blank" rel="noopener noreferrer">Michael Kapralov</a> and <a href="https://theory.epfl.ch/osven/" target="_blank" rel="noopener noreferrer">Ola Svensson</a> from February 
-28th to May 29th.</p>
-
-<p>The goal of the group is to delve into recent works that aim to lay down a theoretical foundation for deep 
-neural networks, tackling the challenges presented by their significant computational demands, the opacity of their 
-outputs, and the privacy concerns they raise. This initiative is driven by the recent advances in machine learning that
-have led to notable breakthroughs in fields such as natural language processing and vision.</p>
-
-<p>In this series, I will discuss every session of this meeting group, talking about current advancements in state-of-the-art
-deep learning research. I hope to do things like review papers, analyze groundbreaking techniques, and share insights 
-on overcoming the challenges that come with deep learning nowadays.</p>
-
-<hr>
-
-<h2 id="topics">Topics</h2>
-
-<p>The reading group will sequentially discuss 4 research topics:</p>
-<ol>
-  <li>
-<strong>Transformers</strong>: the transformer architecture, as well as (some of) the recent works on subquadratic attention mechanisms (xformers, State Space models, Hyena etc).
-    <ul>
-      <li>Basics of the Transformer architecture.</li>
-      <li>Xformers (subquadratic attention mechanisms).</li>
-      <li>More xformers (polysketchformer, hyperattention).</li>
-      <li>State space models.</li>
-    </ul>
-  </li>
-  <li>
-<strong>Which functions can transformers learn</strong>: classes of functions that transformers can provably learn in-context.
-    <ul>
-      <li>Which functions can transformers learn in-context (RASP, RASP-L)</li>
-      <li>In-context learning of linear regression, part i.</li>
-      <li>In-context learning of linear regression, part ii.</li>
-    </ul>
-  </li>
-  <li>
-<strong>Graph neural networks</strong>: expressivity of graph neural networks (connections to the Weissfeiler-Lehman test), information bottlenecks in graph neural networks.
-    <ul>
-      <li>Graph embeddings.</li>
-      <li>Basics of graph neural networks.</li>
-      <li>Graph neural networks and the Weisfeiler Lehmann test.</li>
-    </ul>
-  </li>
-  <li>
-<strong>Reinforement learning</strong>: algorithmic foundations of reinforcement learning, including Markov Decision Processes and Monte Carlo Tree Search.
-    <ul>
-      <li>Reinforcement learning, Markov Decision Processes, Monte-Carlo tree search.</li>
-    </ul>
-  </li>
-  <li>
-<strong>Other</strong>.
-    <ul>
-      <li>ADAM.</li>
-      <li>Differentially private training of neural networks.</li>
-    </ul>
-  </li>
-</ol>
-
-<p>I am excited to start discussing these topics in greater detail! Check this page regularly for updates!</p>
-
-<hr>
-
-      </d-article>
-
-      <d-appendix>
-        <d-footnote-list></d-footnote-list>
-        <d-citation-list></d-citation-list>
-      </d-appendix>
+</div>
 
     </div>
 
@@ -264,11 +129,34 @@ on overcoming the challenges that come with deep learning nowadays.</p>
       </div>
     </footer>
 
-    <d-bibliography src="/assets/bibliography/"></d-bibliography>
-    
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
     <!-- Bootsrap & MDB scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script defer src="/assets/js/common.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
     
     
