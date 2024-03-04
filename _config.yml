@@ -71,7 +71,7 @@ og_image: # The site-wide (default for all links) Open Graph preview image
 
 github_username: lars-quaedvlieg # your GitHub user name
 gitlab_username: # your GitLab user name
-twitter_username: # your Twitter handle
+twitter_username: lars_quaedvlieg # your Twitter handle
 linkedin_username: lars-quaedvlieg # your LinkedIn user name
 scholar_userid: f_-rgVcAAAAJ # your Google Scholar ID
 semanticscholar_id: # your Semantic Scholar ID
@@ -97,13 +97,13 @@ facebook_id: # your facebook id
 discord_id: # your discord id (18-digit unique numerical identifier)
 
 contact_note: >
-  I am more likely to respond to e-mails and messages on LinkedIn.
+  I am more likely to respond to e-mails and messages on LinkedIn or Twitter.
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
 # -----------------------------------------------------------------------------
 
-google_analytics:  # your Goole Analytics measurement ID (format: G-XXXXXXXXXX)
+google_analytics: G-JKH10LEP3Y  # your Goole Analytics measurement ID (format: G-XXXXXXXXXX)
 panelbear_analytics:  # panelbear analytics site ID (format: XXXXXXXXX)
 
 google_site_verification:  # your google-site-verification ID (Google Search Console)
@@ -298,7 +298,7 @@ jekyll-diagrams:
 # Optional Features
 # -----------------------------------------------------------------------------
 
-enable_google_analytics:    false  # enables google analytics
+enable_google_analytics:    true  # enables google analytics
 enable_panelbear_analytics: false  # enables panelbear analytics
 enable_google_verification: false  # enables google site verification
 enable_bing_verification:   false  # enables bing site verification
