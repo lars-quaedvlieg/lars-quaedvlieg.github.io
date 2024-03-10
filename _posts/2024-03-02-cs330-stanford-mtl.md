@@ -5,7 +5,7 @@ description: This is the first lecture of the CS-330 Deep Multi-Task and Meta Le
 date: 2024-03-02
 tags: course
 categories: deep-multi-task-and-meta-learning
-comments: false
+comments: true
 
 authors:
   - name: Lars C.P.M. Quaedvlieg

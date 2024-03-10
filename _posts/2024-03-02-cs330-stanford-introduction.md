@@ -5,7 +5,7 @@ description: I have been incredibly interested in the recent wave of multimodal 
 date: 2024-03-01
 tags: course
 categories: deep-multi-task-and-meta-learning
-comments: false
+comments: true
 
 authors:
   - name: Lars C.P.M. Quaedvlieg
