@@ -3,7 +3,7 @@ og_image: /assets/img/blog/cs330/5/oml_approach.png
 layout: distill
 title: "CS-330 Lecture 4: Optimization-Based Meta-Learning"
 description: This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the basics of optimization-based meta learning techniques. You will also learn about the trade-offs between black-box and optimization-based meta learning!
-date: 2024-03-05
+date: 2024-03-10
 tags: course
 categories: deep-multi-task-and-meta-learning
 comments: true
@@ -14,7 +14,7 @@ authors:
     affiliations:
       name: EPFL
       
-bibliography: blog/cs330/2024-03-05-obml.bib
+bibliography: blog/cs330/2024-03-10-obml.bib
 
 # Optionally, you can add a table of contents to your post.
 # NOTES:
