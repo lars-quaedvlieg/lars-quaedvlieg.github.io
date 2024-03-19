@@ -292,7 +292,7 @@ all parameters are shared (except the ones directly following $z_i$, in case it 
 \cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters? Our 
 objective function becomes the following:</p>
 
-\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
+\[\min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
 
 <p>In this case, choosing how to condition on $z_i$ is equivalent to choosing how and where to share model parameters. We 
 will now look into some basic ways to condition a model.</p>
@@ -427,7 +427,7 @@ that the task labels, and the loss function, are on the same scale.</p>
 
     <p>In the case of negative transfer, you should share less across tasks. You can also add a regularization term to the objective function, to allow <em>soft parameter sharing</em>:</p>
 
-\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.\]
+\[\min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.\]
 
     <p>This allows for more fluid degrees of parameters sharing. However, it does add another set of hyperparameters, and it more memory intensive.</p>
   </li>

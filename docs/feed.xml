@@ -1,5 +1,288 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-14T11:19:17+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
-</subtitle><entry><title type="html">CS-330 Lecture 5: Few-Shot Learning via Metric Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-fsl-ml/" rel="alternate" type="text/html" title="CS-330 Lecture 5: Few-Shot Learning via Metric Learning" /><published>2024-03-14T00:00:00+01:00</published><updated>2024-03-14T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-fsl-ml</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-fsl-ml/"><![CDATA[<p>The goal of this lecture is to understand the third form of meta learning: <strong>non-parametric few-shot learning</strong>. We will
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-19T21:33:27+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Lars C.P.M. Quaedvlieg</title><subtitle>The portfolio website of Lars C.P.M. Quaedvlieg
+</subtitle><entry><title type="html">CS-330 Lecture 6: Unsupervised Pre-Training: Contrastive Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-upt-fsl-cl/" rel="alternate" type="text/html" title="CS-330 Lecture 6: Unsupervised Pre-Training: Contrastive Learning" /><published>2024-03-16T00:00:00+01:00</published><updated>2024-03-16T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-upt-fsl-cl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-upt-fsl-cl/"><![CDATA[<p>The goal of this lecture is to understand the intuition, design choices, and implementation of <strong>contrastive learning</strong> 
+for unsupervised representation learning. We will also talk about the relationship between contrastive learning and meta 
+learning! If you missed the previous lecture, which was about non-parametric few-shot learning, you can head over <a href="/blog/2024/cs330-stanford-fsl-ml/">here</a> 
+to view it.</p>
+
+<p>As always, since I am still quite new to this blogging thing, reach out to me if you have any feedback on my writing, 
+the flow of information, or whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
+
+<p>The link to the lecture slides can be found <a href="https://cs330.stanford.edu/materials/cs330_contrastive_2023.pdf">here</a>.</p>
+
+<h2 id="quick-introduction">Quick introduction</h2>
+
+<figure class="figure col-sm-12">
+ <img src="/assets/img/blog/cs330/7/fine-tune-example.png" class="img-fluid" alt="Alt text." />
+ <figcaption class="figure-caption text-center">Example of the amount of data needed for transfer learning through fine-tuning.</figcaption>
+</figure>
+
+<p>So far we have talked about the idea of few-shot learning via meta learning. In this problem, you are given a set of 
+tasks $\mathcal{T}_1, \cdots, \mathcal{T}_n$ to train on, and wish to solve a new task $\mathcal{T}_\mathrm{test}$ more 
+quickly, effectively, and stably. Before starting with meta learning, we discussed the idea of using transfer learning 
+via fine-tuning for this problem, but the performance of this method is very dependent on the amount of data, as you can
+see on in figure above. Instead, we proposed three different types of meta learning to help quickly adapt to new tasks: 
+black-box meta learning, optimization-based meta learning, and non-parametric meta learning.</p>
+
+<p>These methods were shown to work especially well when there are <strong>many tasks available</strong> for a problem. But, when you only have few tasks, meta learning might not be a good approach to the problem due to risks of overfitting and having insufficient diversity in your data. Let’s take this even further. What if you only have <strong>one batch</strong> of <strong>unlabelled data</strong>?</p>
+
+<figure class="figure col-sm-12">
+ <img src="/assets/img/blog/cs330/7/unsupervised-pretraining.png" class="img-fluid" alt="Alt text." />
+ <figcaption class="figure-caption text-center">The process of doing unsupervised pre-training for few-shot learning.</figcaption>
+</figure>
+
+<p>In this case, meta learning might not be a good approach to the problem. Instead, we will look into <strong>unsupervised representation learning for few-shot learning</strong>. In the figure above, we describe the process of training a model for this problem on a high level. Given a dataset of unlabelled data ${x_i}$, we want to do unsupervised pre-training to get an initial model. Once we have obtained this model, we then wish to fine-tune it on a task-specific dataset $\mathcal{D}_j^\mathrm{tr}$, to get a task-specific predictor.</p>
+
+<p>You might have already noticed that this procedure is very similar to the way that <strong>large language models</strong> are trained. They are first pre-trained on a huge corpus of language data, and then fine-tuned for specific purposes (i.e. alignment, mathematics, etc.).</p>
+
+<p>In this course, we will talk about two approaches to this problem:</p>
+
+<ol>
+  <li>Contrastive learning.</li>
+  <li>Reconstruction-based methods.</li>
+</ol>
+
+<p>In this post, we will focus on contrastive learning, and we will discuss the reconstruction-based methods in the next one!</p>
+
+<h2 id="contrastive-learning">Contrastive learning</h2>
+
+<div>
+<figure class="figure col-sm-3 float-right">
+    <img src="/assets/img/blog/cs330/7/similar-reps.png" class="img-fluid" alt="Alt text." />
+</figure>
+
+<p>The idea behind contrastive learning is that <b>similar examples should have similar representations</b>, and different
+examples should have different representations. When you have a batch of unsupervised data, you can decide on a semantic
+meaning of similarity and then learn the data representations as embeddings from a model. The steps would roughly be as 
+follows:</p>
+
+<ol>
+   <li>Select or generate examples that are semantically similar.</li>
+   <li>Train an encoder where similar examples are closer in the representation space than non-similar examples.</li>
+</ol>
+</div>
+
+<p>Let’s start out with a simple approach. We are trying to learn an model $f_\theta(x)$, which embeds a datapoint $x$ into some representation. As a loss function, we decide use the following:</p>
+
+\[\min_\theta \sum_{(x_i, x_j)}\Vert f_\theta(x_i) - f_\theta(x_j)\Vert^2\;.\]
+
+<div>
+<figure class="figure col-sm-5 float-right">
+    <img src="/assets/img/blog/cs330/7/basic-embed-space.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Abstract example of the embedding space.</figcaption>
+</figure>
+
+<p>This loss function tries to minimize the distance of the embeddings of <b>similar datapoints</b> $x_i$ <b>and</b> $x_j$. 
+However, do you think this loss function performs well? Well, you might be able to see that one possible optimal solution
+to this loss function would just be to let $f_\theta(x) = 0$. This would mean that <b>all</b> datapoints are mapped to the 
+same representation, even very different datapoints. For this reason, the loss should also incorporate an element to
+<b>push apart differing samples</b>. You need to both compare and contrast!</p>
+
+</div>
+
+<p>We present this idea in the figure on the right. In the embedding space, similar samples should be close, whilst differing samples should should be far apart. The key design choices here are choosing what to compare/contrast, and which contrastive loss you use.</p>
+
+<p>Whilst the ideas work for all kinds of unlabelled data, we will focus on images (or videos) in the remainder of this post. Recalling that similar examples should have similar representations, we discuss a few ways to measure similarity in images.</p>
+
+<p>The most straightforward way to assign similarity is by looking at class labels. This is very related to the Siamese 
+networks and Prototypical networks that we saw in the previous post. However, for unsupervised data, this is not possible.
+Instead, there are many different approaches that <strong>create new samples from one sample</strong>. Below are some examples <d-cite key="oord2018representation"></d-cite><d-cite key="chen2020simple"></d-cite>.</p>
+
+<div class="row mt-3">
+   <div class="col-sm mt-3 mt-md-0">
+      <p><b>Patch-based.</b></p>
+      <figure class="figure col-sm-12">
+         <img src="/assets/img/blog/cs330/7/patches.png" class="img-fluid" alt="Alt text." />
+      </figure>
+
+      <p>Given an image, it is possible to split it into image patches, and to let image patches that are close to each other have a similar representation.</p>
+   </div>
+   <div class="col-sm mt-3 mt-md-0">
+      <p><b>Augmentation-based.</b></p>
+      <figure class="figure col-sm-12">
+         <img src="/assets/img/blog/cs330/7/augments.png" class="img-fluid" alt="Alt text." />
+      </figure>
+
+      <p>Given an image, it is also possible to augment it in some way (i.e. by flipping, cropping, etc.), and letting those sample be similar to each other.</p>
+   </div>
+   <div class="col-sm mt-3 mt-md-0">
+      <p><b>Temporally-based.</b></p>
+      <figure class="figure col-sm-12">
+         <img src="/assets/img/blog/cs330/7/videos.png" class="img-fluid" alt="Alt text." />
+      </figure>
+
+      <p>Given a video, it is <i>often</i> possible to let frames that are temporally close have a similar representation. Of course this depends on the nature of the video.</p>
+   </div>
+</div>
+
+<p>As you can see, defining similarity is usually pretty problem-specific. A simple example in text would be something like <em>bag of words</em> depending on the task, or permutations with a similar semantic meaning.</p>
+
+<div>
+<figure class="figure col-sm-4 float-right">
+    <img src="/assets/img/blog/cs330/7/mid-embed-space.png" class="img-fluid" alt="Alt text." />
+</figure>
+
+<p>Now that we have a way of defining similarity across samples, we can take a look at modifying the loss function to push
+apart differing samples. One common loss function is the <b>triplet loss</b>, introduced in <d-cite key="schroff2015facenet"></d-cite>, which simply tries to
+push away unrelated samples:</p>
+
+</div>
+
+\[\min_\theta \sum_{(x, x^+, x^-)}\max(0,\Vert f_\theta(x) - f_\theta(x^+)\Vert^2 - \Vert f_\theta(x) - f_\theta(x^-)\Vert^2 + \epsilon)\;.\]
+
+<p>If you only consider $l_\theta(x, x^+, x^-) = \Vert f_\theta(x) - f_\theta(x^+)\Vert^2 - \Vert f_\theta(x) - f_\theta(x^-)\Vert^2$, this loss function would be unbounded, since it can decrease indefinitely. By introducing $\max(0, \cdots + \epsilon)$, you ensure that the values of $l_\theta(x, x^+, x^-)$ that affect the loss are bounded up to some margin $-\epsilon$. This implicitly defines <strong>how far apart</strong> you want your samples to be when comparing related versus unrelated samples.</p>
+
+<p>This approach is <em>very</em> similar to Siamese networks, which classifies a pair $(x, x^\prime)$ as the same class if $\Vert f(x) - f(x^\prime)\Vert^2$ is small. The key difference is that contrastive learning <strong>learns a metric space</strong>, and not just a classifier.</p>
+
+<p>Unfortunately, the Triplet loss has a downside: In order for it to be effective, you need to find <em>difficult</em> negatively similar examples, which can be very challenging. It is important to find difficult negative samples, since very obviously different ones will already be far apart and have a zero loss, meaning the model is not going to be learning anything from that negative sample.</p>
+
+<div>
+<figure class="figure col-sm-5 float-right">
+    <img src="/assets/img/blog/cs330/7/adv-embed-space.png" class="img-fluid" alt="Alt text." />
+</figure>
+
+<p>One approach to finding difficult negative samples is called <b>hard negative mining</b>. It essentially just looks 
+through a list of negative samples and tries to see which ones are close your sample in the embedding space. This brings
+us to the idea of <b>sampling multiple negatives</b> in order to contrast with more difficult negative samples. This is 
+depicted in the figure on the right.</p>
+
+</div>
+
+<p>The loss function then becomes an $N$-way classification problem, and it generalizes the triplet loss to using multiple negatives:</p>
+
+\[\mathcal{L}_\mathrm{N-way}(\theta) = -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-)) + \exp(-d(z, z^+))} \right]\;.\]
+
+<p>Notice that the goal of this loss is to distinguish the similar sample from all of the negatives with some distance measure of your learned metric space $d(\cdot, \cdot)$, such as a Euclidean loss or negative cosine similarity.</p>
+
+<p>This approach was taken in <d-cite key="sohn2016improved"></d-cite> and <d-cite key="chen2020simple"></d-cite>, but in practice people often use a slight modification of this loss function, which is shown below:</p>
+
+\[\displaylines{\mathcal{L}(\theta) = -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-))} \right] \cr
+= \sum_z \left[\exp(-d(z, z^+)) + \log\sum_i\exp(-d(z, z_i^-))\right]\;.}\]
+
+<p>This loss is usually preferred, since you really only want to push away negative examples, not the similar one as well. As you can see in the equivalent formula shown above, this is exactly what it is doing.</p>
+
+<h3 id="the-simclr-algorithm">The SimCLR algorithm</h3>
+
+<div>
+<figure class="figure col-sm-6 float-right">
+    <img src="/assets/img/blog/cs330/7/simclr.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Training process of the SimCLR algorithm.</figcaption>
+</figure>
+
+<p>We will now talk about a way of sampling negative examples so we can compute this loss. There is an algorithm called 
+<b>SimCLR</b> which is proposed in <d-cite key="chen2020simple"></d-cite>, that does exactly this. We visualize this approach in the figure on the right.
+It is composed of the following steps:</p>
+
+<ol>
+<li>Sample a minibatch of examples $x_1, \cdots, x_N$.</li>
+<li><b>Augment</b> each example <i>twice (design choice)</i> to get $\tilde{x}_1, \cdots, \tilde{x}_N, \tilde{x}_{N+1}, \cdots, \tilde{x}_{2N}$.</li>
+<li><b>Embed</b> examples with $f_\theta$ to get $\tilde{z}_1, \cdots, \tilde{z}_N, \tilde{z}_{N+1}, \cdots, \tilde{z}_{2N}$.</li>
+<li>Compute all <b>pairwise distances</b> $d(z_i, z_j) = -\frac{z_i^Tz_j}{\Vert z_i\Vert\Vert z_j\Vert}$ (negative cosine similarity).</li>
+<li>Update <b>pairwise distances</b> $\theta$ with respect to $\mathcal{L}_\mathrm{N-way}(\theta)$.</li>
+</ol>
+
+</div>
+
+<div>
+<figure class="figure col-sm-5 float-left">
+    <img src="/assets/img/blog/cs330/7/simclr-perf.png" class="img-fluid" alt="Alt text." />
+</figure>
+
+<figure class="figure col-sm-5 float-left">
+    <img src="/assets/img/blog/cs330/7/simclr-efficiency.png" class="img-fluid" alt="Alt text." />
+</figure>
+</div>
+
+<p><b>After pre-training</b> the function $f_\theta$, we can either train a classifier on top of the representations that it 
+produces, or choose to fine-tune the entire network. The performance of this method was benchmarked on ImageNet 
+classification, where the model was fine-tuned using only $1$% of all labels (~$12.8$ images per class) or $10$% of all
+labels. The other part of the dataset was used as unsupervised pre-training data. It shows a substantial improvement 
+over training from scratch, and also improvements over other methods, especially in the $1$% label setting.</p>
+
+<p>In their experiments, they did note that it was important to use a <b>large batch size</b> (larger than 256), since it 
+leads to longer needed training (more than 600 epochs) in order to get a good performance.</p>
+
+<h3 id="theoretical-properties-of-contrastive-learning">Theoretical properties of contrastive learning</h3>
+
+<p>One reason that <strong>contrastive learning needs a large batch size</strong>, is that the summation over the entire dataset in the $\mathcal{L}_\mathrm{N-way}(\theta)$ loss function will dominate for very close samples. However, if your batch size is too small, you might not include those similar hard examples. This is related to the previous problem of subsampling hard negatives. We will show this mathematically below.</p>
+
+<p>We will rewrite the loss function using a minibatch $\mathcal{B}$ and find a lower bound using <strong>Jensen’s inequality</strong>:</p>
+
+\[\displaylines{\exp(-d(z, z^+)) + \log\sum_n\exp(-d(z, z_n^-)) \cr
+\geq\exp(-d(z, z^+)) + \sum_{\mathcal{B}} \log\sum_{n \in \mathcal{B}}\exp(-d(z, z_n^-))\;.}\]
+
+<p>This shows that our training objective that uses minibatches actually solves a <strong>lower bound on the original objective</strong>.
+This means that we might not actually be minimizing our original objective. However, the larger the batch size, the 
+closer the lower bound gets to the original objective function. Can you see why? <d-footnote>Answer: We can express
+$\sum_n = \sum_\mathcal{B}\sum_{n\in\mathcal{B}}$. If you let you minibatch be the entire dataset, then we only have
+one minibatch, so the $\sum_{\mathcal{B}}$ in the lower bound will disappear and turn into objective function. However,
+in the worst case with a batch size of 1, we have only one value for $\sum_{n \in \mathcal{B}}$ and many sums over
+minibatches $\sum_{\mathcal{B}}$, meaning that the lower bound will be the further away from the initial objective. </d-footnote></p>
+
+<h3 id="recent-works-in-contrastive-learning">Recent works in contrastive learning</h3>
+
+<p>There are some papers that try to tackle the problem of optimizing this lower bound:</p>
+
+<ul>
+  <li>One idea is to store representations from previous batches using a form of momentum during training. It’s not completely correct, but they show it obtains good results with a batch size of $256$ <d-cite key="he2020momentum"></d-cite>.</li>
+  <li>It is also possible to predict representations of the same image under different augmentation. In this case, you do not require any negatively similar examples <d-cite key="grill2020bootstrap"></d-cite>. It’s more of a predictive approach, but does not have a nice contrastive representation.</li>
+</ul>
+
+<figure class="figure col-sm-12">
+    <img src="/assets/img/blog/cs330/7/imagenet.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Progress over the years on the ImageNet benchmark for self-supervised learning.</figcaption>
+</figure>
+
+<p>The image above shows results on the ImageNet benchmark over the past years, and contrastive methods (i.e. MoCo v3) are still close to <strong>state-of-the-art for self-supervised pre-training for visual data</strong>.</p>
+
+<p>In this post we have mainly focussed on augmentation-based methods. However, for many applications, we do not have well-engineered augmentations.</p>
+
+<ol>
+  <li>A recent work <d-cite key="tamkin2020viewmaker"></d-cite> at ICLR in 2021 tries to <em>learn</em> the augmentations in an adversarial manner. It is competitive with SimCLR on image data and obtains good results on speech and sensor data.</li>
+  <li>
+    <p>Furthermore, <em>time-contrastive learning</em> on videos has been shown as effective for robotics pre-training, as presented in a paper <d-cite key="nair2022r3m"></d-cite> presented at CoRL in 2022. The method of this paper has been depicted in the figure below.</p>
+
+    <figure class="figure col-sm-12">
+ <img src="/assets/img/blog/cs330/7/time-constrastive-learning.png" class="img-fluid" alt="Alt text." />
+ <figcaption class="figure-caption text-center">Process of the time-contrastive learning for robotics pre-training paper.</figcaption>
+</figure>
+  </li>
+  <li>
+    <p>Finally, the popular CLIP paper <d-cite key="agarwal2021evaluating"></d-cite> uses <em>image-text</em> contrastive pre-training to produce robust zero-shot models. It learns a representation of images and a representation of text, and can tell which images and captions go together (positive samples), and which ones should be pushed apart (negative samples). It shows good zero-shot transfer to out-of-distribution tasks.</p>
+
+    <figure class="figure col-sm-12">
+    <img src="/assets/img/blog/cs330/7/clip.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Example of how CLIP works and the performance on out-of-distribution tasks.</figcaption>
+</figure>
+  </li>
+</ol>
+
+<p>In summary, contrastive learning is a general and effective framework to do unsupervised pre-trained for few-shot adaptation. It does not require generative modelling and can incorporate domain knowledge through augmentations and similarity. However, it can be difficult to select negative samples, it often requires a large batch size for training, and is currently most successful with augmentations.</p>
+
+<h3 id="contrastive-learning-as-meta-learning">Contrastive learning as meta learning</h3>
+
+<p>Many of the equations that we saw in this post look similar to the ones that we saw in the previous post about non-parametric meta learning. It is actually possible to create a meta learning algorithm that works <em>similarly</em> to the contrastive approaches that we have seen today. Let’s formulate the problem as a meta learning problem:</p>
+
+<ol>
+  <li>Given an unlabelled dataset ${x_i}$.</li>
+  <li>Create a class $y_i$ from each datapoint via data augmentation $\mathcal{D}_i := \{\tilde{x}_i, \tilde{x}_i^\prime, \cdots\}.$</li>
+  <li>Run any meta learning algorithm on this dataset.</li>
+</ol>
+
+<p>There is a paper that goes in depth into similarities of SimCLR with Prototypical networks for meta learning, and shows the methods differ in the following ways:</p>
+
+<ul>
+  <li>SimCLR samples <em>one task</em> per minibatch, whereas meta learning usually samples multiple.</li>
+  <li>SimCLR compares <em>all pairs</em> of samples, whereas meta learning compares query examples only to support examples and not to query other examples.</li>
+</ul>
+
+<p>In the table below, they also show that both representations transfer similarly well between different datasets.</p>
+
+<figure class="figure col-sm-12">
+ <img src="/assets/img/blog/cs330/7/meta-learning-ref.png" class="img-fluid" alt="Alt text." />
+ <figcaption class="figure-caption text-center">Performance of Prototypical networks and SimCLR on different unsupervised few-shot learning problems.</figcaption>
+</figure>
+
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the intuition, design choices, and implementation of contrastive learning for unsupervised representation learning. We will also talk about the relationship between contrastive learning and meta learning!]]></summary></entry><entry><title type="html">CS-330 Lecture 5: Few-Shot Learning via Metric Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-fsl-ml/" rel="alternate" type="text/html" title="CS-330 Lecture 5: Few-Shot Learning via Metric Learning" /><published>2024-03-14T00:00:00+01:00</published><updated>2024-03-14T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-fsl-ml</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-fsl-ml/"><![CDATA[<p>The goal of this lecture is to understand the third form of meta learning: <strong>non-parametric few-shot learning</strong>. We will
 also compare the three different methods of meta learning. Finally, we give practical examples of meta learning, in
 domains such as <strong>imitation learning</strong>, <strong>drug discovery</strong>, <strong>motion prediction</strong>, and <strong>language generation</strong>! If you
 missed the previous lecture, which was about optimization-based meta learning, you can head over 
@@ -669,7 +952,150 @@ and effective than (dark blue) pre-training on meta-training data and fine-tunin
 terrain from scratch. Hopefully these results give you a good idea of the potential of meta learning for few-shot 
 learning!</p>
 
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the basics of optimization-based meta learning techniques. You will also learn about the trade-offs between black-box and optimization-based meta learning!]]></summary></entry><entry><title type="html">CS-330 Lecture 2: Transfer Learning and Meta-Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-tl-ml/" rel="alternate" type="text/html" title="CS-330 Lecture 2: Transfer Learning and Meta-Learning" /><published>2024-03-03T00:00:00+01:00</published><updated>2024-03-03T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-tl-ml</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-tl-ml/"><![CDATA[<p>The goal of this lecture is to learn how to transfer knowledge from one task to another, discuss what it means for two 
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the basics of optimization-based meta learning techniques. You will also learn about the trade-offs between black-box and optimization-based meta learning!]]></summary></entry><entry><title type="html">CS-330 Lecture 3: Black-Box Meta-Learning &amp;amp; In-Context Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-bbml-icl/" rel="alternate" type="text/html" title="CS-330 Lecture 3: Black-Box Meta-Learning &amp;amp; In-Context Learning" /><published>2024-03-03T00:00:00+01:00</published><updated>2024-03-03T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-bbml-icl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-bbml-icl/"><![CDATA[<p>The goal of this lecture is to learn how to <strong>implement black-box meta-learning</strong> techniques. We will also talk about a
+<strong>case study of GPT-3</strong>! If you missed the previous lecture, which was about transfer learning by fine-tuning and meta
+learning, you can head over <a href="/blog/2024/cs330-stanford-tl-ml/">here</a> to view it.</p>
+
+<p>As always, since I am still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow 
+of information, or whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
+
+<p>The link to the lecture slides can be found <a href="https://cs330.stanford.edu/materials/cs330_metalearning_bbox_2023.pdf">here</a>.</p>
+
+<h2 id="black-box-adaptation-approaches">Black-box adaptation approaches</h2>
+
+<figure class="figure col-sm-12 float-right">
+    <img src="/assets/img/blog/cs330/4/omniglot.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Example of the Omniglot dataset.</figcaption>
+</figure>
+
+<p>The content of this section will build on the general recipe for meta-learning problems that we saw in the previous 
+lecture. In order to explain it, we will use the example of the Omniglot dataset <d-cite key="lake2019omniglot"></d-cite>, which is a dataset of 1,623 
+characters from 50 different alphabets. In this problem, every alphabet would refer to a different task. In our example,
+we will do 3-way 1-shot learning, meaning that our sampled datasets consist of 3 classes with 1 example per class at 
+every step. One iteration of the black-box meta-training process then has the following steps:</p>
+
+<ol>
+  <li>Sample task $\mathcal{T}_i$ or a mini-batch of tasks. In our case, this would correspond to generating the language(s).</li>
+  <li>From the selected language(s), we sample disjoint datasets $\mathcal{D}_i^\mathrm{tr}$ and $\mathcal{D}_i^\mathrm{test}$ from $\mathcal{D}_i$. In our example, this will be a disjoint dataset with 3 samples of characters for every language alphabet.</li>
+</ol>
+
+<div>
+<figure class="figure col-sm-5 6 float-right">
+    <img src="/assets/img/blog/cs330/4/param_lstm.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Basic model architecture for black-box meta learning.</figcaption>
+</figure>
+
+<p>Now that we have these datasets, our goal is to train a neural network to represent $\phi_i = f_\theta(\mathcal{D}_i^\mathrm{tr})$. 
+After computing these task parameters given a sampled training dataset, we can predict the test targets with $y^\mathrm{ts} = g_{\phi_i}(x^\mathrm{ts})$. 
+An example of how such a model could work, is depicted in the figure above. Here, we are using a sequence model for 
+$f_\theta$, which generates the parameters $\phi_i$. However, you can use all your fancy architectures that can handle 
+a varying number of input sample. This is necessary due to varying dataset lengths.</p>
+</div>
+
+<p>After computing $y^\mathrm{ts}$, we can do backpropagation of the loss that is generated with the this test dataset. 
+The full optimization objective is shown in the equation below:</p>
+
+\[\min_\theta \sum_{\mathcal{T}_i} \sum_{(x,y) \sim \mathcal{D}^\mathrm{test}_i} - \log g_{\phi_i}(y\vert x) = \min_\theta \sum_{\mathcal{T}_i}\mathcal{L}(f_\theta(\mathcal{D}^\mathrm{tr}_i), \mathcal{D}^\mathrm{test}_i)\;.\]
+
+<p>Notice that we are optimizing the parameters $\theta$. The task-specific parameters $\phi_i$ are generated by 
+$f_\theta(\mathcal{D}_i^\mathrm{tr})$, and so they are not updated. Also note that the loss is calculated with 
+respect to the sampled <strong>test dataset</strong>! This is no problem, since it makes sense to evaluate on new tasks for meta 
+learning.</p>
+
+<p>Now that you understand the architecture, we can write down the last two steps of the meta-training process:</p>
+
+<ol>
+  <li>Compute $\phi_i \leftarrow f_\theta(\mathcal{D}_i^\mathrm{tr})$.</li>
+  <li>Update $\theta$ using $\nabla_\theta \mathcal{L}(\phi_i, \mathcal{D}_i^\mathrm{test})$.</li>
+</ol>
+
+<h3 id="a-more-scalable-architecture">A more scalable architecture</h3>
+
+<p>However, we run into an issue. How do we let the model $f_\theta$ output another model’s parameters $\phi_i$? Not only 
+can this be quite tricky to do, it also does not scale to larger parameter vectors $\phi_i$! Can you think of an 
+alternative way of going this?</p>
+
+<figure class="figure col-sm-12 float-right">
+    <img src="/assets/img/blog/cs330/4/better_model.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">More scalable architecture for black-box meta-learning.</figcaption>
+</figure>
+
+<p>Instead of letting $f_\theta$ output $\phi_i$, we instead output a hidden state $h_i$, which is a low-dimensional 
+vector that is supposed to represent contextual task information from the training dataset. If you recall the different
+ways of conditioning that we saw for multi-task learning, you can see that we can train a model end-to-end by 
+conditioning as $y^\mathrm{ts} = g_{\phi}(x^\mathrm{ts} \vert h_i)$. Now, notice that we have a general set of 
+parameters $\phi$ for $g$; it does not need to be task-specific anymore, since we are already conditioning on task
+information. In the figure above, $\theta$ are the parameters of the sequence model, and $\phi$ are the parameters of 
+the convolutional network.</p>
+
+<p>❗One problem that sometimes occurs with this architecture, is that the model learns to <strong>ignore conditioning on $h_i$.</strong>
+In that case, it is essentially just learning to memorize, and not using the training dataset. In order to avoid that,
+you can randomize the numerical label assignment to the target variables when sampling the datasets $\mathcal{D}^{tr}_i$
+and $\mathcal{D}^{test}_i$. If the numerical label is different each time, it cannot just memorize the sample from the 
+testing set.</p>
+
+<h3 id="black-box-adaptation-architectures">Black-box adaptation architectures</h3>
+
+<p>The architecture that we just presented was more-or-less first proposed on the Omniglot dataset at ICML in 2016 <d-cite key="santoro2016meta"></d-cite>.
+It used LSTMs with Neural Turing Machines (which are not used anymore nowadays). Since then, a lot of new architectures 
+have been proposed.</p>
+
+<p>At ICML 2018, an architecture called the DeepSet architecture <d-cite key="garnelo2018conditional"></d-cite> was published. The idea is to pass all your dataset 
+samples through a feedforward neural network to get an embedding of each sample, and then average those. This way, you have
+a permutation-invariant model which is still model-agnostic. Given some conditions on the width and depth of the network, 
+these models can represent any permutation-invariant function.</p>
+
+<p>There are quite some more papers that used other external memory mechanisms <d-cite key="munkhdalai2017meta"></d-cite>, or convolutions 
+and attention <d-cite key="mishra2017simple"></d-cite>.</p>
+
+<p>Unfortunately, these models are still quite limited in capabilities against “difficult” datasets, as you can see in the
+table below.</p>
+
+<figure class="figure col-sm-12 float-right">
+    <img src="/assets/img/blog/cs330/4/bmml_results.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Results of a model trained with black-box meta-learning.</figcaption>
+</figure>
+
+<p>In summary, some benefits of black-box meta learning are its <strong>expressiveness</strong>, how easy it is to combine with a 
+<strong>variety of learning problems</strong> (such as SL or RL). Nonetheless, it is a <strong>challenging optimization problem</strong> for a 
+<strong>complex model</strong>, and it is often <strong>data-inefficient</strong>.</p>
+
+<hr />
+
+<h2 id="case-study-of-gpt-3">Case study of GPT-3</h2>
+
+<p>With the rise of research on in-context learning, especially with foundation models, GPT-3 <d-cite key="brown2020language"></d-cite> is a good example of 
+a black-box meta-learner, trained on language generation tasks. We can represent the task-specific datasets 
+$\mathcal{D}_i^\mathrm{tr}$ as a sequence of characters, and $\mathcal{D}_i^\mathrm{test}$ as the following sequence 
+of characters. This way, $\mathcal{D}_i^\mathrm{tr}$ is what the model is being conditioned on (its context), and 
+$\mathcal{D}_i^\mathrm{test}$ is what it has to generate.</p>
+
+<p>The meta-training dataset consists of crawled data from the internet, English-language Wikipedia, and two books corpora,
+with a giant Transformer architecture as its network (175 billion parameters, 96 layers, 3.2M batch size).</p>
+
+<p>For these datasets, there are a multitude of different tasks such as, but definitely not limited to, 
+<strong>spelling correction</strong>, <strong>simple math problems</strong>, or <strong>translating between languages</strong>. By encoding every task as text,
+the authors are able to obtain meta-training data incredibly easily.</p>
+
+<figure class="figure col-sm-12 float-right">
+    <img src="/assets/img/blog/cs330/4/gpt3_pipeline.png" class="img-fluid" alt="Alt text." />
+    <figcaption class="figure-caption text-center">Abstract representation of the training meta-train pipeline of GPT-3.</figcaption>
+</figure>
+
+<p>In the case of GPT-3, text generation, also known as in-context learning, represents the inner loop of the optimization 
+process. The outer loop represents the model optimizing across different tasks, which is very similar to the process that
+we saw in the previous section.</p>
+
+<p>With this model, you can easily do few-shot learning by adding examples in text form to the context of the model. Even 
+through the model is far from perfect, its results are extremely impressive. It is also no oracle and can fail in 
+unintuitive ways! If there is anything we have learned from recent research, it is that <strong>the choice of $\mathcal{D}^\mathrm{tr}$ 
+at test time matters</strong> (welcome to the world of prompt engineering).</p>
+
+<p>It is also interesting to think about what is needed for <strong>few-shot learning to emerge</strong> when training a model. This is 
+an active research are, but it seems that (1) temporal correlation in your data with dynamic meaning of words, and (2) 
+large model capacities definitely seems to make a difference here <d-cite key="chan2022data"></d-cite>.</p>
+
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to learn how to implement black-box meta-learning techniques. We will also talk about a case study of GPT-3!]]></summary></entry><entry><title type="html">CS-330 Lecture 2: Transfer Learning and Meta-Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-tl-ml/" rel="alternate" type="text/html" title="CS-330 Lecture 2: Transfer Learning and Meta-Learning" /><published>2024-03-03T00:00:00+01:00</published><updated>2024-03-03T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-tl-ml</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-tl-ml/"><![CDATA[<p>The goal of this lecture is to learn how to transfer knowledge from one task to another, discuss what it means for two 
 tasks to share a common structure, and start thinking about meta learning. If you missed the previous lecture, which was
 about multi-task learning, you can head over <a href="/blog/2024/cs330-stanford-mtl/">here</a> to view it.</p>
 
@@ -680,7 +1106,7 @@ of information, or whatever! You can contact me through <a href="https://www.lin
 
 <h2 id="transfer-learning">Transfer learning</h2>
 
-<p>In contrast to multi-task learning, which tackles several tasks $\mathcal{T}_1, \dots, \mathcal{T}_i$ simultaneously, 
+<p>In contrast to multi-task learning, which tackles several tasks $\mathcal{T}_1, \cdots, \mathcal{T}_i$ simultaneously, 
 transfer learning takes a sequential approach. It focuses on mastering a specific task $\mathcal{T}_b$ after the 
 knowledge has been acquired from source task(s) $\mathcal{T}_a$. A common assumption is that $\mathcal{D}_a$ cannot be 
 accessed during the transfer.</p>
@@ -827,14 +1253,14 @@ we will switch back to the mechanistic view.</p>
 </figure>
 
 <p>Let’s consider an image classification problem, where you have different tasks. In the problem above, the different 
-tasks contain different images to classify. For the (meta-)training process, we have tasks $\mathcal{T}_1, \mathcal{T}_2, \dots, \mathcal{T}_n$
+tasks contain different images to classify. For the (meta-)training process, we have tasks $\mathcal{T}_1, \mathcal{T}_2, \cdots, \mathcal{T}_n$
 and we would like to do meta-testing on a new task $\mathcal{T}_\mathrm{test}$. The goal is to learn to solve task 
 $\mathcal{T}_\mathrm{test}$ more quickly than from scratch. We can then test after training on the few examples from 
 the new (in this case testing) task $\mathcal{T}_\mathrm{test}$. Of course, this problem settings generalizes to any 
 other machine learning problem like regression, language generation, skill learning, etc.</p>
 
 <p>The <b>key assumption</b> here is that meta-training tasks and meta-testing tasks are drawn i.i.d. from the same task 
-distribution $\mathcal{T}_1, \dots, \mathcal{T}_n,\mathcal{T}_\mathrm{test} \sim p(\mathcal{T})$, meaning that tasks 
+distribution $\mathcal{T}_1, \cdots, \mathcal{T}_n,\mathcal{T}_\mathrm{test} \sim p(\mathcal{T})$, meaning that tasks 
 must share structure.</p>
 
 <p>Analogous to more data in machine learning, the more tasks, the better! You can say that meta learning is transfer 
@@ -851,7 +1277,7 @@ learning with many source tasks.</p>
 <h3 id="a-general-recipe-for-meta-learning-algorithms">A general recipe for meta learning algorithms</h3>
 
 <p>Let’s formalize meta supervised learning in a mechanistic view. We are looking for a function 
-$y^\mathrm{ts} = f_\theta(\mathcal{D}^\mathrm{tr}, x^\mathrm{ts})$, which is trained on the data $\{\mathcal{D}_i\}_{i=1,\dots,n}$. 
+$y^\mathrm{ts} = f_\theta(\mathcal{D}^\mathrm{tr}, x^\mathrm{ts})$, which is trained on the data $\{\mathcal{D}_i\}_{i=1,\cdots,n}$. 
 This formulation reduces the meta-learning problem to the design and optimization of $f_\theta$.</p>
 
 <p>To approach a problem using meta learning, you will need to decide on two steps:</p>
@@ -863,150 +1289,7 @@ This formulation reduces the meta-learning problem to the design and optimizatio
 
 <p>The following lectures will focus on core methods for meta learning and unsupervised pre-trained methods!</p>
 
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to learn how to transfer knowledge from one task to another, discuss what it means for two tasks to share a common structure, and start thinking about meta learning.]]></summary></entry><entry><title type="html">CS-330 Lecture 3: Black-Box Meta-Learning &amp;amp; In-Context Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-bbml-icl/" rel="alternate" type="text/html" title="CS-330 Lecture 3: Black-Box Meta-Learning &amp;amp; In-Context Learning" /><published>2024-03-03T00:00:00+01:00</published><updated>2024-03-03T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-bbml-icl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-bbml-icl/"><![CDATA[<p>The goal of this lecture is to learn how to <strong>implement black-box meta-learning</strong> techniques. We will also talk about a
-<strong>case study of GPT-3</strong>! If you missed the previous lecture, which was about transfer learning by fine-tuning and meta
-learning, you can head over <a href="/blog/2024/cs330-stanford-tl-ml/">here</a> to view it.</p>
-
-<p>As always, since I am still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow 
-of information, or whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
-
-<p>The link to the lecture slides can be found <a href="https://cs330.stanford.edu/materials/cs330_metalearning_bbox_2023.pdf">here</a>.</p>
-
-<h2 id="black-box-adaptation-approaches">Black-box adaptation approaches</h2>
-
-<figure class="figure col-sm-12 float-right">
-    <img src="/assets/img/blog/cs330/4/omniglot.png" class="img-fluid" alt="Alt text." />
-    <figcaption class="figure-caption text-center">Example of the Omniglot dataset.</figcaption>
-</figure>
-
-<p>The content of this section will build on the general recipe for meta-learning problems that we saw in the previous 
-lecture. In order to explain it, we will use the example of the Omniglot dataset <d-cite key="lake2019omniglot"></d-cite>, which is a dataset of 1,623 
-characters from 50 different alphabets. In this problem, every alphabet would refer to a different task. In our example,
-we will do 3-way 1-shot learning, meaning that our sampled datasets consist of 3 classes with 1 example per class at 
-every step. One iteration of the black-box meta-training process then has the following steps:</p>
-
-<ol>
-  <li>Sample task $\mathcal{T}_i$ or a mini-batch of tasks. In our case, this would correspond to generating the language(s).</li>
-  <li>From the selected language(s), we sample disjoint datasets $\mathcal{D}_i^\mathrm{tr}$ and $\mathcal{D}_i^\mathrm{test}$ from $\mathcal{D}_i$. In our example, this will be a disjoint dataset with 3 samples of characters for every language alphabet.</li>
-</ol>
-
-<div>
-<figure class="figure col-sm-5 6 float-right">
-    <img src="/assets/img/blog/cs330/4/param_lstm.png" class="img-fluid" alt="Alt text." />
-    <figcaption class="figure-caption text-center">Basic model architecture for black-box meta learning.</figcaption>
-</figure>
-
-<p>Now that we have these datasets, our goal is to train a neural network to represent $\phi_i = f_\theta(\mathcal{D}_i^\mathrm{tr})$. 
-After computing these task parameters given a sampled training dataset, we can predict the test targets with $y^\mathrm{ts} = g_{\phi_i}(x^\mathrm{ts})$. 
-An example of how such a model could work, is depicted in the figure above. Here, we are using a sequence model for 
-$f_\theta$, which generates the parameters $\phi_i$. However, you can use all your fancy architectures that can handle 
-a varying number of input sample. This is necessary due to varying dataset lengths.</p>
-</div>
-
-<p>After computing $y^\mathrm{ts}$, we can do backpropagation of the loss that is generated with the this test dataset. 
-The full optimization objective is shown in the equation below:</p>
-
-\[\min_\theta \sum_{\mathcal{T}_i} \sum_{(x,y) \sim \mathcal{D}^\mathrm{test}_i} - \log g_{\phi_i}(y\vert x) = \min_\theta \sum_{\mathcal{T}_i}\mathcal{L}(f_\theta(\mathcal{D}^\mathrm{tr}_i), \mathcal{D}^\mathrm{test}_i)\;.\]
-
-<p>Notice that we are optimizing the parameters $\theta$. The task-specific parameters $\phi_i$ are generated by 
-$f_\theta(\mathcal{D}_i^\mathrm{tr})$, and so they are not updated. Also note that the loss is calculated with 
-respect to the sampled <strong>test dataset</strong>! This is no problem, since it makes sense to evaluate on new tasks for meta 
-learning.</p>
-
-<p>Now that you understand the architecture, we can write down the last two steps of the meta-training process:</p>
-
-<ol>
-  <li>Compute $\phi_i \leftarrow f_\theta(\mathcal{D}_i^\mathrm{tr})$.</li>
-  <li>Update $\theta$ using $\nabla_\theta \mathcal{L}(\phi_i, \mathcal{D}_i^\mathrm{test})$.</li>
-</ol>
-
-<h3 id="a-more-scalable-architecture">A more scalable architecture</h3>
-
-<p>However, we run into an issue. How do we let the model $f_\theta$ output another model’s parameters $\phi_i$? Not only 
-can this be quite tricky to do, it also does not scale to larger parameter vectors $\phi_i$! Can you think of an 
-alternative way of going this?</p>
-
-<figure class="figure col-sm-12 float-right">
-    <img src="/assets/img/blog/cs330/4/better_model.png" class="img-fluid" alt="Alt text." />
-    <figcaption class="figure-caption text-center">More scalable architecture for black-box meta-learning.</figcaption>
-</figure>
-
-<p>Instead of letting $f_\theta$ output $\phi_i$, we instead output a hidden state $h_i$, which is a low-dimensional 
-vector that is supposed to represent contextual task information from the training dataset. If you recall the different
-ways of conditioning that we saw for multi-task learning, you can see that we can train a model end-to-end by 
-conditioning as $y^\mathrm{ts} = g_{\phi}(x^\mathrm{ts} \vert h_i)$. Now, notice that we have a general set of 
-parameters $\phi$ for $g$; it does not need to be task-specific anymore, since we are already conditioning on task
-information. In the figure above, $\theta$ are the parameters of the sequence model, and $\phi$ are the parameters of 
-the convolutional network.</p>
-
-<p>❗One problem that sometimes occurs with this architecture, is that the model learns to <strong>ignore conditioning on $h_i$.</strong>
-In that case, it is essentially just learning to memorize, and not using the training dataset. In order to avoid that,
-you can randomize the numerical label assignment to the target variables when sampling the datasets $\mathcal{D}^{tr}_i$
-and $\mathcal{D}^{test}_i$. If the numerical label is different each time, it cannot just memorize the sample from the 
-testing set.</p>
-
-<h3 id="black-box-adaptation-architectures">Black-box adaptation architectures</h3>
-
-<p>The architecture that we just presented was more-or-less first proposed on the Omniglot dataset at ICML in 2016 <d-cite key="santoro2016meta"></d-cite>.
-It used LSTMs with Neural Turing Machines (which are not used anymore nowadays). Since then, a lot of new architectures 
-have been proposed.</p>
-
-<p>At ICML 2018, an architecture called the DeepSet architecture <d-cite key="garnelo2018conditional"></d-cite> was published. The idea is to pass all your dataset 
-samples through a feedforward neural network to get an embedding of each sample, and then average those. This way, you have
-a permutation-invariant model which is still model-agnostic. Given some conditions on the width and depth of the network, 
-these models can represent any permutation-invariant function.</p>
-
-<p>There are quite some more papers that used other external memory mechanisms <d-cite key="munkhdalai2017meta"></d-cite>, or convolutions 
-and attention <d-cite key="mishra2017simple"></d-cite>.</p>
-
-<p>Unfortunately, these models are still quite limited in capabilities against “difficult” datasets, as you can see in the
-table below.</p>
-
-<figure class="figure col-sm-12 float-right">
-    <img src="/assets/img/blog/cs330/4/bmml_results.png" class="img-fluid" alt="Alt text." />
-    <figcaption class="figure-caption text-center">Results of a model trained with black-box meta-learning.</figcaption>
-</figure>
-
-<p>In summary, some benefits of black-box meta learning are its <strong>expressiveness</strong>, how easy it is to combine with a 
-<strong>variety of learning problems</strong> (such as SL or RL). Nonetheless, it is a <strong>challenging optimization problem</strong> for a 
-<strong>complex model</strong>, and it is often <strong>data-inefficient</strong>.</p>
-
-<hr />
-
-<h2 id="case-study-of-gpt-3">Case study of GPT-3</h2>
-
-<p>With the rise of research on in-context learning, especially with foundation models, GPT-3 <d-cite key="brown2020language"></d-cite> is a good example of 
-a black-box meta-learner, trained on language generation tasks. We can represent the task-specific datasets 
-$\mathcal{D}_i^\mathrm{tr}$ as a sequence of characters, and $\mathcal{D}_i^\mathrm{test}$ as the following sequence 
-of characters. This way, $\mathcal{D}_i^\mathrm{tr}$ is what the model is being conditioned on (its context), and 
-$\mathcal{D}_i^\mathrm{test}$ is what it has to generate.</p>
-
-<p>The meta-training dataset consists of crawled data from the internet, English-language Wikipedia, and two books corpora,
-with a giant Transformer architecture as its network (175 billion parameters, 96 layers, 3.2M batch size).</p>
-
-<p>For these datasets, there are a multitude of different tasks such as, but definitely not limited to, 
-<strong>spelling correction</strong>, <strong>simple math problems</strong>, or <strong>translating between languages</strong>. By encoding every task as text,
-the authors are able to obtain meta-training data incredibly easily.</p>
-
-<figure class="figure col-sm-12 float-right">
-    <img src="/assets/img/blog/cs330/4/gpt3_pipeline.png" class="img-fluid" alt="Alt text." />
-    <figcaption class="figure-caption text-center">Abstract representation of the training meta-train pipeline of GPT-3.</figcaption>
-</figure>
-
-<p>In the case of GPT-3, text generation, also known as in-context learning, represents the inner loop of the optimization 
-process. The outer loop represents the model optimizing across different tasks, which is very similar to the process that
-we saw in the previous section.</p>
-
-<p>With this model, you can easily do few-shot learning by adding examples in text form to the context of the model. Even 
-through the model is far from perfect, its results are extremely impressive. It is also no oracle and can fail in 
-unintuitive ways! If there is anything we have learned from recent research, it is that <strong>the choice of $\mathcal{D}^\mathrm{tr}$ 
-at test time matters</strong> (welcome to the world of prompt engineering).</p>
-
-<p>It is also interesting to think about what is needed for <strong>few-shot learning to emerge</strong> when training a model. This is 
-an active research are, but it seems that (1) temporal correlation in your data with dynamic meaning of words, and (2) 
-large model capacities definitely seems to make a difference here <d-cite key="chan2022data"></d-cite>.</p>
-
-<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to learn how to implement black-box meta-learning techniques. We will also talk about a case study of GPT-3!]]></summary></entry><entry><title type="html">CS-330 Lecture 1: Multi-Task Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-mtl/" rel="alternate" type="text/html" title="CS-330 Lecture 1: Multi-Task Learning" /><published>2024-03-02T00:00:00+01:00</published><updated>2024-03-02T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-mtl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-mtl/"><![CDATA[<p>The goal of this lecture is to understand the key design decisions when building multi-task learning systems. Since I am
+<hr />]]></content><author><name>Lars C.P.M. Quaedvlieg</name></author><category term="deep-multi-task-and-meta-learning" /><category term="course" /><summary type="html"><![CDATA[This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to learn how to transfer knowledge from one task to another, discuss what it means for two tasks to share a common structure, and start thinking about meta learning.]]></summary></entry><entry><title type="html">CS-330 Lecture 1: Multi-Task Learning</title><link href="http://localhost:4000/blog/2024/cs330-stanford-mtl/" rel="alternate" type="text/html" title="CS-330 Lecture 1: Multi-Task Learning" /><published>2024-03-02T00:00:00+01:00</published><updated>2024-03-02T00:00:00+01:00</updated><id>http://localhost:4000/blog/2024/cs330-stanford-mtl</id><content type="html" xml:base="http://localhost:4000/blog/2024/cs330-stanford-mtl/"><![CDATA[<p>The goal of this lecture is to understand the key design decisions when building multi-task learning systems. Since I am
 still new to this blogging thing, reach out to me if you have any feedback on my writing, the flow of information, or 
 whatever! You can contact me through <a href="https://www.linkedin.com/in/lars-quaedvlieg/">LinkedIn</a>. ☺</p>
 
@@ -1089,7 +1372,7 @@ all parameters are shared (except the ones directly following $z_i$, in case it 
 \cup \theta_i$, where $\theta_\mathrm{sh}$ are shared parameters and $\theta_i$ are task-specific parameters? Our 
 objective function becomes the following:</p>
 
-\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
+\[\min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.\]
 
 <p>In this case, choosing how to condition on $z_i$ is equivalent to choosing how and where to share model parameters. We 
 will now look into some basic ways to condition a model.</p>
@@ -1224,7 +1507,7 @@ that the task labels, and the loss function, are on the same scale.</p>
 
     <p>In the case of negative transfer, you should share less across tasks. You can also add a regularization term to the objective function, to allow <em>soft parameter sharing</em>:</p>
 
-\[\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.\]
+\[\min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.\]
 
     <p>This allows for more fluid degrees of parameters sharing. However, it does add another set of hyperparameters, and it more memory intensive.</p>
   </li>
@@ -1323,7 +1606,7 @@ for AI, especially now.</p>
   <li><a href="/blog/2024/cs330-stanford-bbml-icl/">Black-box meta-learning &amp; in-context learning</a></li>
   <li><a href="/blog/2024/cs330-stanford-obml/">Optimization-based meta-learning</a></li>
   <li><a href="/blog/2024/cs330-stanford-fsl-ml/">Few-shot learning via metric learning</a></li>
-  <li>Unsupervised pre-training for few-shot learning (contrastive)</li>
+  <li><a href="/blog/2024/cs330-stanford-upt-fsl-cl/">Unsupervised pre-training for few-shot learning (contrastive)</a></li>
   <li>Unsupervised pre-training for few-shot learning (generative)</li>
   <li>Advanced meta-learning topics (task construction)</li>
   <li>Variational inference</li>
