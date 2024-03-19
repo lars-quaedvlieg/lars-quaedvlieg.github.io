@@ -62,7 +62,7 @@ The link to the lecture slides can be found [here](https://cs330.stanford.edu/ma
 
 ## Transfer learning
 
-In contrast to multi-task learning, which tackles several tasks $\mathcal{T}_1, \dots, \mathcal{T}_i$ simultaneously, 
+In contrast to multi-task learning, which tackles several tasks $\mathcal{T}_1, \cdots, \mathcal{T}_i$ simultaneously, 
 transfer learning takes a sequential approach. It focuses on mastering a specific task $\mathcal{T}_b$ after the 
 knowledge has been acquired from source task(s) $\mathcal{T}_a$. A common assumption is that $\mathcal{D}_a$ cannot be 
 accessed during the transfer.
@@ -207,14 +207,14 @@ we will switch back to the mechanistic view.
 </figure>
 
 <p>Let’s consider an image classification problem, where you have different tasks. In the problem above, the different 
-tasks contain different images to classify. For the (meta-)training process, we have tasks $\mathcal{T}_1, \mathcal{T}_2, \dots, \mathcal{T}_n$
+tasks contain different images to classify. For the (meta-)training process, we have tasks $\mathcal{T}_1, \mathcal{T}_2, \cdots, \mathcal{T}_n$
 and we would like to do meta-testing on a new task $\mathcal{T}_\mathrm{test}$. The goal is to learn to solve task 
 $\mathcal{T}_\mathrm{test}$ more quickly than from scratch. We can then test after training on the few examples from 
 the new (in this case testing) task $\mathcal{T}_\mathrm{test}$. Of course, this problem settings generalizes to any 
 other machine learning problem like regression, language generation, skill learning, etc.</p>
 
 <p>The <b>key assumption</b> here is that meta-training tasks and meta-testing tasks are drawn i.i.d. from the same task 
-distribution $\mathcal{T}_1, \dots, \mathcal{T}_n,\mathcal{T}_\mathrm{test} \sim p(\mathcal{T})$, meaning that tasks 
+distribution $\mathcal{T}_1, \cdots, \mathcal{T}_n,\mathcal{T}_\mathrm{test} \sim p(\mathcal{T})$, meaning that tasks 
 must share structure.</p>
 
 Analogous to more data in machine learning, the more tasks, the better! You can say that meta learning is transfer 
@@ -229,7 +229,7 @@ The following is some terminology for different things you will hear when talkin
 ### A general recipe for meta learning algorithms
 
 <p>Let’s formalize meta supervised learning in a mechanistic view. We are looking for a function 
-$y^\mathrm{ts} = f_\theta(\mathcal{D}^\mathrm{tr}, x^\mathrm{ts})$, which is trained on the data $\{\mathcal{D}_i\}_{i=1,\dots,n}$. 
+$y^\mathrm{ts} = f_\theta(\mathcal{D}^\mathrm{tr}, x^\mathrm{ts})$, which is trained on the data $\{\mathcal{D}_i\}_{i=1,\cdots,n}$. 
 This formulation reduces the meta-learning problem to the design and optimization of $f_\theta$.</p>
 
 To approach a problem using meta learning, you will need to decide on two steps:

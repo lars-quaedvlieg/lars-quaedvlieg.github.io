@@ -129,7 +129,7 @@ This give rise to a question: can you phrase the multi-task learning objective p
 objective function becomes the following:
 
 $$
-\min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.
+\min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i)\;.
 $$
 
 In this case, choosing how to condition on $z_i$ is equivalent to choosing how and where to share model parameters. We 
@@ -215,7 +215,7 @@ There are multiple challenges that come with multi-task learning.
    In the case of negative transfer, you should share less across tasks. You can also add a regularization term to the objective function, to allow *soft parameter sharing*:
 
    $$
-   \min_{\theta_\mathrm{sh}, \theta_1, \dots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.
+   \min_{\theta_\mathrm{sh}, \theta_1, \cdots, \theta_T} \sum_{i=1}^T \mathcal{L}_i(\theta_\mathrm{sh} \cup \theta_i, \mathcal{D}_i) + \lambda \sum_{i^\prime = 1}^T \left\Vert \theta_i - \theta_i^\prime \right\Vert\;.
    $$
 
    This allows for more fluid degrees of parameters sharing. However, it does add another set of hyperparameters, and it more memory intensive.
