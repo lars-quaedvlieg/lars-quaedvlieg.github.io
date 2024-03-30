@@ -78,7 +78,7 @@ The lecture schedule of the course is as follows:
 4. [Optimization-based meta-learning](/blog/2024/cs330-stanford-obml/)
 5. [Few-shot learning via metric learning](/blog/2024/cs330-stanford-fsl-ml/)
 6. [Unsupervised pre-training for few-shot learning (contrastive)](/blog/2024/cs330-stanford-upt-fsl-cl/) 
-7. Unsupervised pre-training for few-shot learning (generative)
+7. [Unsupervised pre-training for few-shot learning (generative)](/blog/2024/cs330-stanford-upt-rbm/)
 8. Advanced meta-learning topics (task construction)
 9. Variational inference
 10. Bayesian meta-learning
