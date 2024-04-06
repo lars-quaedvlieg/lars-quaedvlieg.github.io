@@ -213,8 +213,10 @@ Notice that the goal of this loss is to distinguish the similar sample from all 
 This approach was taken in <d-cite key="sohn2016improved"></d-cite> and <d-cite key="chen2020simple"></d-cite>, but in practice people often use a slight modification of this loss function, which is shown below:
 
 $$
-\displaylines{\mathcal{L}(\theta) = -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-))} \right] \cr
-= \sum_z \left[\exp(-d(z, z^+)) + \log\sum_i\exp(-d(z, z_i^-))\right]\;.}
+\begin{align*}
+\mathcal{L}(\theta) &= -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-))} \right] \\
+&= \sum_z \left[ \exp(-d(z, z^+)) + \log\sum_i\exp(-d(z, z_i^-)) \right]\;.
+\end{align*}
 $$
 
 This loss is usually preferred, since you really only want to push away negative examples, not the similar one as well. As you can see in the equivalent formula shown above, this is exactly what it is doing.
@@ -267,8 +269,10 @@ One reason that **contrastive learning needs a large batch size**, is that the s
 We will rewrite the loss function using a minibatch $\mathcal{B}$ and find a lower bound using **Jensen’s inequality**:
 
 $$
-\displaylines{\exp(-d(z, z^+)) + \log\sum_n\exp(-d(z, z_n^-)) \cr
-\geq\exp(-d(z, z^+)) + \sum_{\mathcal{B}} \log\sum_{n \in \mathcal{B}}\exp(-d(z, z_n^-))\;.}
+\begin{align*}
+& \exp(-d(z, z^+)) + \log\sum_n\exp(-d(z, z_n^-)) \\
+\geq \: &\exp(-d(z, z^+)) + \sum_{\mathcal{B}} \log\sum_{n \in \mathcal{B}}\exp(-d(z, z_n^-))\;.
+\end{align*}
 $$
 
 This shows that our training objective that uses minibatches actually solves a **lower bound on the original objective**.

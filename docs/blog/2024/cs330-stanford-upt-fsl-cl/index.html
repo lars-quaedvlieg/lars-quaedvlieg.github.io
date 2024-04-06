@@ -361,8 +361,10 @@ depicted in the figure on the right.</p>
 
 <p>This approach was taken in <d-cite key="sohn2016improved"></d-cite> and <d-cite key="chen2020simple"></d-cite>, but in practice people often use a slight modification of this loss function, which is shown below:</p>
 
-\[\displaylines{\mathcal{L}(\theta) = -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-))} \right] \cr
-= \sum_z \left[\exp(-d(z, z^+)) + \log\sum_i\exp(-d(z, z_i^-))\right]\;.}\]
+\[\begin{align*}
+\mathcal{L}(\theta) &amp;= -\sum_z \log \left[ \frac{\exp(-d(z, z^+))}{\sum_i\exp(-d(z, z_i^-))} \right] \\
+&amp;= \sum_z \left[ \exp(-d(z, z^+)) + \log\sum_i\exp(-d(z, z_i^-)) \right]\;.
+\end{align*}\]
 
 <p>This loss is usually preferred, since you really only want to push away negative examples, not the similar one as well. As you can see in the equivalent formula shown above, this is exactly what it is doing.</p>
 
@@ -415,8 +417,10 @@ leads to longer needed training (more than 600 epochs) in order to get a good pe
 
 <p>We will rewrite the loss function using a minibatch $\mathcal{B}$ and find a lower bound using <strong>Jensen’s inequality</strong>:</p>
 
-\[\displaylines{\exp(-d(z, z^+)) + \log\sum_n\exp(-d(z, z_n^-)) \cr
-\geq\exp(-d(z, z^+)) + \sum_{\mathcal{B}} \log\sum_{n \in \mathcal{B}}\exp(-d(z, z_n^-))\;.}\]
+\[\begin{align*}
+&amp; \exp(-d(z, z^+)) + \log\sum_n\exp(-d(z, z_n^-)) \\
+\geq \: &amp;\exp(-d(z, z^+)) + \sum_{\mathcal{B}} \log\sum_{n \in \mathcal{B}}\exp(-d(z, z_n^-))\;.
+\end{align*}\]
 
 <p>This shows that our training objective that uses minibatches actually solves a <strong>lower bound on the original objective</strong>.
 This means that we might not actually be minimizing our original objective. However, the larger the batch size, the 

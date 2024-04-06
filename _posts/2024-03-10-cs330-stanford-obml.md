@@ -117,9 +117,10 @@ If we expand $\nabla_\theta \mathcal{L}(\phi_i, \mathcal{D}_i^\mathrm{test})$, w
 show this below:
 
 $$
-\displaylines{\nabla_\theta\mathcal{L}(\phi_i, \mathcal{D}_i^\mathrm{test}) \cr
-= \nabla_{\bar{\phi}}\mathcal{L}(\bar{\phi}, \mathcal{D}_i^\mathrm{test})\vert_{\bar{\phi} = \phi_i} \frac{\partial\phi_i}{\partial\theta} \cr
-= \nabla_{\bar{\phi}}\mathcal{L}(\bar{\phi}, \mathcal{D}_i^\mathrm{test})\vert_{\bar{\phi} = \phi_i}\left(I - \alpha \nabla^2_\theta\mathcal{L}(\theta, \mathcal{D}^\mathrm{tr}_i)\right)\;.}
+\begin{align*}
+\nabla_\theta\mathcal{L}(\phi_i, \mathcal{D}_i^\mathrm{test}) &= \nabla_{\bar{\phi}}\mathcal{L}(\bar{\phi}, \mathcal{D}_i^\mathrm{test})\bigg|_{\bar{\phi} = \phi_i} \frac{\partial\phi_i}{\partial\theta} \\
+&= \nabla_{\bar{\phi}}\mathcal{L}(\bar{\phi}, \mathcal{D}_i^\mathrm{test})\bigg|_{\bar{\phi} = \phi_i}\left(I - \alpha \nabla^2_\theta\mathcal{L}(\theta, \mathcal{D}^\mathrm{tr}_i)\right)\;.
+\end{align*}
 $$
 
 <p>Unfortunately, we can see the Hessian $\nabla^2_\theta\mathcal{L}(\theta, \mathcal{D}^\mathrm{tr}_i)$. We would have to
@@ -128,9 +129,11 @@ is a row vector. Due to Hessian-vector products, we can compute $\nabla_\theta\m
 without computing the whole Hessian. Let’s show this below:</p>
 
 $$
-\displaylines{g(x + \Delta x) \approxeq g(x) + H(x)\Delta x \cr
-g(x + rv) \approxeq g(x) + rH(x)v \cr
-H(x)v \approxeq \frac{g(x+rv) - g(x)}{r}\;.}
+\begin{align*}
+g(x + \Delta x) &\approx g(x) + H(x)\Delta x \\
+g(x + rv) &\approx g(x) + rH(x)v \\
+H(x)v &\approx \frac{g(x+rv) - g(x)}{r}\;.
+\end{align*}
 $$
 
 In the first line, we are using a simple Taylor expansion to approximate the function $g(x+\Delta x)$, which is the 
