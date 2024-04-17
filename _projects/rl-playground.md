@@ -7,5 +7,5 @@ img: assets/img/rl-playground.png
 redirect: /RL-Playground/
 importance: 100
 github: https://github.com/lars-quaedvlieg/RL-Playground
-category: Educational
+category: Development
 ---

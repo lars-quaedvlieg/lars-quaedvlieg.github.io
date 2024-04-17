@@ -6,5 +6,5 @@ description: For the LauzHack Sustainability 2023 hackathon. Campus sustainabili
 img: assets/img/lauzhack-sus.png
 redirect: https://arvind6599.github.io/Lauzhack4sus/
 importance: 99
-category: Educational
+category: Development
 ---
