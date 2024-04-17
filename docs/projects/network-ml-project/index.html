@@ -9,23 +9,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Optimizing Job Allocation using Reinforcement Learning with Graph Neural Networks | Lars C.P.M. Quaedvlieg</title>
+    <title>Chess ratings: Leveraging Network Methods to Predict Chess Results | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="This project uses reinforcement learning and graph neural networks to schedule job assignments." />
+    <meta name="description" content="We address the problem of estimating chess player ratings and match outcome prediction by leveraging network approaches based on their past games and results." />
 
     <!-- OpenGraph -->
     <meta property="og:site_name" content="Lars C.P.M. Quaedvlieg" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Lars C.P.M. Quaedvlieg | Optimizing Job Allocation using Reinforcement Learning with Graph Neural Networks" />
-    <meta property="og:url" content="http://localhost:4000/projects/lions-scheduling/" />
-    <meta property="og:description" content="This project uses reinforcement learning and graph neural networks to schedule job assignments." />
+    <meta property="og:title" content="Lars C.P.M. Quaedvlieg | Chess ratings: Leveraging Network Methods to Predict Chess Results" />
+    <meta property="og:url" content="http://localhost:4000/projects/network-ml-project/" />
+    <meta property="og:description" content="We address the problem of estimating chess player ratings and match outcome prediction by leveraging network approaches based on their past games and results." />
     <meta property="og:image" content="/assets/img/profile.png" />
     <meta property="og:locale" content="en" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Optimizing Job Allocation using Reinforcement Learning with Graph Neural Networks" />
-    <meta name="twitter:description" content="This project uses reinforcement learning and graph neural networks to schedule job assignments." />
+    <meta name="twitter:title" content="Chess ratings: Leveraging Network Methods to Predict Chess Results" />
+    <meta name="twitter:description" content="We address the problem of estimating chess player ratings and match outcome prediction by leveraging network approaches based on their past games and results." />
     <meta name="twitter:image" content="/assets/img/profile.png" />
     <meta name="twitter:site" content="@lars_quaedvlieg" />
     <meta name="twitter:creator" content="@lars_quaedvlieg" />
@@ -48,7 +48,7 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="http://localhost:4000/projects/lions-scheduling/">
+    <link rel="canonical" href="http://localhost:4000/projects/network-ml-project/">
     
     <!-- Dark Mode -->
     
@@ -115,44 +115,45 @@
         <div class="post">
 
           <header class="post-header">
-            <h1 class="post-title">Optimizing Job Allocation using Reinforcement Learning with Graph Neural Networks</h1>
+            <h1 class="post-title">Chess ratings: Leveraging Network Methods to Predict Chess Results</h1>
             
-            <p><b>Authors: Lars. C.P.M. Quaedvlieg</b></p>
+            <p><b>Authors: Lars C.P.M. Quaedvlieg, Lazar Milikic</b></p>
             
             
-            <p class="post-description">This project uses reinforcement learning and graph neural networks to schedule job assignments.</p>
+            <p class="post-description">We address the problem of estimating chess player ratings and match outcome prediction by leveraging network approaches based on their past games and results.</p>
           </header>
 
           <article>
-            <p>I am happy to share that, for this research project, I joined the <a href="https://www.epfl.ch/labs/lions/" target="_blank" rel="noopener noreferrer">Laboratory for Information and Inference Systems</a> 
-during the Spring 2023 semester. My work, supervised by <a href="https://people.epfl.ch/grigorios.chrysos" target="_blank" rel="noopener noreferrer">Grigorios Chrysos</a>
-and <a href="https://www.epfl.ch/labs/lions/people/postdocs/efstratios-stratis-skoulakis/" target="_blank" rel="noopener noreferrer">Stratis Skoulakis</a>, is on the
-use of graph neural networks and reinforcement learning for scheduling problems. More specifically, we will focus on a job
-assignment problem for hospitals.</p>
+            <p>This project was done for the EE-452 Network machine learning course at EPFL in Fall 2023.</p>
 
-<p>Efficient job allocation is a critical factor in various domains such as healthcare, logistics, and manufacturing, as
-it optimizes resource utilization and ensures timely task completion. This report introduces and investigates the Job 
-Allocation Problem (JAP), which involves assigning a maximum number of jobs to available resources while considering
-multiple constraints.</p>
+<p>In our final project for EE-452, we focused on <strong>estimating chess player ratings and predicting match outcomes by applying 
+network methods to historical game data</strong>. We proposed a rank regression framework that not only <em>predicts match outcomes</em> 
+based on input features but also <em>learns the player ratings implicitly</em>. Our approach included the use of hand-crafted 
+features and graph neural networks (GNNs) to learn embeddings, which were then used to train the regression model.</p>
 
-<p>The contributions of this project are twofold. Firstly, it showcases the effectiveness of Reinforcement Learning (RL) in overcoming the 
-challenges posed by annotated data requirements, providing a practical and scalable approach to job allocation. By
-directly learning from simulations, the model demonstrates the ability to allocate jobs effectively without extensive
-manual labeling, thus enhancing efficiency.</p>
+<p>We evaluated the performance of our models on a dataset consisting of 65,053 games played over 100 months among 
+approximately 7,000 players, structured into a network graph where each player is a node and each game is a directed 
+edge with attributes indicating the game’s outcome and timing. Our analyses revealed several network properties, 
+including a <em>heavy-tailed degree distribution</em> and a <em>scale-free nature</em>, suggesting non-random connections and <em>strong 
+community structures</em> within the network.</p>
 
-<p>Secondly, the utilization of GNNs allows the model to leverage the inherent graph structure of the JAP. This approach 
-builds upon previous research where GNNs have shown promising results in solving combinatorial optimization problems.</p>
+<p>We compared our network with standard network models like Erdős-Rényi, Watts-Strogatz, and Barabási-Albert, finding 
+that none perfectly matched the characteristics of our chess games network. We also experimented with various node properties
+and community detection methods to understand their predictive power on match outcomes and player ratings.</p>
 
-<p>Experimental evaluations conducted on both real-world and synthetic datasets validate the effectiveness of the proposed
-approach. The model’s superior performance over baseline algorithms highlights its potential for enhancing job 
-allocation in various domains. Furthermore, out-of-distribution testing reveals the model’s generalizability, 
-showcasing its ability to handle diverse scenarios beyond the training data.</p>
+<p>Our experiments included developing a baseline model using hand-crafted features and advancing to more sophisticated
+models using <strong>unsupervised node embeddings</strong> and an <strong>end-to-end GNN approach</strong>. We incorporated various regularization techniques
+to prevent overfitting and to account for the temporal dynamics of player performance.</p>
 
-<p>The final report has been embedded below. It goes into detail about the problem, our approach, other related research,
-and experiments.</p>
+<p>The success of this project underscores the potential of network-based approaches in predictive analytics for chess and similar
+domains where historical performance data can be structured as a network. We conclude that leveraging network properties 
+through carefully designed features and advanced modeling techniques can provide significant insights and predictive power
+in rating systems.</p>
 
-<style> .pdf-embed-wrap-3e466cce-145b-48ed-bc21-0512e8d40681 { display: flex; flex-direction: column; width: 100%; height: 1030px; } .pdf-embed-container-3e466cce-145b-48ed-bc21-0512e8d40681 { height: 100%; } .pdf-embed-container-3e466cce-145b-48ed-bc21-0512e8d40681 iframe { width: 100%; height: 100%; } </style>
-<div class="pdf-embed-wrap-3e466cce-145b-48ed-bc21-0512e8d40681"> <div class="pdf-embed-container-3e466cce-145b-48ed-bc21-0512e8d40681"> <iframe src="/assets/pdf/ml_semester_project.pdf" frameborder="0" allowfullscreen=""></iframe> </div> </div>
+<p>Please see the report below for more information:</p>
+
+<style> .pdf-embed-wrap-424f3897-de3c-4756-b091-a5b93cfef282 { display: flex; flex-direction: column; width: 100%; height: 1030px; } .pdf-embed-container-424f3897-de3c-4756-b091-a5b93cfef282 { height: 100%; } .pdf-embed-container-424f3897-de3c-4756-b091-a5b93cfef282 iframe { width: 100%; height: 100%; } </style>
+<div class="pdf-embed-wrap-424f3897-de3c-4756-b091-a5b93cfef282"> <div class="pdf-embed-container-424f3897-de3c-4756-b091-a5b93cfef282"> <iframe src="/assets/pdf/network_ml_project.pdf" frameborder="0" allowfullscreen=""></iframe> </div> </div>
 
           </article>
 
