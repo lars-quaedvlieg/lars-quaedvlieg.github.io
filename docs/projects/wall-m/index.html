@@ -2,30 +2,30 @@
 <html lang="en">
 
   <!-- Head -->
-  <head>    <!-- Metadata, OpenGraph and Schema.org -->
+  <head><meta http-equiv="refresh" content="3; url=/" />    <!-- Metadata, OpenGraph and Schema.org -->
     
 
     <!-- Standard metadata -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Strategic Dominion: AI-Powered Risk Conquest | Lars C.P.M. Quaedvlieg</title>
+    <title>WALL-M | Lars C.P.M. Quaedvlieg</title>
     <meta name="author" content="Lars C.P.M. Quaedvlieg" />
-    <meta name="description" content="Strategic Dominion is a project where we used the power of machine learning to develop agents for the classic game of Risk, enabling intelligent AI bots to engage in strategic conquests." />
+    <meta name="description" content="<b>First place @ HackUPC 2024</b><br>Bringing structure to your e-mail inbox filled with personalized unstructured data and helping you communicate with it using RAG and hybrid search with minimal hallucinations." />
 
     <!-- OpenGraph -->
     <meta property="og:site_name" content="Lars C.P.M. Quaedvlieg" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Lars C.P.M. Quaedvlieg | Strategic Dominion: AI-Powered Risk Conquest" />
-    <meta property="og:url" content="http://localhost:4000/projects/risk-game/" />
-    <meta property="og:description" content="Strategic Dominion is a project where we used the power of machine learning to develop agents for the classic game of Risk, enabling intelligent AI bots to engage in strategic conquests." />
+    <meta property="og:title" content="Lars C.P.M. Quaedvlieg | WALL-M" />
+    <meta property="og:url" content="http://localhost:4000/projects/wall-m/" />
+    <meta property="og:description" content="<b>First place @ HackUPC 2024</b><br>Bringing structure to your e-mail inbox filled with personalized unstructured data and helping you communicate with it using RAG and hybrid search with minimal hallucinations." />
     <meta property="og:image" content="/assets/img/profile.png" />
     <meta property="og:locale" content="en" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Strategic Dominion: AI-Powered Risk Conquest" />
-    <meta name="twitter:description" content="Strategic Dominion is a project where we used the power of machine learning to develop agents for the classic game of Risk, enabling intelligent AI bots to engage in strategic conquests." />
+    <meta name="twitter:title" content="WALL-M" />
+    <meta name="twitter:description" content="<b>First place @ HackUPC 2024</b><br>Bringing structure to your e-mail inbox filled with personalized unstructured data and helping you communicate with it using RAG and hybrid search with minimal hallucinations." />
     <meta name="twitter:image" content="/assets/img/profile.png" />
     <meta name="twitter:site" content="@lars_quaedvlieg" />
     <meta name="twitter:creator" content="@lars_quaedvlieg" />
@@ -48,7 +48,7 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="http://localhost:4000/projects/risk-game/">
+    <link rel="canonical" href="http://localhost:4000/projects/wall-m/">
     
     <!-- Dark Mode -->
     
@@ -115,80 +115,14 @@
         <div class="post">
 
           <header class="post-header">
-            <h1 class="post-title">Strategic Dominion: AI-Powered Risk Conquest</h1>
-            
-            <p><b>Authors: Lars C.P.M. Quaedvlieg, Ramon Reszat, Joan Botzev, Daniel Roder, Michael Balzer, Sree Kotala</b></p>
+            <h1 class="post-title">WALL-M</h1>
             
             
-            <p class="post-description">Strategic Dominion is a project where we used the power of machine learning to develop agents for the classic game of Risk, enabling intelligent AI bots to engage in strategic conquests.</p>
+            <p class="post-description"><b>First place @ HackUPC 2024</b><br>Bringing structure to your e-mail inbox filled with personalized unstructured data and helping you communicate with it using RAG and hybrid search with minimal hallucinations.</p>
           </header>
 
           <article>
-            <p>This is group project was completed in Fall 2021 for the Project 2-1 course at my bachelor’s <a href="https://www.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence/courses-curriculum" target="_blank" rel="noopener noreferrer">Data Science and Artificial Intelligence</a>
-at Maastricht University.</p>
-
-<h2 id="phase-1-developing-the-game">Phase 1: Developing the Game</h2>
-
-<p>In the first phase of the project, we spent our time developing the game in Java and laying out the backbone for the game-playing
-agents. We utilized many useful design patterns to make sure the game mechanics, the bot, and the user-interface were mainly
-disconnected and could be developed simultaneously.</p>
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <div class="text-center">
-            <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/phase1-risk.gif" class="center img-fluid rounded z-depth-1" width="auto" height="auto" title="Example of the solution" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-        </div>
-    </div>
-</div>
-<div class="caption">
-    This GIF shows an example of the product at the end of this phase.
-</div>
-
-<h2 id="phase-2-and-3">Phase 2 and 3:</h2>
-
-<p>The remaining two phases were spent both on an improved user-interface and the development of two bot players. For the bots,
-we used Double Deep Q-Learning in order to estimate the Q-values of certain actions. Since the game is very stochastic, partially observable, and multi-agent, some assumptions
-had to be made in order to make developing a bot feasible. Instead of being concerned with global actions, the agent 
-learned, for example, the number of troops to choose for an attack. This is still useful for the bot while playing the game, but
-simplifies the state and action spaces dramatically.</p>
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        <div class="text-center">
-            <figure>
-
-  <picture>
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/phase2-risk.gif" class="center img-fluid rounded z-depth-1" width="auto" height="auto" title="Example of the solution" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
-
-  </picture>
-
-</figure>
-
-        </div>
-    </div>
-</div>
-<div class="caption">
-    This GIF shows an example of the final product.
-</div>
-
-<p>If you are interested in the details of the project, the final report for this project is attached below!</p>
-
-<style> .pdf-embed-wrap-b53f77c2-48ee-434c-b6e1-f1c49e10696b { display: flex; flex-direction: column; width: 100%; height: 1030px; } .pdf-embed-container-b53f77c2-48ee-434c-b6e1-f1c49e10696b { height: 100%; } .pdf-embed-container-b53f77c2-48ee-434c-b6e1-f1c49e10696b iframe { width: 100%; height: 100%; } </style>
-<div class="pdf-embed-wrap-b53f77c2-48ee-434c-b6e1-f1c49e10696b"> <div class="pdf-embed-container-b53f77c2-48ee-434c-b6e1-f1c49e10696b"> <iframe src="/assets/pdf/dke_project21.pdf" frameborder="0" allowfullscreen=""></iframe> </div> </div>
+            
 
           </article>
 
