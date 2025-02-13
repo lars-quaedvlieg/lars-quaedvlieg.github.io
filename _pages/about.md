@@ -4,7 +4,7 @@ layout: about
 title: About
 permalink: /
 nav_order: 0
-subtitle: "<b>MSc Student in Data Science @ <a href='https://www.epfl.ch/education/master/programs/data-science/'>EPFL</a> || Research Scholar @ <a href='https://www.epfl.ch/labs/claire/'>CLAIRE</a> || Ex Research Intern @ <a href='https://www.instadeep.com/'>InstaDeep</a></b>"
+subtitle: "<img style='width:4vw; min-width:80px; max-width:100px; margin-right:10px;' src='assets/img/meta-logo.png'/><img style='width:4vw; min-width:80px; max-width:100px;' src='assets/img/epfl-logo.png'/>"
 
 profile:
   align: right
@@ -18,23 +18,22 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-<b>Research interests:</b> Foundation Models, Sequential Decision-Making, Multi-Task Learning, AI4Math.
+<b>Research interests:</b> Foundation Models, Sequential Decision-Making, Multi-Task Learning, AI for Science.
 
-Welcome to my personal website! I am currently pursuing an MSc in Data Science at the [École Polytechnique Fédérale de Lausanne](https://www.epfl.ch/education/master/programs/data-science/), 
-where I serve as a **[Research Scholar Assistant](https://www.epfl.ch/schools/ic/education/master/research-scholars/)** in the [Caglar Gulcehre Lab for AI Research](https://www.epfl.ch/labs/claire/). Additionally, I am honored to 
-be a recipient of the **[EPFL Excellence Fellowship](https://www.epfl.ch/education/master/master-excellence-fellowships/)**. My ongoing research projects are centered around foundational models 
-and reinforcement learning, specifically targeting **AI4Math** and **Sequential Decision-Making**. Earlier this year, 
-I completed a research internship at [InstaDeep](https://www.instadeep.com/).
+I will be starting as a **Research Scientist intern** at [Meta (FAIR)](https://ai.meta.com/research/) in London from June onwards! Currently, I am wrapping 
+up my MSc in Data Science at [EPFL](https://www.epfl.ch/education/master/programs/data-science/), where I work as a [Research Assistant](https://www.epfl.ch/schools/ic/education/master/research-scholars/) in the 
+[Caglar Gulcehre Lab for AI Research](https://www.epfl.ch/labs/claire/). I am also honored to be a recipient of the 
+[EPFL Excellence Fellowship](https://www.epfl.ch/education/master/master-excellence-fellowships/). My ongoing research projects are centered around foundation models 
+and reinforcement learning, specifically targeting **AI4Math** and **LLM Reasoning**.
 
-I have had the opportunity to explore a variety of research areas and participate in numerous extracurricular 
-activities. Below, I have created an interactive timeline to share some of these experiences. I invite you to navigate through 
+Below, I have created an interactive timeline to share some of my experiences. I invite you to navigate through 
 it and click on any activity that captures your interest for more information. For further details, please feel free to 
 explore the [publications](/publications/) and [projects](/projects/) pages!
 
 <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
 <script src="assets/js/timeline/timeline.js"></script>
 
-<div id='timeline-embed' style="width: 100%; height: 600px"></div>
+<div id='timeline-embed' style="width: 100%; height: 400px"></div>
 
 <script type="text/javascript">
     var additionalOptions = {
@@ -51,8 +50,5 @@ explore the [publications](/publications/) and [projects](/projects/) pages!
 
 When I'm not doing research or working on my projects, you can find me skiing down slopes ⛷, swimming in mountain lakes 🏖️,
 exploring scenic hiking trails 🥾🏞️, or playing field hockey 🏑. 
-
-Thank you for visiting my website! I welcome collaboration and invite you to reach out (see the icons below), 
-whether you have ideas for impactful projects, opportunities for partnership, or simply want to connect!
 
 [//]: # (Link to your social media connections, too. This theme is set up to use [Font Awesome icons]&#40;http://fortawesome.github.io/Font-Awesome/&#41; and [Academicons]&#40;https://jpswalsh.github.io/academicons/&#41;, like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.)

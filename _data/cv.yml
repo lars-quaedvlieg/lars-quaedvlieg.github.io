@@ -2,11 +2,9 @@
   type: map
   contents:
     - name: Full Name
-      value: Lars Chris Peter Maria Quaedvlieg
+      value: Lars Quaedvlieg
     - name: Title
-      value: Research Intern & Research Assistant
-    - name: Date of Birth
-      value: 15th October 2001
+      value: Research Scientist Intern & Research Assistant
     - name: Languages
       value: English (C2), Dutch (C2), German (B1), French (A2)
     - name: Programming Languages
@@ -26,10 +24,9 @@
 - title: Research Interests
   type: list
   contents:
-    - Foundation Models - (specifically for Sequential Decision-Making)
-    - Large Language Models
-    - Deep Reinforcement Learning
-    - Multi-Task Learning
+    - Foundation Models
+    - Reinforcement Learning
+    - AI for Science
 
 - title: Education
   type: time_table
@@ -160,12 +157,12 @@
       description:
         - Tutoring and hosting group exam-preparation sessions for undergraduate students in computer science- and mathematics-related topics
 
-- title: References
-  type: list
-  contents:
-    - <b><a href="https://scholar.google.com/citations?user=cxRqeVwAAAAJ">Prof. Dr. Karl Tuyls</a></b>       |  Google DeepMind & University of Liverpool
-    - <b><a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ">Dr. Stratis Skoulakis</a></b> |  EPFL
-    - <b><a href="https://scholar.google.com/citations?user=3TofHnIAAAAJ">Prof. Dr. Gerhard B. Weiss</a></b> |  Maastricht University
-    - <b><a href="https://scholar.google.com/citations?user=OxPUGmwAAAAJ">Prof. Dr. Frank Thuijsman</a></b>  |  Maastricht University
-    - <b><a href="https://scholar.google.com/citations?user=57dQcbgAAAAJ">Prof. Dr. Rico Möckel</a></b> | Maastricht University
-    - <b><a href="https://scholar.google.com/citations?user=4PexEGMAAAAJ">Prof. Dr. Mirela Popa</a></b> | Maastricht University
+#- title: References
+#  type: list
+#  contents:
+#    - <b><a href="https://scholar.google.com/citations?user=cxRqeVwAAAAJ">Prof. Dr. Karl Tuyls</a></b>       |  Google DeepMind & University of Liverpool
+#    - <b><a href="https://scholar.google.com/citations?user=Juo2Tk8AAAAJ">Dr. Stratis Skoulakis</a></b> |  EPFL
+#    - <b><a href="https://scholar.google.com/citations?user=3TofHnIAAAAJ">Prof. Dr. Gerhard B. Weiss</a></b> |  Maastricht University
+#    - <b><a href="https://scholar.google.com/citations?user=OxPUGmwAAAAJ">Prof. Dr. Frank Thuijsman</a></b>  |  Maastricht University
+#    - <b><a href="https://scholar.google.com/citations?user=57dQcbgAAAAJ">Prof. Dr. Rico Möckel</a></b> | Maastricht University
+#    - <b><a href="https://scholar.google.com/citations?user=4PexEGMAAAAJ">Prof. Dr. Mirela Popa</a></b> | Maastricht University
