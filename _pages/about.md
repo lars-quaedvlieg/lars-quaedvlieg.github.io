@@ -2,10 +2,10 @@
 layout: about
 title: About
 permalink: /
-subtitle: "<b>Research Scientist Intern @ Meta</b> & MSc Data Science @ EPFL"
+subtitle: "<b>Member of Technical Staff @ Jump Trading</b> & MSc Data Science @ EPFL"
 
 header_logos: |
-  <img style='width: clamp(80px, 10vw, 120px); height: auto; margin-right:15px; vertical-align:bottom; transform: translateY(7px);' src='assets/img/meta-logo.png'/><img style='width: clamp(80px, 3.75vw, 120px); height: auto; margin-right:10px; vertical-align:bottom; transform: translateY(8px)' src='assets/img/epfl-logo.png'/>
+  <img style='width: clamp(60px, 4vw, 90px); height: auto; margin-right:15px; vertical-align:bottom; transform: translateY(7px);' src='assets/img/jump-trading-logo.jpg'/><img style='width: clamp(80px, 10vw, 120px); height: auto; margin-right:15px; vertical-align:bottom; transform: translateY(7px);' src='assets/img/meta-logo.png'/><img style='width: clamp(80px, 3.75vw, 120px); height: auto; margin-right:10px; vertical-align:bottom; transform: translateY(8px)' src='assets/img/epfl-logo.png'/>
 
 profile:
   align: right
@@ -30,7 +30,7 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am currently a **Research Scientist intern** in the <i>Core Learning & Reasoning</i> team at [Meta](https://ai.meta.com/research/). I recently finished my MSc in Data Science at [EPFL](https://www.epfl.ch/education/master/programs/data-science/), where I worked as a [Research Assistant](https://www.epfl.ch/schools/ic/education/master/research-scholars/) in the 
+Starting in January 2026, I will be joining [Jump Trading](https://www.jumptrading.com/) as a **Member of Technical Staff (AI Researcher)**. I was previously a **Research Scientist intern** in the <i>Core Learning & Reasoning</i> pilar at [Meta](https://ai.meta.com/research/) FAIR. I finished my MSc in Data Science at [EPFL](https://www.epfl.ch/education/master/programs/data-science/), where I worked as a [Research Assistant](https://www.epfl.ch/schools/ic/education/master/research-scholars/) in the 
 [Caglar Gulcehre Lab for AI Research](https://www.epfl.ch/labs/claire/). I am also a recipient of the 
 [EPFL Excellence Fellowship](https://www.epfl.ch/education/master/master-excellence-fellowships/). My research is focused on foundation models and reinforcement learning, specifically, **evolutionary search with LLMs** and **AI4Math**.
 

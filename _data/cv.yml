@@ -4,7 +4,7 @@
     - name: Full Name
       value: Lars Quaedvlieg
     - name: Title
-      value: Research Scientist Intern & Research Assistant
+      value: Member of Technical Staff @ Jump Trading & Research Scientist Intern & Research Assistant
     - name: Languages
       value: English (C2), Dutch (C2), German (B1), French (A2)
     - name: Programming Languages
@@ -60,6 +60,12 @@
 - title: Experience
   type: time_table
   contents:
+    - title: Member of Technical Staff (AI Researcher)
+      institution: <a href="https://www.jumptrading.com/">Jump Trading</a> - London, United Kingdom
+      year: Jan '26 - Present
+      description:
+        - '<b>Skills:</b> AI Research, Machine Learning, Algorithm Development'
+        - Joining Jump Trading as a Member of Technical Staff in AI Research starting in January 2026
     - title: Research Assistant
       institution: Caglar Gulcehre Lab for AI Research @ EPFL - Lausanne, Switzerland
       year: Oct '23 - Present

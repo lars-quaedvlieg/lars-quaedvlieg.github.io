@@ -1,10 +1,10 @@
 {
   "basics": {
     "name": "Lars Quaedvlieg",
-    "label": "Research Scientist Intern",
+    "label": "Member of Technical Staff (AI Researcher) @ Jump Trading",
     "image": "",
     "phone": "",
-    "summary": "Research Scientist Intern at Meta with expertise in Foundation Models, Reinforcement Learning, and AI for Science",
+    "summary": "Currently at Jump Trading! Previously Research Scientist Intern at Meta with expertise in Foundation Models, Reinforcement Learning, and AI for Science",
     "location": {
       "city": "London",
       "countryCode": "GB",
@@ -19,6 +19,15 @@
       ]
   },
   "work": [
+    {
+      "name": "Jump Trading",
+      "position": "Member of Technical Staff (AI Researcher)",
+      "url": "https://www.jumptrading.com/",
+      "startDate": "2026-01-01",
+      "endDate": "present",
+      "summary": "AI Research role at Jump Trading",
+      "highlights": ["AI Research", "Machine Learning", "Algorithm Development"]
+    },
     {
       "name": "Caglar Gulcehre Lab for AI Research @ EPFL",
       "position": "Research Assistant",
