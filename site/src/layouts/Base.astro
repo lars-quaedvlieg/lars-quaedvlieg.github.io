@@ -15,9 +15,11 @@ interface Props {
   ogImage?: string;
   /** Full-bleed page: the page manages its own widths/padding (used by the homepage hero). */
   full?: boolean;
+  /** Render the evolutionary-search field. Off on long-read pages (blog posts, project pages). */
+  field?: boolean;
 }
 
-const { title, description = SITE.description, ogImage, full = false } = Astro.props;
+const { title, description = SITE.description, ogImage, full = false, field = true } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.name}` : SITE.name;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -120,7 +122,7 @@ const isActive = (href: string) => {
     </header>
 
     <main class="relative w-full flex-1">
-      <EvolutionField />
+      {field && <EvolutionField />}
       <div class:list={['relative z-10', !full && 'mx-auto w-full max-w-5xl px-4 py-10 sm:px-6']}>
         <slot />
       </div>

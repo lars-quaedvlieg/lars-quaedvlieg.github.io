@@ -17,7 +17,7 @@ const toc = headings.filter((h) => h.depth <= 3);
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
-<Base title={post.data.title} description={post.data.description} ogImage={post.data.ogImage}>
+<Base title={post.data.title} description={post.data.description} ogImage={post.data.ogImage} field={false}>
   <div class="mx-auto flex max-w-6xl gap-10">
     <article class="mx-auto min-w-0 max-w-3xl flex-1" data-evo-block>
       <a href={withBase('/blog')} class="text-sm font-medium text-accent-700 hover:underline dark:text-accent-400">← All posts</a>

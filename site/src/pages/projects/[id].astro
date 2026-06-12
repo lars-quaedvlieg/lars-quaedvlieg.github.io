@@ -13,7 +13,7 @@ const { Content } = await render(project);
 const { title, description, authors, img, developedDate } = project.data;
 ---
 
-<Base title={title} description={description} ogImage={img}>
+<Base title={title} description={description} ogImage={img} field={false}>
   <article class="mx-auto max-w-3xl" data-evo-block>
     <a href={withBase('/projects')} class="text-sm font-medium text-accent-700 hover:underline dark:text-accent-400">← All projects</a>
     <h1 class="mt-4 font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">{title}</h1>
