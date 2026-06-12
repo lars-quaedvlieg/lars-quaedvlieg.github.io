@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 2: Transfer Learning and Meta-Learning"
 description: "This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to learn how to transfer knowledge from one task to another, discuss what it means for two tasks to share a common structure, and start thinking about meta learning."
 date: "2024-03-03"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ---

@@ -4,6 +4,7 @@ description: "<b>First place @ HackUPC 2024</b><br>Bringing structure to your e-
 img: "/assets/img/wall-m.jpg"
 importance: 99
 category: "Development"
+developedDate: "2024-05-12 00:00:00-0000"
 redirect: "https://devpost.com/software/wall-m"
 visible: true
 ---

@@ -19,71 +19,119 @@ interface CvSection {
 }
 
 const cv = yaml.load(fs.readFileSync(path.join(process.cwd(), 'src/data/cv.yml'), 'utf-8')) as CvSection[];
+
+// The "General Information" map becomes the side rail; everything else is a
+// numbered editorial section, in the order it appears in cv.yml.
+const general = cv.find((s) => s.type === 'map');
+const sections = cv.filter((s) => s !== general);
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
 
 <Base title="CV" description="Curriculum vitae of Lars Quaedvlieg">
-  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100" data-evo-block>Curriculum vitae</h1>
+  <div class="grid grid-cols-1 gap-10 lg:grid-cols-[17rem_1fr] lg:gap-14">
+    <!-- ===== Side rail: quick facts + section nav ===== -->
+    <aside class="lg:sticky lg:top-20 lg:self-start" data-evo-block>
+      <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">Curriculum vitae</h1>
 
-  {
-    cv.map((section) => (
-      <section class="mt-12" data-evo-block>
-        <h2 class="font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">{section.title}</h2>
-
-        {section.type === 'map' && (
-          <dl class="mt-4 divide-y divide-ink-100 dark:divide-ink-800">
-            {(section.contents as CvItem[]).map((item) => (
-              <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-[14rem_1fr]">
-                <dt class="text-sm font-semibold text-ink-500 dark:text-ink-400">{item.name}</dt>
-                <dd class="text-sm text-ink-800 dark:text-ink-200" set:html={item.value} />
+      {
+        general && (
+          <dl class="mt-6 space-y-4">
+            {(general.contents as CvItem[]).map((item) => (
+              <div>
+                <dt class="font-mono text-[11px] tracking-[0.2em] text-ink-400 uppercase dark:text-ink-500">{item.name}</dt>
+                <dd class="mt-1 text-sm leading-relaxed text-ink-700 dark:text-ink-200" set:html={item.value} />
               </div>
             ))}
           </dl>
-        )}
+        )
+      }
 
-        {section.type === 'list' && (
-          <ul class="mt-4 flex flex-wrap gap-2">
-            {(section.contents as string[]).map((item) => (
-              <li
-                class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-sm font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300"
-                set:html={item}
-              />
-            ))}
-          </ul>
-        )}
-
-        {section.type === 'time_table' && (
-          <ol class="relative mt-6 ml-3 border-l-2 border-ink-200 dark:border-ink-800">
-            {(section.contents as CvItem[]).map((item) => (
-              <li class="relative mb-8 pl-6 last:mb-0">
-                <span class="absolute top-1.5 -left-[7px] h-3 w-3 rounded-full bg-accent-500 ring-4 ring-white dark:ring-ink-950" />
-                {item.year && <p class="text-xs font-semibold tracking-wide text-ink-400 uppercase dark:text-ink-500">{item.year}</p>}
-                <h3 class="mt-0.5 font-semibold text-ink-900 dark:text-ink-100">{item.title}</h3>
-                {item.institution && <p class="mt-0.5 text-sm text-ink-500 dark:text-ink-400" set:html={item.institution} />}
-                {item.description && (
-                  <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-600 dark:text-ink-400">
-                    {item.description.map((d) =>
-                      typeof d === 'string' ? (
-                        <li set:html={d} />
-                      ) : (
-                        <li>
-                          <span set:html={d.title} />
-                          <ul class="mt-1 list-[circle] space-y-1 pl-5">
-                            {d.contents.map((c) => (
-                              <li set:html={c} />
-                            ))}
-                          </ul>
-                        </li>
-                      )
-                    )}
-                  </ul>
-                )}
+      <nav class="mt-8 hidden border-t border-ink-200 pt-6 lg:block dark:border-ink-800">
+        <ul class="space-y-1.5">
+          {
+            sections.map((section, i) => (
+              <li>
+                <a
+                  href={`#${slug(section.title)}`}
+                  class="group flex items-baseline gap-2 text-sm text-ink-500 transition-colors hover:text-accent-700 dark:text-ink-400 dark:hover:text-accent-400"
+                >
+                  <span class="font-mono text-[11px] text-ink-300 dark:text-ink-600">{num(i)}</span>
+                  <span class="group-hover:underline group-hover:underline-offset-2">{section.title}</span>
+                </a>
               </li>
-            ))}
-          </ol>
-        )}
-      </section>
-    ))
-  }
+            ))
+          }
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ===== Main column: numbered sections ===== -->
+    <div class="min-w-0">
+      {
+        sections.map((section, i) => (
+          <section id={slug(section.title)} class:list={['scroll-mt-24', i > 0 && 'mt-14 border-t border-ink-200 pt-12 dark:border-ink-800']} data-evo-block>
+            <p class="section-eyebrow">
+              {num(i)} / {section.title}
+            </p>
+
+            {section.type === 'list' && (
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {(section.contents as string[]).map((item) => (
+                  <li
+                    class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-sm font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300"
+                    set:html={item}
+                  />
+                ))}
+              </ul>
+            )}
+
+            {section.type === 'time_table' && (
+              <ol class="relative mt-6 ml-1.5 border-l-2 border-ink-200 dark:border-ink-800">
+                {(section.contents as CvItem[]).map((item) => (
+                  <li class="relative mb-9 pl-6 last:mb-0">
+                    <span class="absolute top-1.5 -left-[7px] h-3 w-3 rounded-full bg-accent-500 ring-4 ring-white dark:ring-ink-950" />
+                    {item.year && (
+                      <p class="font-mono text-xs font-semibold tracking-wide text-ink-400 uppercase dark:text-ink-500">{item.year}</p>
+                    )}
+                    <h3 class="mt-1 font-serif text-lg font-semibold text-ink-900 dark:text-ink-100">{item.title}</h3>
+                    {item.institution && <p class="mt-0.5 text-sm text-ink-500 dark:text-ink-400" set:html={item.institution} />}
+                    {item.description && (
+                      <ul class="mt-2.5 space-y-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-400">
+                        {item.description.map((d) =>
+                          typeof d === 'string' ? (
+                            <li class="flex gap-2">
+                              <span class="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-accent-400" />
+                              <span set:html={d} />
+                            </li>
+                          ) : (
+                            <li class="flex gap-2">
+                              <span class="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-accent-400" />
+                              <span>
+                                <span set:html={d.title} />
+                                <ul class="mt-1 space-y-1 pl-4">
+                                  {d.contents.map((c) => (
+                                    <li class="flex gap-2">
+                                      <span class="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-ink-300 dark:bg-ink-600" />
+                                      <span set:html={c} />
+                                    </li>
+                                  ))}
+                                </ul>
+                              </span>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+        ))
+      }
+    </div>
+  </div>
 </Base>
 
 <style>

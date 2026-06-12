@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 7: Unsupervised Pre-Training: Reconstruction-Based Methods"
 description: "This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this post is to introduce to widely-used methods for unsupervised pre-training, which is essential in many fields nowadays, most notably in the development of foundation models. We also introduce methods that help with efficient fine-tuning of pre-trained models!"
 date: "2024-03-19"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ogImage: "/assets/img/blog/cs330/8/transformer.png"

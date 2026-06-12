@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 1: Multi-Task Learning"
 description: "This is the first lecture of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the key design decisions when building multi-task learning systems."
 date: "2024-03-02"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ---

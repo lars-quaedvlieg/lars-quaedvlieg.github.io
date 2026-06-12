@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 5: Few-Shot Learning via Metric Learning"
 description: "This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to to understand the third form of meta learning: non-parametric few-shot learning. We will also compare the three different methods of meta learning. Finally, we give practical examples of meta learning, in domains such as imitation learning, drug discovery, motion prediction, and language generation!"
 date: "2024-03-14"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ogImage: "/assets/img/blog/cs330/6/matching_network.png"

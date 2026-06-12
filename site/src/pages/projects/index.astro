@@ -3,10 +3,19 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
-const projects = (await getCollection('projects', (p) => p.data.visible)).sort(
-  (a, b) => b.data.importance - a.data.importance
-);
-const categories = [...new Set(projects.map((p) => p.data.category))];
+// Reverse chronological; undated projects sink to the end, ranked by importance.
+const projects = (await getCollection('projects', (p) => p.data.visible)).sort((a, b) => {
+  const da = a.data.developedDate?.valueOf() ?? 0;
+  const db = b.data.developedDate?.valueOf() ?? 0;
+  return db - da || b.data.importance - a.data.importance;
+});
+// Fixed section order; anything unlisted lands at the end.
+const CATEGORY_ORDER = ['Research', 'Development'];
+const categories = [...new Set(projects.map((p) => p.data.category))].sort((a, b) => {
+  const ia = CATEGORY_ORDER.indexOf(a);
+  const ib = CATEGORY_ORDER.indexOf(b);
+  return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+});
 ---
 
 <Base title="Projects" description="Research and development projects by Lars Quaedvlieg">

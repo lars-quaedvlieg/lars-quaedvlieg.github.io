@@ -24,6 +24,14 @@
 <div id="evo-field" class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
   <canvas id="evo-canvas" class="absolute inset-0 h-full w-full"></canvas>
 </div>
+<style>
+  /* The landscape dissolves before reaching the header and footer instead of
+     hitting their borders with a hard edge. */
+  #evo-field {
+    mask-image: linear-gradient(to bottom, transparent, black 130px, black calc(100% - 160px), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 130px, black calc(100% - 160px), transparent);
+  }
+</style>
 <button
   id="evo-stats"
   type="button"

@@ -1,6 +1,6 @@
 ---
 date: "2023-07-12 23:00:00-0000"
-display: true
+display: false
 ---
 
 I'm very excited to announce that I will be joining [InstaDeep](https://www.instadeep.com/) in Paris for the upcoming 

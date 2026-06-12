@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 6: Unsupervised Pre-Training: Contrastive Learning"
 description: "This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. The goal of this lecture is to understand the intuition, design choices, and implementation of contrastive learning for unsupervised representation learning. We will also talk about the relationship between contrastive learning and meta learning!"
 date: "2024-03-16"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ogImage: "/assets/img/blog/cs330/7/adv-embed-space.png"

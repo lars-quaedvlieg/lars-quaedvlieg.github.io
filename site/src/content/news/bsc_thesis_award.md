@@ -1,6 +1,6 @@
 ---
 date: "2023-01-27 10:30:00-0000"
-display: true
+display: false
 ---
 
 I am honoured to announce that I have been awarded the [Best Bachelor's Thesis Award 2022](https://www.maastrichtuniversity.nl/lars-quaedvlieg) 

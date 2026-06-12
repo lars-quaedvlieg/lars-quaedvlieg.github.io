@@ -1,6 +1,6 @@
 ---
 date: "2023-05-24 12:00:00-0000"
-display: true
+display: false
 ---
 
 I'm thrilled to share that I've just submitted my first paper to [NeurIPS](https://neurips.cc/)! It has been an amazing

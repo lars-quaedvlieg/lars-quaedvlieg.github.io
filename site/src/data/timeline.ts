@@ -14,7 +14,7 @@ export const TIMELINE: TimelineEntry[] = [
     title: 'Member of Technical Staff (AI Researcher)',
     org: 'Jump Trading',
     orgUrl: 'https://www.jumptrading.com/',
-    description: 'AI research in London, United Kingdom.',
+    description: 'AI research for trading, based in London.',
     type: 'work',
   },
   {
@@ -22,7 +22,8 @@ export const TIMELINE: TimelineEntry[] = [
     title: 'Research Scientist Intern',
     org: 'Meta FAIR',
     orgUrl: 'https://ai.meta.com/research/',
-    description: 'Core Learning & Reasoning pillar.',
+    description:
+      'Learning a distribution of successor features for zero-shot reinforcement learning, on the RL team in the Core Learning & Reasoning pillar.',
     type: 'work',
   },
   {
@@ -31,7 +32,7 @@ export const TIMELINE: TimelineEntry[] = [
     org: 'CLAIRE lab @ EPFL',
     orgUrl: 'https://www.epfl.ch/labs/claire/',
     description:
-      'Research scholar in the Caglar Gulcehre Lab for AI Research: foundation models for decision-making, evolutionary search with LLMs.',
+      'Research scholar in the Caglar Gulcehre Lab for AI Research: evolutionary search with LLMs, AI for math, and in-context reinforcement learning with state space models.',
     type: 'work',
   },
   {
@@ -40,7 +41,7 @@ export const TIMELINE: TimelineEntry[] = [
     org: 'InstaDeep',
     orgUrl: 'https://www.instadeep.com/',
     description:
-      'Pre-trained Transformers on a 1B+ transition offline RL dataset (Atari) for downstream fine-tuning.',
+      'Self-supervised pre-training of transformer agents on expert trajectories (PASTA, RLJ 2024), evaluated across behavioral cloning, offline RL, sensor-failure robustness, and dynamics adaptation.',
     type: 'work',
   },
   {

@@ -10,6 +10,8 @@ const posts = defineCollection({
     categories: z.string().optional(),
     tags: z.string().nullable().optional(),
     ogImage: z.string().optional(),
+    /** Posts sharing a series name are grouped into one collection card on the blog index. */
+    series: z.string().optional(),
   }),
 });
 

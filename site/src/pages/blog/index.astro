@@ -5,7 +5,24 @@ import { SITE, withBase } from '../../lib/site';
 
 const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-const categories = [...new Set(posts.map((p) => p.data.categories).filter(Boolean))];
+const url = (p: (typeof posts)[number]) => withBase(`/blog/${p.id.replace(/\.md$/, '')}`);
+
+// Featured: the newest standalone post (series posts make poor heroes).
+const featured = posts.find((p) => !p.data.series) ?? posts[0];
+
+// Series collections, in reading order (lecture number, then date).
+const lectureNo = (t: string) => Number(t.match(/Lecture (\d+)/)?.[1] ?? 0);
+const seriesNames = [...new Set(posts.map((p) => p.data.series).filter(Boolean))] as string[];
+const series = seriesNames.map((name) => {
+  const items = posts
+    .filter((p) => p.data.series === name)
+    .sort((a, b) => lectureNo(a.data.title) - lectureNo(b.data.title) || a.data.date.valueOf() - b.data.date.valueOf());
+  return { name, items };
+});
+
+// Remaining standalone posts, newest first. They render ABOVE the series
+// collections, so fresh writing never gets buried under old course notes.
+const rest = posts.filter((p) => p !== featured && !p.data.series);
 ---
 
 <Base title="Blog" description={SITE.blogDescription}>
@@ -14,30 +31,108 @@ const categories = [...new Set(posts.map((p) => p.data.categories).filter(Boolea
     <p class="mt-2 max-w-2xl text-ink-500 dark:text-ink-400">{SITE.blogDescription}</p>
   </div>
 
-  <div class="mt-8 space-y-6">
-    {
-      posts.map((post) => (
-        <a
-          href={withBase(`/blog/${post.id.replace(/\.md$/, '')}`)}
-          data-evo-block
-          class="group block rounded-xl border border-ink-200 bg-white/80 p-5 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800 dark:bg-ink-950/80"
-        >
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-ink-400 dark:text-ink-500">
-            <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
-            {post.data.categories && (
-              <span class="rounded-full bg-accent-50 px-2 py-0.5 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300">
-                {post.data.categories}
-              </span>
-            )}
-          </div>
-          <h2 class="mt-2 font-serif text-xl font-semibold text-ink-900 group-hover:text-accent-700 dark:text-ink-100 dark:group-hover:text-accent-400">
-            {post.data.title}
+  <!-- ===== Featured: the latest standalone post ===== -->
+  {
+    featured && (
+      <a
+        href={url(featured)}
+        data-evo-block
+        class="group mt-10 grid grid-cols-1 overflow-hidden rounded-2xl border border-ink-200 bg-white/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg sm:grid-cols-[1fr_18rem] dark:border-ink-800 dark:bg-ink-950/80"
+      >
+        <div class="p-6 sm:p-8">
+          <p class="font-mono text-[11px] tracking-[0.25em] text-accent-700 uppercase dark:text-accent-400">Latest post</p>
+          <h2 class="mt-3 font-serif text-2xl font-bold text-ink-900 group-hover:text-accent-700 sm:text-3xl dark:text-ink-100 dark:group-hover:text-accent-400">
+            {featured.data.title}
           </h2>
-          {post.data.description && (
-            <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{post.data.description}</p>
+          {featured.data.description && (
+            <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{featured.data.description}</p>
           )}
-        </a>
-      ))
-    }
-  </div>
+          <p class="mt-4 text-xs font-medium text-ink-400 dark:text-ink-500">
+            <time datetime={featured.data.date.toISOString()}>{fmt(featured.data.date)}</time>
+            {featured.data.categories && <span> · {featured.data.categories}</span>}
+          </p>
+        </div>
+        {featured.data.ogImage && (
+          <div class="hidden bg-ink-100 sm:block dark:bg-ink-900">
+            <img
+              src={withBase(featured.data.ogImage)}
+              alt=""
+              loading="lazy"
+              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+          </div>
+        )}
+      </a>
+    )
+  }
+
+  <!-- ===== Standalone posts (always above the series archive) ===== -->
+  {
+    rest.length > 0 && (
+      <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {rest.map((post) => (
+          <a
+            href={url(post)}
+            data-evo-block
+            class="group block rounded-xl border border-ink-200 bg-white/80 p-5 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800 dark:bg-ink-950/80"
+          >
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-ink-400 dark:text-ink-500">
+              <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+              {post.data.categories && (
+                <span class="rounded-full bg-accent-50 px-2 py-0.5 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300">
+                  {post.data.categories}
+                </span>
+              )}
+            </div>
+            <h2 class="mt-2 font-serif text-xl font-semibold text-ink-900 group-hover:text-accent-700 dark:text-ink-100 dark:group-hover:text-accent-400">
+              {post.data.title}
+            </h2>
+            {post.data.description && (
+              <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{post.data.description}</p>
+            )}
+          </a>
+        ))}
+      </div>
+    )
+  }
+
+  <!-- ===== Series: grouped collections instead of a wall of lectures ===== -->
+  {
+    series.map(({ name, items }) => (
+      <section
+        data-evo-block
+        class="mt-8 overflow-hidden rounded-2xl border border-ink-200 bg-white/80 backdrop-blur-sm dark:border-ink-800 dark:bg-ink-950/80"
+      >
+        <div class="border-b border-ink-100 p-6 sm:p-8 sm:pb-6 dark:border-ink-800/60">
+          <p class="font-mono text-[11px] tracking-[0.25em] text-accent-700 uppercase dark:text-accent-400">
+            Series · {items.length} parts
+          </p>
+          <h2 class="mt-3 font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">{name}</h2>
+          <p class="mt-2 text-xs font-medium text-ink-400 dark:text-ink-500">
+            {fmt(items[0].data.date)} – {fmt(items[items.length - 1].data.date)}
+          </p>
+        </div>
+        <ol class="divide-y divide-ink-100 dark:divide-ink-800/60">
+          {items.map((post, i) => (
+            <li>
+              <a href={url(post)} class="group flex items-baseline gap-4 px-6 py-3.5 transition-colors hover:bg-accent-50/60 sm:px-8 dark:hover:bg-accent-900/15">
+                <span class="w-6 shrink-0 font-mono text-xs text-ink-300 tabular-nums dark:text-ink-600">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="min-w-0 flex-1 truncate text-sm font-medium text-ink-700 group-hover:text-accent-700 dark:text-ink-200 dark:group-hover:text-accent-400">
+                  {post.data.title.replace(`${name.split(':')[0]}: `, '').replace(/^CS-330 /, '')}
+                </span>
+                <time
+                  datetime={post.data.date.toISOString()}
+                  class="hidden shrink-0 font-mono text-xs text-ink-400 sm:block dark:text-ink-500"
+                >
+                  {fmt(post.data.date)}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
 </Base>

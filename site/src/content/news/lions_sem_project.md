@@ -1,6 +1,6 @@
 ---
 date: "2023-01-28 12:00:00-0000"
-display: true
+display: false
 ---
 
 I am happy to share that I will be joining the [Laboratory for Information and Inference Systems](https://www.epfl.ch/labs/lions/)

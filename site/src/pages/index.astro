@@ -9,8 +9,7 @@ import { loadPublications } from '../lib/bibtex';
 
 const interests = ['Evolutionary Search with LLMs', 'AI for Science', 'Reinforcement Learning'];
 
-// News is currently outdated; flip to true to show the section again.
-const showNews = false;
+const showNews = true;
 const secNum = {
   about: '01',
   news: '02',
@@ -127,10 +126,10 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
                   ))
                 }
               </div>
-              <div class="mt-6 flex items-center gap-4 opacity-70" data-evo-block>
-                <img src={withBase('/assets/img/jump-trading-logo.jpg')} alt="Jump Trading" class="h-7 w-auto rounded" />
-                <img src={withBase('/assets/img/meta-logo.png')} alt="Meta" class="h-5 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
-                <img src={withBase('/assets/img/epfl-logo.png')} alt="EPFL" class="h-4 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+              <div class="mt-6 flex items-center gap-5 opacity-70" data-evo-block>
+                <img src={withBase('/assets/img/jump-trading-logo.jpg')} alt="Jump Trading" class="h-9 w-auto rounded" />
+                <img src={withBase('/assets/img/meta-logo.png')} alt="Meta" class="h-6 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+                <img src={withBase('/assets/img/epfl-logo.png')} alt="EPFL" class="h-5 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
               </div>
             </div>
             <img
@@ -149,20 +148,20 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
             <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-24 md:grid-cols-[16rem_1fr] md:py-20 dark:border-ink-800">
               <div>
                 <div data-evo-block>
-                  <p class="section-eyebrow">{secNum.news} / News</p>
-                  <h2 class="section-title">Lately</h2>
+                  <p class="section-eyebrow">{secNum.news} / Highlights</p>
+                  <h2 class="section-title">A pretty good year</h2>
                 </div>
               </div>
-              <ul class="space-y-5" data-evo-block>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2" data-evo-block>
                 {newsRendered.map(({ date, Content }) => (
-                  <li class="flex gap-5">
-                    <span class="w-20 shrink-0 pt-0.5 font-mono text-xs font-medium text-ink-400 dark:text-ink-500">{fmt(date)}</span>
-                    <div class="prose min-w-0 flex-1 text-[0.95rem] [&_p]:my-0">
+                  <div class="rounded-xl border border-ink-200 bg-white/80 p-4 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800 dark:bg-ink-950/80">
+                    <p class="font-mono text-[11px] tracking-[0.2em] text-accent-700 uppercase dark:text-accent-400">{fmt(date)}</p>
+                    <div class="prose mt-1.5 min-w-0 text-sm leading-relaxed [&_p]:my-0">
                       <Content />
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </section>
           )
         }

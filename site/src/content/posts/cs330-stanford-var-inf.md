@@ -2,6 +2,7 @@
 title: "CS-330 Lecture 8: Variational Inference"
 description: "This lecture is part of the CS-330 Deep Multi-Task and Meta Learning course, taught by Chelsea Finn in Fall 2023 at Stanford. This post will talk about variational inference, which is a way of approximating complex distributions through Bayesian inference. We will go from talking about latent variable models all the way to amortized variational inference!"
 date: "2024-03-30"
+series: "CS-330: Deep Multi-Task and Meta Learning"
 categories: "deep-multi-task-and-meta-learning"
 tags: "course"
 ogImage: "/assets/img/blog/cs330/9/autoencoder.png"
