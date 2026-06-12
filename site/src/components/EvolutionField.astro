@@ -24,18 +24,54 @@
 <div id="evo-field" class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
   <canvas id="evo-canvas" class="absolute inset-0 h-full w-full"></canvas>
 </div>
-<p
+<button
   id="evo-stats"
-  class="pointer-events-none fixed right-3 bottom-2 z-20 font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none dark:text-ink-500/70"
-  aria-hidden="true"
+  type="button"
+  class="fixed right-3 bottom-2 z-20 cursor-help font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none hover:text-accent-600 dark:text-ink-500/70 dark:hover:text-accent-400"
+  aria-expanded="false"
+  aria-controls="evo-about"
 >
   runs 0 · solved 0
-</p>
+</button>
+<aside
+  id="evo-about"
+  hidden
+  class="fixed right-3 bottom-8 z-20 w-72 rounded-xl border border-ink-200 bg-white/95 p-4 text-xs leading-relaxed text-ink-600 shadow-lg backdrop-blur dark:border-ink-800 dark:bg-ink-950/95 dark:text-ink-300"
+>
+  <p class="font-mono text-[10px] tracking-widest text-accent-700 uppercase dark:text-accent-400">you found the search</p>
+  <p class="mt-2">
+    This page is a fitness landscape, and what's crawling over it is <em>evolutionary search</em> — the thing I research.
+    Each colored lineage is an independent run: it samples parents (better programs reproduce more), and an LLM-style
+    operator proposes children, scored by the ground they land on.
+  </p>
+  <ul class="mt-2 space-y-1">
+    <li><span class="mr-1 inline-block h-2 w-2 rounded-full bg-teal-500"></span> improved on its parent</li>
+    <li><span class="mr-1 inline-block h-2 w-2 rounded-full bg-amber-500"></span> worse than its parent</li>
+    <li><span class="mr-1 inline-block h-2 w-2 rounded-full bg-red-500"></span> failed to run at all</li>
+    <li><span class="mr-1 inline-block h-2 w-2 rounded-full border border-yellow-500"></span> champion of its run</li>
+  </ul>
+  <p class="mt-2">
+    Runs converge on a summit — or stagnate on a local optimum — then freeze as artifacts. Your text is sacred ground;
+    your cursor is a fitness peak. Try luring a run somewhere.
+  </p>
+</aside>
 
 <script>
   const field = document.getElementById('evo-field')!;
   const canvas = document.getElementById('evo-canvas') as HTMLCanvasElement;
   const statsEl = document.getElementById('evo-stats')!;
+  const aboutEl = document.getElementById('evo-about')!;
+  statsEl.addEventListener('click', () => {
+    aboutEl.hidden = !aboutEl.hidden;
+    statsEl.setAttribute('aria-expanded', String(!aboutEl.hidden));
+  });
+  console.log(
+    '%cYou found the search.%c\n' +
+      'This site runs island-model evolutionary search over the page as a fitness landscape.\n' +
+      'Text is sacred ground. Your cursor is a fitness peak. The counter bottom-right explains the rest.',
+    'color:#0d9488;font-weight:bold;font-size:14px',
+    'color:inherit'
+  );
   const ctx = canvas.getContext('2d')!;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = window.innerWidth < 640;
@@ -57,7 +93,7 @@
   const PRIOR = 0.5;                     // strength of the toward-target prior
   const STAGNATE_BEATS = 40;             // beats without improvement → local optimum
   const SUMMIT_FRAC = 0.78;              // champion ≥ this × peak amp → solved
-  const ROTATE_AFTER = 600;              // frames all-frozen before oldest is recycled
+  const RECYCLE_COOLDOWN = 180;          // min frames between artifact recycles
   const CLEARANCE = 0.9;                 // peak distance from text, in units of σ
   const STEP = () => (mobile ? 36 : 46) + Math.random() * 30;
   const HUES = [172, 205, 260, 140, 305, 95];
@@ -425,7 +461,7 @@
   new ResizeObserver(remeasure).observe(field);
   setInterval(collect, 2500);
 
-  let allFrozenSince = 0;
+  let lastRecycle = 0;
   const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
   function tick() {
@@ -478,29 +514,27 @@
       }
     }
 
-    /* ---- staggered renewal: recycle the oldest artifact ---- */
+    /* ---- perpetual renewal: the search never stops ----
+       Whenever live+waiting runs dip below a floor, the oldest frozen
+       artifact makes way: it fades, its peak regrows elsewhere in the same
+       band, and a fresh run is queued (born when its region is seen). */
     const live = runs.filter((r) => r.state === 'running').length + pending.length;
-    if (live === 0 && runs.length > 0) {
-      if (!allFrozenSince) allFrozenSince = frame;
-      if (frame - allFrozenSince > ROTATE_AFTER && !reduceMotion) {
-        allFrozenSince = 0;
-        const oldest = runs.filter((r) => r.state === 'converged').sort((a, b) => a.convergedAt - b.convergedAt)[0];
-        if (oldest) {
-          oldest.state = 'fading';
-          for (const n of oldest.nodes) n.removing = true;
-          // its peak migrates: regrow elsewhere in the same vertical band
-          const idx = peaks.indexOf(oldest.target);
-          const bandH = h / N_RUNS;
-          const band = Math.max(0, Math.min(N_RUNS - 1, Math.floor(oldest.target.y / bandH)));
-          const fresh = placePeak(band * bandH, (band + 1) * bandH, false);
-          if (fresh && idx >= 0) {
-            peaks[idx] = fresh;
-            pending.push({ peak: fresh, hue: oldest.hue }); // born when seen
-          }
+    const minLive = Math.max(1, Math.round(N_RUNS * 0.4));
+    if (!reduceMotion && live < minLive && frame - lastRecycle > RECYCLE_COOLDOWN) {
+      const oldest = runs.filter((r) => r.state === 'converged').sort((a, b) => a.convergedAt - b.convergedAt)[0];
+      if (oldest) {
+        lastRecycle = frame;
+        oldest.state = 'fading';
+        for (const n of oldest.nodes) n.removing = true;
+        const idx = peaks.indexOf(oldest.target);
+        const bandH = h / N_RUNS;
+        const band = Math.max(0, Math.min(N_RUNS - 1, Math.floor(oldest.target.y / bandH)));
+        const fresh = placePeak(band * bandH, (band + 1) * bandH, false);
+        if (fresh && idx >= 0) {
+          peaks[idx] = fresh;
+          pending.push({ peak: fresh, hue: oldest.hue });
         }
       }
-    } else {
-      allFrozenSince = 0;
     }
 
     /* ---- node updates (cap applies only to live runs) ---- */
