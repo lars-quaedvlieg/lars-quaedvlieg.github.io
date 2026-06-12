@@ -132,14 +132,23 @@
     return best;
   }
 
-  /** Terrain-only score (what the heatmap shows). Never decays. */
+  const BLOCK_FADE = 60; // px over which terrain tapers off around content
+
+  /** Terrain-only score (what the heatmap shows). Never decays.
+   *  Sacred content is zero, with a smooth taper around it so the surface
+   *  reads as contours around a plateau, not a razor-edged hole. */
   function terrain(x: number, y: number): number {
     if (x < 14 || y < 14 || x > w - 14 || y > h - 14) return 0;
-    if (insideBlock(x, y)) return 0; // sacred ground
+    const bd = blockDist(x, y);
+    if (bd <= 0) return 0; // sacred ground
     let f = 0.06;
     for (const pk of peaks) {
       const d2 = (x - pk.x) ** 2 + (y - pk.y) ** 2;
       if (d2 < pk.sigma * pk.sigma * 9) f += pk.amp * Math.exp(-d2 / (2 * pk.sigma * pk.sigma));
+    }
+    if (bd < BLOCK_FADE) {
+      const m = bd / BLOCK_FADE;
+      f *= m * m * (3 - 2 * m); // smoothstep taper into the margins
     }
     return Math.min(1, f);
   }
