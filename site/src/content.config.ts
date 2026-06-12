@@ -38,14 +38,4 @@ const news = defineCollection({
   }),
 });
 
-const books = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/books' }),
-  schema: z.object({
-    title: z.string(),
-    author: z.string().optional(),
-    img: z.string().optional(),
-    categories: z.string().optional(),
-  }),
-});
-
-export const collections = { posts, projects, news, books };
+export const collections = { posts, projects, news };

@@ -12,6 +12,13 @@ export const SITE = {
     'Insights, breakthroughs, and practical tips from my involvement in machine learning research.',
 } as const;
 
+/**
+ * Privacy-friendly analytics via GoatCounter (free, no cookies, GDPR-safe).
+ * Create a site at https://www.goatcounter.com and put its code here
+ * (e.g. 'lars-quaedvlieg' for lars-quaedvlieg.goatcounter.com). Empty = disabled.
+ */
+export const GOATCOUNTER = '';
+
 export const SOCIALS = [
   { label: 'Email', href: 'mailto:larsquaedvlieg@outlook.com', icon: 'email' },
   { label: 'GitHub', href: 'https://github.com/lars-quaedvlieg', icon: 'github' },

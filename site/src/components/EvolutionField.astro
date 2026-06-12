@@ -90,6 +90,11 @@
       class="text-accent-700 underline underline-offset-2 dark:text-accent-400">Recursive</a
     >.
   </p>
+  <p
+    id="evo-live"
+    class="mt-3 border-t border-ink-100 pt-2 font-mono text-[10px] tracking-widest text-ink-400 uppercase dark:border-ink-800 dark:text-ink-500"
+  >
+  </p>
 </aside>
 
 <script>
@@ -97,6 +102,7 @@
   const canvas = document.getElementById('evo-canvas') as HTMLCanvasElement;
   const statsEl = document.getElementById('evo-stats')!;
   const aboutEl = document.getElementById('evo-about')!;
+  const liveEl = document.getElementById('evo-live')!;
   statsEl.addEventListener('click', () => {
     aboutEl.hidden = !aboutEl.hidden;
     statsEl.setAttribute('aria-expanded', String(!aboutEl.hidden));
@@ -331,6 +337,9 @@
   let pending: { peak: Peak; hue: number }[] = [];
   let frame = 0;
   let solvedTotal = 0;
+  // This visit's telemetry, surfaced in the hidden legend.
+  let genTotal = 0;
+  let bestEver = 0;
 
   function makeNode(run: Run, parents: PNode[], score: number, outcome: PNode['outcome'], ax: number, ay: number): PNode {
     const px = parents.length ? parents.reduce((s, p) => s + p.x, 0) / parents.length : ax;
@@ -415,6 +424,7 @@
       } else {
         const score = Math.min(1, Math.max(0.02, spot[2] * 0.85 + (Math.random() - 0.35) * 0.12));
         run.nodes.push(makeNode(run, parents, score, score > pScore ? 'better' : 'worse', spot[0], spot[1]));
+        if (score > bestEver) bestEver = score;
         if (score > run.bestScore) {
           run.bestScore = score;
           run.lastImproveBeat = run.beats;
@@ -532,6 +542,7 @@
       if (cy < viewTop - 600 || cy > viewBot + 600) continue;
       if (frame >= run.nextSample) {
         run.beats++;
+        genTotal++;
         const parents = sampleParents(run, Math.random() < CROSS_P ? 2 : 1);
         if (parents.length) generateChildren(run, parents);
         const near = mouse && champ && (mouse.x - champ.x) ** 2 + (mouse.y - champ.y) ** 2 < 300 * 300;
@@ -697,6 +708,9 @@
     if (frame % 20 === 0) {
       const liveNow = runs.filter((r) => r.state === 'running').length;
       statsEl.textContent = `running ${liveNow} · solved ${solvedTotal}`;
+      if (!aboutEl.hidden) {
+        liveEl.textContent = `this visit: ${genTotal} generations · best ${bestEver.toFixed(2)}`;
+      }
     }
     requestAnimationFrame(tick);
   }

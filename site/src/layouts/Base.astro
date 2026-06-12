@@ -5,7 +5,7 @@ import '@fontsource/lora/400.css';
 import '@fontsource/lora/600.css';
 import '@fontsource/lora/700.css';
 import '../styles/global.css';
-import { SITE, NAV, SOCIALS, withBase } from '../lib/site';
+import { SITE, NAV, SOCIALS, GOATCOUNTER, withBase } from '../lib/site';
 import Icon from '../components/Icon.astro';
 import EvolutionField from '../components/EvolutionField.astro';
 
@@ -39,16 +39,18 @@ const isActive = (href: string) => {
     <meta name="description" content={description} />
     <link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.blogName} · ${SITE.name}`} href={withBase('/rss.xml')} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={new URL(withBase(ogImage ?? '/assets/img/profile.png'), Astro.site)} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL(withBase(ogImage ?? '/assets/img/og-card.png'), Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {GOATCOUNTER && <script async data-goatcounter={`https://${GOATCOUNTER}.goatcounter.com/count`} src="https://gc.zgo.at/count.js" is:inline />}
     <script is:inline>
       // Set theme before paint to avoid a flash of the wrong mode.
+      // First visits get light; the toggle persists the visitor's choice.
       const stored = localStorage.getItem('theme');
-      const dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', dark);
+      document.documentElement.classList.toggle('dark', stored === 'dark');
     </script>
   </head>
   <body class="flex min-h-screen flex-col">
@@ -146,6 +148,9 @@ const isActive = (href: string) => {
             ))
           }
         </div>
+        <p class="font-mono text-[11px] tracking-[0.15em] text-ink-400 uppercase dark:text-ink-500">
+          now: AI research for trading @ Jump Trading · London
+        </p>
         <p class="text-xs text-ink-400 dark:text-ink-500">
           © {new Date().getFullYear()} Lars C.P.M. Quaedvlieg · Built with <a class="hover:text-accent-600" href="https://astro.build" target="_blank" rel="noopener">Astro</a> · Hosted on <a class="hover:text-accent-600" href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>
         </p>

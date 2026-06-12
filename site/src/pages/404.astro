@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/site';
+---
+
+<Base title="404" description="Page not found">
+  <section class="flex min-h-[60svh] items-center justify-center">
+    <div class="max-w-md text-center" data-evo-block>
+      <p class="font-mono text-xs tracking-[0.3em] text-accent-700 uppercase dark:text-accent-400">score 0.00</p>
+      <h1 class="display mt-4 text-7xl">404</h1>
+      <p class="mt-5 text-ink-600 dark:text-ink-300">
+        This region of the landscape scored zero. No run ever converges here, and neither will you.
+      </p>
+      <a
+        href={withBase('/')}
+        class="mt-8 inline-block rounded-full bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 dark:bg-ink-100 dark:text-ink-900"
+      >
+        Climb back to a summit
+      </a>
+    </div>
+  </section>
+</Base>
