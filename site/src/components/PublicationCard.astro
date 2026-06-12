@@ -9,7 +9,11 @@ interface Props {
 const { pub } = Astro.props;
 ---
 
-<article class="flex flex-col gap-4 rounded-xl border border-ink-200 p-5 transition-shadow hover:shadow-md sm:flex-row dark:border-ink-800 dark:hover:shadow-ink-900/50">
+<article
+  data-evo-block
+  data-evo-peak="1"
+  class="flex flex-col gap-4 rounded-xl border border-ink-200 bg-white/80 p-5 backdrop-blur-sm transition-shadow hover:shadow-md sm:flex-row dark:border-ink-800 dark:bg-ink-950/80 dark:hover:shadow-ink-900/50"
+>
   {
     pub.preview && (
       <div class="w-full shrink-0 sm:w-44">

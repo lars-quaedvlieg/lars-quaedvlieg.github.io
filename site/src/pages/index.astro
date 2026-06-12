@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Timeline from '../components/Timeline.astro';
 import PublicationCard from '../components/PublicationCard.astro';
-import EvolutionHero from '../components/EvolutionHero.astro';
+import EvolutionField from '../components/EvolutionField.astro';
 import { SOCIALS, withBase } from '../lib/site';
 import { loadPublications } from '../lib/bibtex';
 
@@ -22,150 +22,171 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 ---
 
 <Base full>
-  <!-- ============ Hero: generative evolutionary search ============ -->
-  <section class="relative flex min-h-[calc(100svh-57px)] items-center overflow-hidden">
-    <EvolutionHero />
-    <div class="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6">
-      <p class="font-mono text-xs tracking-[0.3em] text-accent-700 uppercase dark:text-accent-400">
-        AI researcher · London
-      </p>
-      <h1 class="display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.95]">
-        Lars<br />Quaedvlieg
-      </h1>
-      <p class="mt-6 max-w-xl text-lg text-ink-600 sm:text-xl dark:text-ink-300">
-        I search the space of algorithms — with evolution, reinforcement, and the occasional large language model.
-      </p>
-      <p class="mt-3 text-sm font-medium text-ink-500 dark:text-ink-400">
-        Member of Technical Staff @ Jump Trading · previously Meta FAIR & EPFL
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a
-          href={withBase('/publications')}
-          class="rounded-full bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 dark:bg-ink-100 dark:text-ink-900"
-        >
-          Read my research
-        </a>
-        <a
-          href={withBase('/blog')}
-          class="rounded-full border border-ink-300 px-5 py-2.5 text-sm font-semibold text-ink-700 transition-transform hover:-translate-y-0.5 dark:border-ink-700 dark:text-ink-200"
-        >
-          AI Horizon blog
-        </a>
-        <div class="ml-1 flex items-center gap-3">
-          {
-            SOCIALS.map((s) => (
+  <!-- The evolutionary search runs over the WHOLE page: content blocks are
+       walls, peaks sit on the things worth finding. -->
+  <div class="relative">
+    <EvolutionField />
+
+    <div class="relative z-10">
+      <!-- ============ Hero ============ -->
+      <section class="relative flex min-h-[calc(100svh-57px)] items-center">
+        <div class="mx-auto w-full max-w-5xl px-4 sm:px-6">
+          <div class="max-w-2xl" data-evo-block>
+            <p class="font-mono text-xs tracking-[0.3em] text-accent-700 uppercase dark:text-accent-400">
+              AI researcher · London
+            </p>
+            <h1 class="display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.95]">
+              Lars<br />Quaedvlieg
+            </h1>
+            <p class="mt-6 max-w-xl text-lg text-ink-600 sm:text-xl dark:text-ink-300">
+              I search the space of algorithms — with evolution, reinforcement, and the occasional large language model.
+            </p>
+            <p class="mt-3 text-sm font-medium text-ink-500 dark:text-ink-400">
+              Member of Technical Staff @ Jump Trading · previously Meta FAIR & EPFL
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-3" data-evo-peak="0.6">
               <a
-                href={s.href}
-                target={s.href.startsWith('mailto:') ? undefined : '_blank'}
-                rel="noopener"
-                aria-label={s.label}
-                title={s.label}
-                class="text-ink-400 transition-colors hover:text-accent-600 dark:text-ink-500 dark:hover:text-accent-400"
+                href={withBase('/publications')}
+                class="rounded-full bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 dark:bg-ink-100 dark:text-ink-900"
               >
-                <Icon name={s.icon} class="h-5 w-5" />
+                Read my research
               </a>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-    <p class="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce font-mono text-[10px] tracking-[0.3em] text-ink-400 uppercase dark:text-ink-500">
-      scroll ↓
-    </p>
-  </section>
-
-  <div class="mx-auto max-w-5xl px-4 sm:px-6">
-    <!-- ============ 01 / About ============ -->
-    <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
-      <div>
-        <p class="section-eyebrow">01 / About</p>
-        <h2 class="section-title">The short version</h2>
-      </div>
-      <div class="grid grid-cols-1 items-start gap-8 sm:grid-cols-[1fr_11rem]">
-        <div>
-          <div class="prose">
-            <p>
-              In January 2026, I joined <a href="https://www.jumptrading.com/" target="_blank" rel="noopener">Jump Trading</a> as a
-              <strong>Member of Technical Staff (AI Researcher)</strong>. I was previously a <strong>Research Scientist intern</strong> in the
-              <em>Core Learning &amp; Reasoning</em> pillar at <a href="https://ai.meta.com/research/" target="_blank" rel="noopener">Meta</a> FAIR,
-              and finished my MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener">EPFL</a>
-              as a research assistant in the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener">Caglar Gulcehre Lab for AI Research</a>,
-              on an <a href="https://www.epfl.ch/education/master/master-excellence-fellowships/" target="_blank" rel="noopener">EPFL Excellence Fellowship</a>.
-            </p>
-            <p>
-              Off the clock: calisthenics parks 🤸 and unreasonably competitive
-              <a href="https://www.geoguessr.com/" target="_blank" rel="noopener">GeoGuessr</a> 🌎.
-            </p>
-          </div>
-          <div class="mt-5 flex flex-wrap gap-2">
-            {
-              interests.map((tag) => (
-                <span class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300">
-                  {tag}
-                </span>
-              ))
-            }
-          </div>
-          <div class="mt-6 flex items-center gap-4 opacity-70">
-            <img src={withBase('/assets/img/jump-trading-logo.jpg')} alt="Jump Trading" class="h-7 w-auto rounded" />
-            <img src={withBase('/assets/img/meta-logo.png')} alt="Meta" class="h-5 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
-            <img src={withBase('/assets/img/epfl-logo.png')} alt="EPFL" class="h-4 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+              <a
+                href={withBase('/blog')}
+                class="rounded-full border border-ink-300 px-5 py-2.5 text-sm font-semibold text-ink-700 transition-transform hover:-translate-y-0.5 dark:border-ink-700 dark:text-ink-200"
+              >
+                AI Horizon blog
+              </a>
+              <div class="ml-1 flex items-center gap-3">
+                {
+                  SOCIALS.map((s) => (
+                    <a
+                      href={s.href}
+                      target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                      rel="noopener"
+                      aria-label={s.label}
+                      title={s.label}
+                      class="text-ink-400 transition-colors hover:text-accent-600 dark:text-ink-500 dark:hover:text-accent-400"
+                    >
+                      <Icon name={s.icon} class="h-5 w-5" />
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
           </div>
         </div>
-        <img
-          src={withBase('/assets/img/profile.png')}
-          alt="Portrait of Lars Quaedvlieg"
-          class="mx-auto h-40 w-40 rotate-2 rounded-2xl border border-ink-200 object-cover shadow-lg transition-transform hover:rotate-0 sm:h-44 sm:w-44 dark:border-ink-800"
-        />
-      </div>
-    </section>
+        <p class="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce font-mono text-[10px] tracking-[0.3em] text-ink-400 uppercase dark:text-ink-500">
+          scroll — follow the search ↓
+        </p>
+      </section>
 
-    <!-- ============ 02 / News ============ -->
-    {
-      newsRendered.length > 0 && (
+      <div class="mx-auto max-w-5xl px-4 sm:px-6">
+        <!-- ============ 01 / About ============ -->
         <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
           <div>
-            <p class="section-eyebrow">02 / News</p>
-            <h2 class="section-title">Lately</h2>
+            <div data-evo-block data-evo-peak="0.7">
+              <p class="section-eyebrow">01 / About</p>
+              <h2 class="section-title">The short version</h2>
+            </div>
           </div>
-          <ul class="space-y-5">
-            {newsRendered.map(({ date, Content }) => (
-              <li class="flex gap-5">
-                <span class="w-20 shrink-0 pt-0.5 font-mono text-xs font-medium text-ink-400 dark:text-ink-500">{fmt(date)}</span>
-                <div class="prose min-w-0 flex-1 text-[0.95rem] [&_p]:my-0">
-                  <Content />
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div class="grid grid-cols-1 items-start gap-8 sm:grid-cols-[1fr_11rem]">
+            <div>
+              <div class="prose" data-evo-block>
+                <p>
+                  In January 2026, I joined <a href="https://www.jumptrading.com/" target="_blank" rel="noopener">Jump Trading</a> as a
+                  <strong>Member of Technical Staff (AI Researcher)</strong>. I was previously a <strong>Research Scientist intern</strong> in the
+                  <em>Core Learning &amp; Reasoning</em> pillar at <a href="https://ai.meta.com/research/" target="_blank" rel="noopener">Meta</a> FAIR,
+                  and finished my MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener">EPFL</a>
+                  as a research assistant in the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener">Caglar Gulcehre Lab for AI Research</a>,
+                  on an <a href="https://www.epfl.ch/education/master/master-excellence-fellowships/" target="_blank" rel="noopener">EPFL Excellence Fellowship</a>.
+                </p>
+                <p>
+                  Off the clock: calisthenics parks 🤸 and unreasonably competitive
+                  <a href="https://www.geoguessr.com/" target="_blank" rel="noopener">GeoGuessr</a> 🌎.
+                </p>
+              </div>
+              <div class="mt-5 flex flex-wrap gap-2" data-evo-block>
+                {
+                  interests.map((tag) => (
+                    <span class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+              <div class="mt-6 flex items-center gap-4 opacity-70" data-evo-block>
+                <img src={withBase('/assets/img/jump-trading-logo.jpg')} alt="Jump Trading" class="h-7 w-auto rounded" />
+                <img src={withBase('/assets/img/meta-logo.png')} alt="Meta" class="h-5 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+                <img src={withBase('/assets/img/epfl-logo.png')} alt="EPFL" class="h-4 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+              </div>
+            </div>
+            <img
+              src={withBase('/assets/img/profile.png')}
+              alt="Portrait of Lars Quaedvlieg"
+              data-evo-block
+              data-evo-peak="0.9"
+              class="mx-auto h-40 w-40 rotate-2 rounded-2xl border border-ink-200 object-cover shadow-lg transition-transform hover:rotate-0 sm:h-44 sm:w-44 dark:border-ink-800"
+            />
+          </div>
         </section>
-      )
-    }
 
-    <!-- ============ 03 / Journey ============ -->
-    <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
-      <div>
-        <p class="section-eyebrow">03 / Journey</p>
-        <h2 class="section-title">How I got here</h2>
-        <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
-          Full details in the <a href={withBase('/cv')} class="text-accent-700 hover:underline dark:text-accent-400">CV</a>.
-        </p>
-      </div>
-      <Timeline />
-    </section>
+        <!-- ============ 02 / News ============ -->
+        {
+          newsRendered.length > 0 && (
+            <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
+              <div>
+                <div data-evo-block data-evo-peak="0.7">
+                  <p class="section-eyebrow">02 / News</p>
+                  <h2 class="section-title">Lately</h2>
+                </div>
+              </div>
+              <ul class="space-y-5" data-evo-block>
+                {newsRendered.map(({ date, Content }) => (
+                  <li class="flex gap-5">
+                    <span class="w-20 shrink-0 pt-0.5 font-mono text-xs font-medium text-ink-400 dark:text-ink-500">{fmt(date)}</span>
+                    <div class="prose min-w-0 flex-1 text-[0.95rem] [&_p]:my-0">
+                      <Content />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
 
-    <!-- ============ 04 / Research ============ -->
-    <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
-      <div>
-        <p class="section-eyebrow">04 / Research</p>
-        <h2 class="section-title">Selected work</h2>
-        <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
-          <a href={withBase('/publications')} class="text-accent-700 hover:underline dark:text-accent-400">All publications →</a>
-        </p>
+        <!-- ============ 03 / Journey ============ -->
+        <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
+          <div>
+            <div data-evo-block data-evo-peak="0.7">
+              <p class="section-eyebrow">03 / Journey</p>
+              <h2 class="section-title">How I got here</h2>
+              <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
+                Full details in the <a href={withBase('/cv')} class="text-accent-700 hover:underline dark:text-accent-400">CV</a>.
+              </p>
+            </div>
+          </div>
+          <div data-evo-block>
+            <Timeline />
+          </div>
+        </section>
+
+        <!-- ============ 04 / Research ============ -->
+        <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-20 md:grid-cols-[16rem_1fr] dark:border-ink-800">
+          <div>
+            <div data-evo-block data-evo-peak="0.8">
+              <p class="section-eyebrow">04 / Research</p>
+              <h2 class="section-title">Selected work</h2>
+              <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
+                <a href={withBase('/publications')} class="text-accent-700 hover:underline dark:text-accent-400">All publications →</a>
+              </p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            {selectedPubs.map((pub) => <PublicationCard pub={pub} />)}
+          </div>
+        </section>
       </div>
-      <div class="space-y-4">
-        {selectedPubs.map((pub) => <PublicationCard pub={pub} />)}
-      </div>
-    </section>
+    </div>
   </div>
 </Base>

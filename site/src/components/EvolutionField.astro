@@ -1,59 +1,115 @@
 ---
-// Generative hero: evolutionary search with LLMs, island model (FunSearch-style).
+// Full-page generative layer: island-model evolutionary search with LLMs,
+// run over the ENTIRE page as a fitness landscape.
 //
-//   · ISLANDS each hold a growing DAG of programs (a node can have 1–2 parents)
-//   · every beat an island samples parents — better-scoring programs are
-//     sampled exponentially more often — and the "LLM" generates children:
-//     bright island color = improved on the parent, dim amber = worse,
-//     red = failed to run (dead branches fade away)
-//   · the DAG grows outward from the good branches; weak leaves get pruned
-//   · every so often two islands MERGE: champions from both send golden seeds
-//     to found a brand-new island whose root descends from both lineages,
-//     while the weakest island fades out
+//   · text/content blocks ([data-evo-block]) are walls — programs that land
+//     on them fail, so the search wraps around your content
+//   · key content ([data-evo-peak]) emits a fitness peak: headings, the
+//     portrait, publication cards. Scores are read off the landscape, so
+//     clusters of high-scoring programs literally form around the work —
+//     the evolution is a guide that leads visitors through the profile
+//   · islands grow lineage DAGs (nodes can have two parents), prune their
+//     weak leaves, and occasionally merge: champions of the two best islands
+//     send golden seeds to found a new island on fresh high-ground
+//   · only islands near the viewport run their sampling beats, so the
+//     search unfolds as you scroll
 ---
 
-<div id="evo-hero" class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-  <canvas id="evo-canvas" class="h-full w-full"></canvas>
-  <p
-    id="evo-gen"
-    class="absolute right-4 bottom-3 font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none dark:text-ink-500/70"
-  >
-    islands 0 · best 0.000 · samples 0
-  </p>
+<div id="evo-field" class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+  <canvas id="evo-canvas" class="absolute inset-0 h-full w-full"></canvas>
 </div>
+<p
+  id="evo-stats"
+  class="pointer-events-none fixed right-3 bottom-2 z-20 font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none dark:text-ink-500/70"
+  aria-hidden="true"
+>
+  islands 0 · best 0.000 · samples 0
+</p>
 
 <script>
+  const field = document.getElementById('evo-field')!;
   const canvas = document.getElementById('evo-canvas') as HTMLCanvasElement;
-  const genLabel = document.getElementById('evo-gen')!;
+  const statsEl = document.getElementById('evo-stats')!;
   const ctx = canvas.getContext('2d')!;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ----------------------- tuning ----------------------- */
+  const ISLAND_CAP = 60;     // max nodes per island before pruning
+  const SAMPLE_EVERY = 16;   // frames between sampling beats (per island)
+  const GROW_FRAMES = 20;    // child spawn animation length
+  const FAIL_P = 0.12;       // chance a generated program fails outright
+  const FAIL_TTL = 380;      // failed nodes linger, then vanish
+  const MERGE_EVERY = 900;   // frames between island-merge events
+  const PRUNE_EVERY = 240;   // frames between low-score prune sweeps
+  const CROSS_P = 0.45;      // chance a beat samples TWO parents
+  const PAD = 12;            // safety margin around content blocks
+  const STEP = () => 40 + Math.random() * 28;
+  const HUES = [172, 205, 260, 140, 305, 95, 28, 230];
+
   let w = 0, h = 0, dpr = 1;
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = canvas.clientWidth;
-    h = canvas.clientHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
+    w = field.clientWidth;
+    h = field.clientHeight;
+    // Big page-tall canvas: cap the backing-store size to stay GPU-friendly.
+    dpr = Math.min(window.devicePixelRatio || 1, 1.75, Math.sqrt(26e6 / Math.max(1, w * h)));
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
-  window.addEventListener('resize', resize);
 
-  /* ----------------------- tuning ----------------------- */
-  const START_ISLANDS = window.innerWidth < 640 ? 3 : 4;
-  const MAX_ISLANDS = START_ISLANDS + 1;
-  const ISLAND_CAP = 55;       // max nodes per island before pruning
-  const SAMPLE_EVERY = 42;     // frames between sampling beats (per island)
-  const GROW_FRAMES = 26;      // child spawn animation length
-  const FAIL_P = 0.15;         // chance a generated program fails to run
-  const FAIL_TTL = 380;        // failed nodes linger, then vanish
-  const MERGE_EVERY = 1250;    // frames between island-merge events
-  const CROSS_P = 0.45;        // chance a beat samples TWO parents (in-island crossover)
-  const STEP = () => 40 + Math.random() * 28; // edge length parent→child
+  /* ---------------- landscape: blocks + peaks ---------------- */
+  interface Rect { x: number; y: number; w: number; h: number }
+  interface Peak { x: number; y: number; amp: number; sigma: number }
+  let blocks: Rect[] = [];
+  let peaks: Peak[] = [];
 
-  const HUES = [172, 205, 260, 140, 305, 95];
+  function collect() {
+    const fr = field.getBoundingClientRect();
+    blocks = [...document.querySelectorAll('[data-evo-block]')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left - fr.left - PAD, y: r.top - fr.top - PAD, w: r.width + PAD * 2, h: r.height + PAD * 2 };
+    });
+    peaks = [...document.querySelectorAll('[data-evo-peak]')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: r.left - fr.left + r.width / 2,
+        y: r.top - fr.top + r.height / 2,
+        amp: parseFloat((el as HTMLElement).dataset.evoPeak || '') || 0.8,
+        sigma: Math.max(150, Math.max(r.width, r.height) * 0.75),
+      };
+    });
+  }
+  collect();
+  window.addEventListener('load', () => { resize(); collect(); });
+  new ResizeObserver(() => { resize(); collect(); }).observe(field);
+  setInterval(collect, 2500); // keep peaks aligned with late layout shifts
 
+  let mouse: { x: number; y: number } | null = null;
+  window.addEventListener('pointermove', (e) => {
+    const fr = field.getBoundingClientRect();
+    mouse = { x: e.clientX - fr.left, y: e.clientY - fr.top };
+  });
+
+  /** The score surface: peaks of value around content, zero on top of it. */
+  function fitness(x: number, y: number): number {
+    if (x < 14 || y < 14 || x > w - 14 || y > h - 14) return 0;
+    for (const b of blocks) {
+      if (x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h) return 0;
+    }
+    let f = 0.07;
+    for (const pk of peaks) {
+      const d2 = (x - pk.x) ** 2 + (y - pk.y) ** 2;
+      if (d2 < pk.sigma * pk.sigma * 9) f += pk.amp * Math.exp(-d2 / (2 * pk.sigma * pk.sigma));
+    }
+    if (mouse) {
+      const d2 = (x - mouse.x) ** 2 + (y - mouse.y) ** 2;
+      f += 0.5 * Math.exp(-d2 / (2 * 160 * 160));
+    }
+    return Math.min(1, f);
+  }
+
+  /* ---------------- population ---------------- */
   interface PNode {
     isl: Island;
     parents: PNode[];
@@ -89,32 +145,21 @@
   let totalSamples = 0;
   let merge: MergeEvent | null = null;
 
-  let mouse: { x: number; y: number } | null = null;
-  const hero = document.getElementById('evo-hero')!.parentElement!;
-  hero.addEventListener('pointermove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  });
-  hero.addEventListener('pointerleave', () => (mouse = null));
-
   function makeNode(isl: Island, parents: PNode[], score: number, outcome: PNode['outcome'], ax: number, ay: number): PNode {
     const px = parents.length ? parents.reduce((s, p) => s + p.x, 0) / parents.length : ax;
     const py = parents.length ? parents.reduce((s, p) => s + p.y, 0) / parents.length : ay;
     return {
       isl, parents, children: 0,
-      ax, ay,
-      x: px, y: py,
+      ax, ay, x: px, y: py,
       t: parents.length && !reduceMotion ? 0 : 1,
       score, outcome,
-      alpha: 0,
-      removing: false,
+      alpha: 0, removing: false,
       born: frame,
       phase: Math.random() * Math.PI * 2,
       flash: 0,
     };
   }
 
-  /** Fitness-proportionate sampling: better programs get sampled more. */
   function samplePool(isl: Island, k: number): PNode[] {
     const pool = isl.nodes.filter((n) => !n.removing && n.outcome !== 'fail' && n.t >= 1);
     const out: PNode[] = [];
@@ -132,76 +177,89 @@
     return out;
   }
 
-  function childAnchor(isl: Island, parents: PNode[]): [number, number] {
+  /**
+   * Propose a child position: try a few directions fanning outward from the
+   * lineage and keep the best-scoring ground. The search is literally drawn
+   * toward high-fitness regions (the content peaks) and around the walls.
+   */
+  function childAnchor(isl: Island, parents: PNode[]): [number, number, number] | null {
     const px = parents.reduce((s, p) => s + p.ax, 0) / parents.length;
     const py = parents.reduce((s, p) => s + p.ay, 0) / parents.length;
     const isRootish = parents.some((p) => !p.parents.length);
-    const baseDir = isRootish ? Math.random() * Math.PI * 2 : Math.atan2(py - isl.cy, px - isl.cx);
-    const dir = baseDir + (Math.random() - 0.5) * 1.6;
-    const d = STEP();
-    return [
-      Math.max(26, Math.min(w - 26, px + Math.cos(dir) * d)),
-      Math.max(26, Math.min(h - 26, py + Math.sin(dir) * d)),
-    ];
+    const outward = isRootish ? Math.random() * Math.PI * 2 : Math.atan2(py - isl.cy, px - isl.cx);
+    let best: [number, number, number] | null = null;
+    for (let c = 0; c < 4; c++) {
+      const dir = outward + (Math.random() - 0.5) * 2.6;
+      const d = STEP();
+      const ax = px + Math.cos(dir) * d;
+      const ay = py + Math.sin(dir) * d;
+      const f = fitness(ax, ay);
+      if (!best || f > best[2]) best = [ax, ay, f];
+    }
+    return best && best[2] > 0.015 ? best : null;
   }
 
   function generateChildren(isl: Island, parents: PNode[]) {
-    const n = 1 + Math.floor(Math.random() * 2.4); // 1–3 programs per prompt
+    const n = 2 + Math.floor(Math.random() * 2); // 2–3 programs per prompt
     const pScore = Math.max(...parents.map((p) => p.score));
     for (let k = 0; k < n; k++) {
-      const failed = Math.random() < FAIL_P;
-      let score = 0;
-      let outcome: PNode['outcome'] = 'fail';
-      if (!failed) {
-        score = Math.min(1, Math.max(0.02, pScore + (Math.random() - 0.42) * 0.16));
-        outcome = score > pScore ? 'better' : 'worse';
+      const spot = childAnchor(isl, parents);
+      if (!spot || Math.random() < FAIL_P) {
+        // failed program: a dead red stub next to its parent
+        const p0 = parents[0];
+        const a = Math.random() * Math.PI * 2;
+        isl.nodes.push(makeNode(isl, parents, 0, 'fail', p0.ax + Math.cos(a) * 16, p0.ay + Math.sin(a) * 16));
+      } else {
+        // score = landscape value + evaluation noise
+        const score = Math.min(1, Math.max(0.02, spot[2] * 0.85 + (Math.random() - 0.35) * 0.14));
+        isl.nodes.push(makeNode(isl, parents, score, score > pScore ? 'better' : 'worse', spot[0], spot[1]));
       }
-      const [ax, ay] = childAnchor(isl, parents);
-      isl.nodes.push(makeNode(isl, parents, score, outcome, ax, ay));
       for (const p of parents) p.children++;
     }
     for (const p of parents) p.flash = 1;
     totalSamples += n;
   }
 
-  /** Seed an island with a root and an initial brood, so it starts as a graph. */
   function seedIsland(isl: Island, score: number, rootParents: PNode[] = []) {
     const root = makeNode(isl, rootParents, score, rootParents.length ? 'merge' : 'root', isl.cx, isl.cy);
     root.t = 1;
     isl.nodes.push(root);
     isl.wiped = false;
-    generateChildren(isl, [root]);
-    generateChildren(isl, [root]);
+    for (let i = 0; i < 3; i++) generateChildren(isl, [root]);
   }
 
+  /** Free high-ground: good fitness, far from existing islands. */
   function findFreeSpot(): { x: number; y: number } {
     let best = { x: w / 2, y: h / 2 };
-    let bestD = -1;
-    for (let c = 0; c < 14; c++) {
-      const x = (0.12 + Math.random() * 0.76) * w;
-      const y = (0.16 + Math.random() * 0.68) * h;
-      const d = Math.min(...islands.filter((i) => !i.wiped).map((i) => (i.cx - x) ** 2 + (i.cy - y) ** 2), Infinity);
-      if (d > bestD) { bestD = d; best = { x, y }; }
+    let bestV = -1;
+    for (let c = 0; c < 24; c++) {
+      const x = 30 + Math.random() * (w - 60);
+      const y = 30 + Math.random() * (h - 60);
+      const f = fitness(x, y);
+      if (f <= 0.02) continue;
+      const live = islands.filter((i) => !i.wiped);
+      const dMin = live.length ? Math.min(...live.map((i) => Math.hypot(i.cx - x, i.cy - y))) : 9999;
+      const v = f * Math.min(1, dMin / 420);
+      if (v > bestV) { bestV = v; best = { x, y }; }
     }
     return best;
   }
 
-  const layouts: Record<number, [number, number][]> = {
-    3: [[0.18, 0.3], [0.6, 0.72], [0.85, 0.25]],
-    4: [[0.15, 0.32], [0.44, 0.74], [0.7, 0.22], [0.88, 0.6]],
-  };
-  for (let i = 0; i < START_ISLANDS; i++) {
-    const [fx, fy] = layouts[START_ISLANDS][i];
+  // Seed islands across the whole page: roughly one per 650px of height.
+  const N_START = Math.max(4, Math.min(9, Math.round(h / 650) + 2));
+  for (let i = 0; i < N_START; i++) {
+    const spot = findFreeSpot();
     const isl: Island = {
-      cx: fx * w, cy: fy * h,
+      cx: spot.x, cy: spot.y,
       hue: HUES[i % HUES.length],
       nodes: [],
-      nextSample: 30 + i * 20,
+      nextSample: 30 + i * 12,
       wiped: false,
     };
     islands.push(isl);
-    seedIsland(isl, 0.25 + Math.random() * 0.2);
+    seedIsland(isl, 0.2 + Math.random() * 0.2);
   }
+  const MAX_ISLANDS = N_START + 1;
 
   function bestOf(isl: Island): PNode | null {
     let best: PNode | null = null;
@@ -218,7 +276,6 @@
     return best;
   }
 
-  /** Two islands' champions found a NEW island; the weakest island fades out. */
   function mergeIslands() {
     const live = islands.filter((i) => !i.wiped);
     const ranked = live
@@ -227,15 +284,12 @@
       .sort((a, b) => b.champ!.score - a.champ!.score);
     if (ranked.length < 2) return;
     const a = ranked[0], b = ranked[1];
-
-    // Make room: fade the weakest island (never one of the merge parents).
     if (live.length >= MAX_ISLANDS) {
       const victim = ranked[ranked.length - 1];
       if (victim.isl === a.isl || victim.isl === b.isl) return;
       for (const n of victim.isl.nodes) n.removing = true;
       victim.isl.wiped = true;
     }
-
     const spot = findFreeSpot();
     const dh = ((b.isl.hue - a.isl.hue + 540) % 360) - 180;
     const newIsland: Island = {
@@ -243,7 +297,7 @@
       hue: (a.isl.hue + dh / 2 + 360) % 360,
       nodes: [],
       nextSample: frame + 60,
-      wiped: true, // stays dormant until the seeds arrive
+      wiped: true,
     };
     islands.push(newIsland);
     merge = {
@@ -265,10 +319,14 @@
     frame++;
     ctx.clearRect(0, 0, w, h);
     const dark = isDark();
+    const fr = canvas.getBoundingClientRect();
+    const viewTop = -fr.top - 400;
+    const viewBot = -fr.top + window.innerHeight + 400;
 
-    /* ---- sampling beats ---- */
+    /* ---- sampling beats (only islands near the viewport evolve) ---- */
     for (const isl of islands) {
       if (isl.wiped) continue;
+      if (isl.cy < viewTop || isl.cy > viewBot) continue;
       const near = mouse && (mouse.x - isl.cx) ** 2 + (mouse.y - isl.cy) ** 2 < 280 * 280;
       if (frame >= isl.nextSample) {
         const k = Math.random() < CROSS_P ? 2 : 1;
@@ -304,14 +362,20 @@
     }
 
     /* ---- update + prune ---- */
+    const pruneSweep = frame % PRUNE_EVERY === 0;
     for (const isl of islands) {
-      if (isl.nodes.filter((n) => !n.removing).length > ISLAND_CAP) {
+      const active = isl.cy >= viewTop - 600 && isl.cy <= viewBot + 600;
+      const liveCount = isl.nodes.filter((n) => !n.removing).length;
+      const overCap = liveCount > ISLAND_CAP;
+      if (overCap || (pruneSweep && liveCount > 12)) {
         const leaves = isl.nodes
           .filter((n) => !n.removing && n.children === 0 && n.outcome !== 'root' && n.outcome !== 'merge')
           .sort((a, b) => a.score - b.score);
-        for (const n of leaves.slice(0, 6)) n.removing = true;
+        const cut = overCap ? 10 : Math.max(2, Math.floor(leaves.length * 0.18));
+        for (const n of leaves.slice(0, cut)) n.removing = true;
       }
       for (const n of isl.nodes) {
+        if (!active && n.t >= 1 && !n.removing && n.flash <= 0) continue; // offscreen: freeze
         if (n.t < 1) n.t = Math.min(1, n.t + 1 / GROW_FRAMES);
         const te = ease(n.t);
         const livingParents = n.parents.filter((p) => p.alpha > 0);
@@ -334,14 +398,13 @@
         }
       }
     }
-    // drop islands that have fully faded
     for (let i = islands.length - 1; i >= 0; i--) {
       if (islands[i].wiped && islands[i].nodes.length === 0 && islands[i] !== merge?.island) islands.splice(i, 1);
     }
 
     const champ = bestNode();
 
-    /* ---- draw edges (lineage DAG; multi-parent nodes draw one per parent) ---- */
+    /* ---- draw edges ---- */
     for (const isl of islands) {
       for (const n of isl.nodes) {
         for (const p of n.parents) {
@@ -412,7 +475,7 @@
 
     if (frame % 20 === 0) {
       const live = islands.filter((i) => !i.wiped).length;
-      genLabel.textContent = `islands ${live} · best ${(champ?.score ?? 0).toFixed(3)} · samples ${totalSamples}`;
+      statsEl.textContent = `islands ${live} · best ${(champ?.score ?? 0).toFixed(3)} · samples ${totalSamples}`;
     }
     requestAnimationFrame(tick);
   }
