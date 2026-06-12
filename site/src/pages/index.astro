@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Timeline from '../components/Timeline.astro';
 import PublicationCard from '../components/PublicationCard.astro';
-import EvolutionField from '../components/EvolutionField.astro';
 import { SOCIALS, withBase } from '../lib/site';
 import { loadPublications } from '../lib/bibtex';
 
@@ -22,13 +21,10 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 ---
 
 <Base full>
-  <!-- The evolutionary search runs over the WHOLE page: a procedural score
-       terrain fills the whitespace, while content blocks are sacred ground
-       the lineages wrap around. -->
-  <div class="relative">
-    <EvolutionField />
-
-    <div class="relative z-10">
+  <!-- The evolutionary search field lives in Base and runs over the WHOLE
+       page; content marked data-evo-block is sacred ground. -->
+  <div>
+    <div>
       <!-- ============ Hero ============ -->
       <section class="relative flex min-h-[calc(100svh-57px)] items-center">
         <div class="mx-auto w-full max-w-5xl px-4 sm:px-6">

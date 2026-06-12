@@ -9,15 +9,18 @@ const categories = [...new Set(posts.map((p) => p.data.categories).filter(Boolea
 ---
 
 <Base title="Blog" description={SITE.blogDescription}>
-  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">{SITE.blogName}</h1>
-  <p class="mt-2 max-w-2xl text-ink-500 dark:text-ink-400">{SITE.blogDescription}</p>
+  <div data-evo-block>
+    <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">{SITE.blogName}</h1>
+    <p class="mt-2 max-w-2xl text-ink-500 dark:text-ink-400">{SITE.blogDescription}</p>
+  </div>
 
   <div class="mt-8 space-y-6">
     {
       posts.map((post) => (
         <a
           href={withBase(`/blog/${post.id.replace(/\.md$/, '')}`)}
-          class="group block rounded-xl border border-ink-200 p-5 transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800"
+          data-evo-block
+          class="group block rounded-xl border border-ink-200 bg-white/80 p-5 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800 dark:bg-ink-950/80"
         >
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-ink-400 dark:text-ink-500">
             <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>

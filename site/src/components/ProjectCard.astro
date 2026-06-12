@@ -17,7 +17,8 @@ const year = developedDate?.getFullYear();
   href={href}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener' : undefined}
-  class="group flex flex-col overflow-hidden rounded-xl border border-ink-200 transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-ink-800 dark:hover:shadow-ink-900/50"
+  data-evo-block
+  class="group flex flex-col overflow-hidden rounded-xl border border-ink-200 bg-white/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-ink-800 dark:bg-ink-950/80 dark:hover:shadow-ink-900/50"
 >
   {
     img && (

@@ -10,13 +10,15 @@ const categories = [...new Set(projects.map((p) => p.data.category))];
 ---
 
 <Base title="Projects" description="Research and development projects by Lars Quaedvlieg">
-  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">Projects</h1>
-  <p class="mt-2 text-ink-500 dark:text-ink-400">A selection of research and side projects I have worked on over the years.</p>
+  <div data-evo-block>
+    <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">Projects</h1>
+    <p class="mt-2 text-ink-500 dark:text-ink-400">A selection of research and side projects I have worked on over the years.</p>
+  </div>
 
   {
     categories.map((category) => (
       <section class="mt-10">
-        <h2 class="font-serif text-xl font-bold text-ink-700 dark:text-ink-300">{category}</h2>
+        <h2 class="font-serif text-xl font-bold text-ink-700 dark:text-ink-300" data-evo-block>{category}</h2>
         <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {projects
             .filter((p) => p.data.category === category)
