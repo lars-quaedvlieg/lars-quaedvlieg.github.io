@@ -46,5 +46,13 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      watch: {
+        // The repo lives on /mnt/c (Windows drive): inotify events never fire
+        // there, so hot reload silently breaks without polling.
+        usePolling: true,
+        interval: 700,
+      },
+    },
   },
 });
