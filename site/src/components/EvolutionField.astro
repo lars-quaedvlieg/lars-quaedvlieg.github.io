@@ -1,17 +1,24 @@
 ---
 // Full-page generative layer: evolutionary search over the page-as-score-landscape.
 //
-//   · the page IS the fitness surface, and you can see it: a procedural
-//     terrain of peaks rendered as a quantized heatmap with numeric summit
-//     scores; content blocks are SACRED ground (zero score, never overgrown)
-//   · several independent ISLANDS spawn, each a short hike away from a score
-//     cluster — so you can watch each one evolve toward the high ground
-//   · islands never interbreed; each grows its own lineage DAG (a node can
-//     have two parents from ITS island), scored by the ground it lands on:
-//     bright = improved, amber = worse, red = failed program
-//   · peaks DEPLETE as populations feed (bands shrink, summit scores tick
-//     down); when the whole terrain is spent, the expedition retires and a
-//     new one begins over fresh terrain
+// DYNAMICS (deliberately modeled as real search runs):
+//   · terrain: one owned peak per run + a few low decoy bumps, all placed
+//     with clearance from text and edges; content blocks are SACRED (zero
+//     score, never overgrown). The surface renders as a quantized heatmap
+//     with numeric summit scores. Scores never decay.
+//   · each RUN spawns far from its target (2.5–3.5σ) and carries a weak
+//     directional prior toward it — across flat ground the prior guides,
+//     near the peak the real score gradient takes over
+//   · runs are independent: no interbreeding, no shared edges. Within a run,
+//     a child can have two parents (lineage DAG). bright = improved,
+//     amber = worse, red = failed program
+//   · a run CONVERGES when its champion sits on the summit with a near-max
+//     score, or when it stagnates (a local optimum). The graph then FREEZES
+//     as a finished artifact — slightly dimmed, champion crowned, fail stubs
+//     cleaned up. The run is over; nothing decays.
+//   · renewal is staggered: once all runs are frozen, the oldest artifact
+//     occasionally fades out, its peak regrows elsewhere, and a fresh run
+//     sets out — the page stays mostly calm with one or two live searches.
 ---
 
 <div id="evo-field" class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
@@ -22,7 +29,7 @@
   class="pointer-events-none fixed right-3 bottom-2 z-20 font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none dark:text-ink-500/70"
   aria-hidden="true"
 >
-  expedition 1 · best 0.000
+  runs 0 · solved 0
 </p>
 
 <script>
@@ -34,22 +41,25 @@
   const mobile = window.innerWidth < 640;
 
   /* ----------------------- tuning ----------------------- */
-  const N_ISLANDS = mobile ? 3 : 5;
-  const POP_TOTAL = mobile ? 70 : 150;   // living nodes across all islands
-  const SAMPLE_EVERY = mobile ? 26 : 15; // frames between beats, per island
+  const N_RUNS = mobile ? 3 : 5;
+  const N_DECOYS = mobile ? 1 : 2;       // small unowned bumps, for texture
+  const RUN_CAP = mobile ? 26 : 36;      // living nodes per run
+  const SAMPLE_EVERY = mobile ? 24 : 14; // frames between beats, per run
   const GROW_FRAMES = 22;
   const FAIL_P = 0.1;
   const FAIL_TTL = 320;
-  const PRUNE_EVERY = 280;
-  const CROSS_P = 0.4;          // chance a beat samples TWO parents (same island)
-  const PAD = 16;               // sacred margin around content blocks
-  const RECENCY = 0.0005;       // sampling decay per frame of age
-  const DEPLETE = 0.0035;       // peak energy drain per occupant per check
-  const HOME_DIST = 1.2;        // island spawn distance, in units of peak sigma
+  const CROSS_P = 0.4;                   // two-parent beats (within a run)
+  const PAD = 16;                        // sacred margin around content
+  const RECENCY = 0.0006;                // frontier keeps moving
+  const SPAWN_MIN = 2.5, SPAWN_MAX = 3.5; // spawn distance in units of σ
+  const PRIOR = 0.5;                     // strength of the toward-target prior
+  const STAGNATE_BEATS = 30;             // beats without improvement → local optimum
+  const SUMMIT_FRAC = 0.78;              // champion ≥ this × peak amp → solved
+  const ROTATE_AFTER = 600;              // frames all-frozen before oldest is recycled
+  const CLEARANCE = 0.9;                 // peak distance from text, in units of σ
   const STEP = () => (mobile ? 36 : 46) + Math.random() * 30;
   const HUES = [172, 205, 260, 140, 305, 95];
-  const CELL = mobile ? 22 : 18; // heatmap resolution (css px per cell)
-  const ISLAND_CAP = Math.floor(POP_TOTAL / N_ISLANDS);
+  const CELL = mobile ? 22 : 18;         // heatmap resolution (css px per cell)
 
   let w = 0, h = 0, dpr = 1;
   function resize() {
@@ -64,7 +74,7 @@
 
   /* ---------------- landscape ---------------- */
   interface Rect { x: number; y: number; w: number; h: number }
-  interface Peak { x: number; y: number; amp: number; sigma: number; energy: number }
+  interface Peak { x: number; y: number; amp: number; sigma: number; decoy: boolean }
   let blocks: Rect[] = [];
   let peaks: Peak[] = [];
 
@@ -83,36 +93,48 @@
     return false;
   }
 
-  /** Procedural terrain: random peaks in the whitespace between the content. */
-  function generatePeaks() {
-    peaks = [];
-    const K = Math.max(4, Math.min(10, Math.round(h / 550)));
-    for (let k = 0; k < K; k++) {
-      const bandY = ((k + 0.3 + Math.random() * 0.4) / K) * h;
-      let best: Peak | null = null;
-      let bestD = -1;
-      for (let c = 0; c < 24; c++) {
-        const x = 40 + Math.random() * (w - 80);
-        const y = Math.max(60, Math.min(h - 60, bandY + (Math.random() - 0.5) * 220));
-        if (insideBlock(x, y)) continue;
-        const dPeaks = peaks.length ? Math.min(...peaks.map((p) => Math.hypot(p.x - x, p.y - y))) : 9999;
-        if (dPeaks > bestD) {
-          bestD = dPeaks;
-          best = { x, y, amp: 0.55 + Math.random() * 0.45, sigma: 130 + Math.random() * 90, energy: 1 };
-        }
-      }
-      if (best) peaks.push(best);
+  /** Distance from a point to the nearest content block (0 if inside). */
+  function blockDist(x: number, y: number): number {
+    let d = Infinity;
+    for (const b of blocks) {
+      const dx = Math.max(b.x - x, 0, x - (b.x + b.w));
+      const dy = Math.max(b.y - y, 0, y - (b.y + b.h));
+      d = Math.min(d, Math.hypot(dx, dy));
     }
+    return d;
   }
 
-  /** Terrain-only score (what the heatmap shows). */
+  /**
+   * Place one peak inside a vertical band, far enough from text and edges
+   * that its visible bands fade before touching anything.
+   */
+  function placePeak(y0: number, y1: number, decoy: boolean): Peak | null {
+    let best: Peak | null = null;
+    let bestV = -1;
+    for (let c = 0; c < 40; c++) {
+      const sigma = decoy ? 90 + Math.random() * 50 : 130 + Math.random() * 80;
+      const x = sigma + Math.random() * (w - 2 * sigma);
+      const y = Math.max(sigma * 0.8, Math.min(h - sigma * 0.8, y0 + Math.random() * (y1 - y0)));
+      const clear = blockDist(x, y) / sigma; // in σ units
+      if (clear < CLEARANCE) continue;
+      const dPeaks = peaks.length ? Math.min(...peaks.map((p) => Math.hypot(p.x - x, p.y - y))) : 9999;
+      const v = Math.min(clear, 2) + Math.min(dPeaks / 500, 2);
+      if (v > bestV) {
+        bestV = v;
+        best = { x, y, amp: decoy ? 0.2 + Math.random() * 0.15 : 0.6 + Math.random() * 0.4, sigma, decoy };
+      }
+    }
+    return best;
+  }
+
+  /** Terrain-only score (what the heatmap shows). Never decays. */
   function terrain(x: number, y: number): number {
     if (x < 14 || y < 14 || x > w - 14 || y > h - 14) return 0;
     if (insideBlock(x, y)) return 0; // sacred ground
     let f = 0.06;
     for (const pk of peaks) {
       const d2 = (x - pk.x) ** 2 + (y - pk.y) ** 2;
-      if (d2 < pk.sigma * pk.sigma * 9) f += pk.amp * pk.energy * Math.exp(-d2 / (2 * pk.sigma * pk.sigma));
+      if (d2 < pk.sigma * pk.sigma * 9) f += pk.amp * Math.exp(-d2 / (2 * pk.sigma * pk.sigma));
     }
     return Math.min(1, f);
   }
@@ -123,19 +145,19 @@
     mouse = { x: e.clientX - fr.left, y: e.clientY - fr.top };
   });
 
-  /** What the search optimizes: terrain + the visitor's cursor. */
+  /** What live runs optimize: terrain + a gentle cursor bump. */
   function fitness(x: number, y: number): number {
     let f = terrain(x, y);
     if (f > 0 && mouse) {
       const d2 = (x - mouse.x) ** 2 + (y - mouse.y) ** 2;
-      f += 0.4 * Math.exp(-d2 / (2 * 150 * 150));
+      f += 0.25 * Math.exp(-d2 / (2 * 150 * 150));
     }
     return Math.min(1, f);
   }
 
   const isDark = () => document.documentElement.classList.contains('dark');
 
-  /* ---------------- visible score surface (heatmap) ---------------- */
+  /* ---------------- visible score surface ---------------- */
   const heat = document.createElement('canvas');
   const hctx = heat.getContext('2d')!;
   function drawHeatmap() {
@@ -168,8 +190,8 @@
     ctx.font = '10px ui-monospace, SFMono-Regular, Menlo, monospace';
     ctx.textAlign = 'center';
     for (const pk of peaks) {
-      const v = pk.amp * pk.energy;
-      const a = 0.3 + v * 0.5;
+      if (pk.decoy) continue;
+      const a = 0.3 + pk.amp * 0.5;
       ctx.strokeStyle = dark ? `hsla(172, 60%, 70%, ${a * 0.5})` : `hsla(172, 60%, 30%, ${a * 0.45})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -179,13 +201,13 @@
       ctx.lineTo(pk.x, pk.y + 4);
       ctx.stroke();
       ctx.fillStyle = dark ? `hsla(172, 45%, 78%, ${a})` : `hsla(172, 55%, 25%, ${a})`;
-      ctx.fillText(v.toFixed(2), pk.x, pk.y - 9);
+      ctx.fillText(pk.amp.toFixed(2), pk.x, pk.y - 9);
     }
   }
 
-  /* ---------------- the islands ---------------- */
+  /* ---------------- runs ---------------- */
   interface PNode {
-    isl: Island;
+    run: Run;
     parents: PNode[];
     children: number;
     ax: number; ay: number;
@@ -199,24 +221,27 @@
     phase: number;
     flash: number;
   }
-  interface Island {
+  interface Run {
     nodes: PNode[];
     hue: number;
-    homeX: number;
-    homeY: number;
+    target: Peak;
+    state: 'running' | 'converged' | 'fading';
     nextSample: number;
+    beats: number;
+    bestScore: number;
+    lastImproveBeat: number;
+    convergedAt: number;
   }
 
-  let islands: Island[] = [];
+  let runs: Run[] = [];
   let frame = 0;
-  let expedition = 1;
-  let retiring = 0;
+  let solvedTotal = 0;
 
-  function makeNode(isl: Island, parents: PNode[], score: number, outcome: PNode['outcome'], ax: number, ay: number): PNode {
+  function makeNode(run: Run, parents: PNode[], score: number, outcome: PNode['outcome'], ax: number, ay: number): PNode {
     const px = parents.length ? parents.reduce((s, p) => s + p.x, 0) / parents.length : ax;
     const py = parents.length ? parents.reduce((s, p) => s + p.y, 0) / parents.length : ay;
     return {
-      isl, parents, children: 0,
+      run, parents, children: 0,
       ax, ay, x: px, y: py,
       t: parents.length && !reduceMotion ? 0 : 1,
       score, outcome,
@@ -227,8 +252,8 @@
     };
   }
 
-  function sampleParents(isl: Island, k: number): PNode[] {
-    const pool = isl.nodes.filter((n) => !n.removing && n.outcome !== 'fail' && n.t >= 1);
+  function sampleParents(run: Run, k: number): PNode[] {
+    const pool = run.nodes.filter((n) => !n.removing && n.outcome !== 'fail' && n.t >= 1);
     const out: PNode[] = [];
     for (let s = 0; s < k && pool.length; s++) {
       const weights = pool.map((n) => Math.exp(n.score * 6 - (frame - n.born) * RECENCY));
@@ -244,100 +269,115 @@
     return out;
   }
 
-  /** Candidate placement: greedy over a handful of proposals — the lineage
-   *  visibly climbs toward whatever high ground is nearby. */
-  function childAnchor(parents: PNode[]): [number, number, number] | null {
+  /**
+   * Candidate placement. Each run carries a weak prior toward its target:
+   * on flat ground the prior steers the lineage; near the peak the actual
+   * score gradient dominates (the prior is a bounded multiplier).
+   */
+  function childAnchor(run: Run, parents: PNode[]): [number, number, number] | null {
     const px = parents.reduce((s, p) => s + p.ax, 0) / parents.length;
     const py = parents.reduce((s, p) => s + p.ay, 0) / parents.length;
+    const toTarget = Math.atan2(run.target.y - py, run.target.x - px);
     let best: [number, number, number] | null = null;
+    let bestV = -1;
     for (let c = 0; c < 6; c++) {
       const dir = Math.random() * Math.PI * 2;
       const d = STEP();
       const ax = px + Math.cos(dir) * d;
       const ay = py + Math.sin(dir) * d;
       const f = fitness(ax, ay);
-      if (!best || f > best[2]) best = [ax, ay, f];
+      const v = f * (1 + PRIOR * Math.cos(dir - toTarget));
+      if (v > bestV) { bestV = v; best = [ax, ay, f]; }
     }
     return best && best[2] > 0.015 ? best : null;
   }
 
-  function generateChildren(isl: Island, parents: PNode[]) {
+  function generateChildren(run: Run, parents: PNode[]) {
     const n = 2 + Math.floor(Math.random() * 2); // 2–3 programs per prompt
     const pScore = Math.max(...parents.map((p) => p.score));
     for (let k = 0; k < n; k++) {
-      const spot = childAnchor(parents);
+      const spot = childAnchor(run, parents);
       if (!spot || Math.random() < FAIL_P) {
         const p0 = parents[0];
         const a = Math.random() * Math.PI * 2;
-        isl.nodes.push(makeNode(isl, parents, 0, 'fail', p0.ax + Math.cos(a) * 14, p0.ay + Math.sin(a) * 14));
+        run.nodes.push(makeNode(run, parents, 0, 'fail', p0.ax + Math.cos(a) * 14, p0.ay + Math.sin(a) * 14));
       } else {
         const score = Math.min(1, Math.max(0.02, spot[2] * 0.85 + (Math.random() - 0.35) * 0.12));
-        isl.nodes.push(makeNode(isl, parents, score, score > pScore ? 'better' : 'worse', spot[0], spot[1]));
+        run.nodes.push(makeNode(run, parents, score, score > pScore ? 'better' : 'worse', spot[0], spot[1]));
+        if (score > run.bestScore) {
+          run.bestScore = score;
+          run.lastImproveBeat = run.beats;
+        }
       }
       for (const p of parents) p.children++;
     }
     for (const p of parents) p.flash = 1;
   }
 
-  /** Spawn islands a short hike from the score clusters, so each one has
-   *  somewhere obvious to evolve toward. */
-  function spawnIslands() {
-    islands = [];
-    // pick N peaks evenly down the page as island "destinations"
-    const sorted = [...peaks].sort((a, b) => a.y - b.y);
-    const chosen: Peak[] = [];
-    const stride = Math.max(1, Math.floor(sorted.length / N_ISLANDS));
-    for (let i = 0; i < sorted.length && chosen.length < N_ISLANDS; i += stride) chosen.push(sorted[i]);
-
-    chosen.forEach((pk, i) => {
-      // home: offset from the peak, in open ground
-      let hx = pk.x, hy = pk.y;
-      for (let c = 0; c < 12; c++) {
-        const a = Math.random() * Math.PI * 2;
-        const d = pk.sigma * (HOME_DIST + Math.random() * 0.5);
-        const x = Math.max(30, Math.min(w - 30, pk.x + Math.cos(a) * d));
-        const y = Math.max(30, Math.min(h - 30, pk.y + Math.sin(a) * d));
-        if (!insideBlock(x, y)) { hx = x; hy = y; break; }
-      }
-      const isl: Island = {
-        nodes: [],
-        hue: HUES[i % HUES.length],
-        homeX: hx,
-        homeY: hy,
-        nextSample: frame + 20 + i * 14,
-      };
-      const root = makeNode(isl, [], 0.25, 'root', hx, hy);
-      root.t = 1;
-      isl.nodes.push(root);
-      generateChildren(isl, [root]);
-      islands.push(isl);
-    });
+  /** Spawn a run FAR from its target, in open ground, pointed at the climb. */
+  function spawnRun(target: Peak, hue: number): Run {
+    let sx = target.x, sy = target.y;
+    for (let c = 0; c < 24; c++) {
+      const a = Math.random() * Math.PI * 2;
+      const d = target.sigma * (SPAWN_MIN + Math.random() * (SPAWN_MAX - SPAWN_MIN));
+      const x = Math.max(40, Math.min(w - 40, target.x + Math.cos(a) * d));
+      const y = Math.max(40, Math.min(h - 40, target.y + Math.sin(a) * d));
+      if (insideBlock(x, y) || blockDist(x, y) < 30) continue;
+      sx = x; sy = y;
+      break;
+    }
+    const run: Run = {
+      nodes: [],
+      hue,
+      target,
+      state: 'running',
+      nextSample: frame + 20 + Math.floor(Math.random() * 30),
+      beats: 0,
+      bestScore: 0,
+      lastImproveBeat: 0,
+      convergedAt: 0,
+    };
+    const root = makeNode(run, [], 0.2, 'root', sx, sy);
+    root.t = 1;
+    run.nodes.push(root);
+    generateChildren(run, [root]);
+    return run;
   }
 
+  function runChampion(run: Run): PNode | null {
+    let best: PNode | null = null;
+    for (const n of run.nodes)
+      if (!n.removing && n.outcome !== 'fail' && (!best || n.score > best.score)) best = n;
+    return best;
+  }
+
+  /* ---------------- bootstrap ---------------- */
   collect();
-  generatePeaks();
-  spawnIslands();
+  {
+    const bandH = h / N_RUNS;
+    for (let i = 0; i < N_RUNS; i++) {
+      const pk = placePeak(i * bandH, (i + 1) * bandH, false);
+      if (pk) {
+        peaks.push(pk);
+        runs.push(spawnRun(pk, HUES[i % HUES.length]));
+      }
+    }
+    for (let i = 0; i < N_DECOYS; i++) {
+      const pk = placePeak(Math.random() * h * 0.8, Math.random() * h * 0.8 + h * 0.2, true);
+      if (pk) peaks.push(pk);
+    }
+  }
   let terrainH = h;
   function remeasure() {
     resize();
     collect();
-    if (Math.abs(h - terrainH) > h * 0.15) {
-      terrainH = h;
-      generatePeaks();
-    }
+    terrainH = h;
   }
   window.addEventListener('load', remeasure);
   new ResizeObserver(remeasure).observe(field);
   setInterval(collect, 2500);
 
-  function champion(): PNode | null {
-    let best: PNode | null = null;
-    for (const isl of islands)
-      for (const n of isl.nodes)
-        if (!n.removing && n.outcome !== 'fail' && (!best || n.score > best.score)) best = n;
-    return best;
-  }
-
+  let allFrozenSince = 0;
   const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
   function tick() {
@@ -351,53 +391,73 @@
     if (frame === 1 || frame % 45 === 0) drawHeatmap();
     drawLandscape(dark);
 
-    /* ---- expedition lifecycle: retire when the terrain is spent ---- */
-    const exhausted = peaks.length > 0 && peaks.every((p) => p.energy < 0.2);
-    if (!retiring && exhausted) retiring = 240;
-    if (retiring > 0) {
-      retiring--;
-      if (retiring === 120) for (const isl of islands) for (const n of isl.nodes) n.removing = true;
-      if (retiring === 0) {
-        expedition++;
-        generatePeaks();
-        spawnIslands();
+    /* ---- live runs: sample, then check for convergence ---- */
+    for (const run of runs) {
+      if (run.state !== 'running' || reduceMotion) continue;
+      const champ = runChampion(run);
+      const cy = champ?.ay ?? run.target.y;
+      if (cy < viewTop - 600 || cy > viewBot + 600) continue;
+      if (frame >= run.nextSample) {
+        run.beats++;
+        const parents = sampleParents(run, Math.random() < CROSS_P ? 2 : 1);
+        if (parents.length) generateChildren(run, parents);
+        const near = mouse && champ && (mouse.x - champ.x) ** 2 + (mouse.y - champ.y) ** 2 < 300 * 300;
+        run.nextSample = frame + (near ? SAMPLE_EVERY / 2.5 : SAMPLE_EVERY) * (0.7 + Math.random() * 0.6);
+
+        // converged? summit reached, or stagnation (an honest local optimum)
+        const c = runChampion(run);
+        const onSummit =
+          c &&
+          (c.ax - run.target.x) ** 2 + (c.ay - run.target.y) ** 2 < (run.target.sigma * 0.6) ** 2 &&
+          c.score >= run.target.amp * SUMMIT_FRAC;
+        const stagnant = run.beats - run.lastImproveBeat > STAGNATE_BEATS;
+        if (onSummit || (stagnant && run.beats > 15)) {
+          run.state = 'converged';
+          run.convergedAt = frame;
+          solvedTotal++;
+          // the artifact keeps its structure; failed stubs get cleaned up
+          for (const n of run.nodes) if (n.outcome === 'fail') n.removing = true;
+        }
       }
     }
 
-    /* ---- sampling beats (islands near the viewport only) ---- */
-    if (!reduceMotion && !retiring) {
-      for (const isl of islands) {
-        if (isl.homeY < viewTop - 600 || isl.homeY > viewBot + 600) continue;
-        if (frame < isl.nextSample) continue;
-        const parents = sampleParents(isl, Math.random() < CROSS_P ? 2 : 1);
-        if (parents.length) generateChildren(isl, parents);
-        const near = mouse && (mouse.x - isl.homeX) ** 2 + (mouse.y - isl.homeY) ** 2 < 300 * 300;
-        isl.nextSample = frame + (near ? SAMPLE_EVERY / 2.5 : SAMPLE_EVERY) * (0.7 + Math.random() * 0.6);
+    /* ---- staggered renewal: recycle the oldest artifact ---- */
+    const live = runs.filter((r) => r.state === 'running').length;
+    if (live === 0 && runs.length > 0) {
+      if (!allFrozenSince) allFrozenSince = frame;
+      if (frame - allFrozenSince > ROTATE_AFTER && !reduceMotion) {
+        allFrozenSince = 0;
+        const oldest = runs.filter((r) => r.state === 'converged').sort((a, b) => a.convergedAt - b.convergedAt)[0];
+        if (oldest) {
+          oldest.state = 'fading';
+          for (const n of oldest.nodes) n.removing = true;
+          // its peak migrates: regrow elsewhere in the same vertical band
+          const idx = peaks.indexOf(oldest.target);
+          const bandH = h / N_RUNS;
+          const band = Math.max(0, Math.min(N_RUNS - 1, Math.floor(oldest.target.y / bandH)));
+          const fresh = placePeak(band * bandH, (band + 1) * bandH, false);
+          if (fresh && idx >= 0) {
+            peaks[idx] = fresh;
+            runs.push(spawnRun(fresh, oldest.hue));
+          }
+        }
       }
+    } else {
+      allFrozenSince = 0;
     }
 
-    /* ---- peak depletion ---- */
-    if (frame % 30 === 0 && !retiring) {
-      for (const pk of peaks) {
-        let occ = 0;
-        for (const isl of islands)
-          for (const n of isl.nodes)
-            if (!n.removing && n.outcome !== 'fail' && (n.ax - pk.x) ** 2 + (n.ay - pk.y) ** 2 < pk.sigma * pk.sigma) occ++;
-        if (occ > 0) pk.energy = Math.max(0, pk.energy - occ * DEPLETE);
+    /* ---- node updates (cap applies only to live runs) ---- */
+    for (const run of runs) {
+      if (run.state === 'running') {
+        const liveCount = run.nodes.filter((n) => !n.removing).length;
+        if (liveCount > RUN_CAP) {
+          const leaves = run.nodes
+            .filter((n) => !n.removing && n.children === 0 && n.outcome !== 'root')
+            .sort((a, b) => a.score - b.score);
+          for (const n of leaves.slice(0, Math.max(4, liveCount - RUN_CAP))) n.removing = true;
+        }
       }
-    }
-
-    /* ---- prune + node updates, per island ---- */
-    for (const isl of islands) {
-      const liveCount = isl.nodes.filter((n) => !n.removing).length;
-      if (liveCount > ISLAND_CAP || (frame % PRUNE_EVERY === 0 && liveCount > 12)) {
-        const leaves = isl.nodes
-          .filter((n) => !n.removing && n.children === 0 && n.outcome !== 'root')
-          .sort((a, b) => a.score - b.score);
-        const cut = liveCount > ISLAND_CAP ? Math.max(4, liveCount - ISLAND_CAP) : Math.max(2, Math.floor(leaves.length * 0.1));
-        for (const n of leaves.slice(0, cut)) n.removing = true;
-      }
-      for (const n of isl.nodes) {
+      for (const n of run.nodes) {
         const onScreen = n.ay > viewTop && n.ay < viewBot;
         if (!onScreen && n.t >= 1 && !n.removing && n.flash <= 0) continue;
         if (n.t < 1) n.t = Math.min(1, n.t + 1 / GROW_FRAMES);
@@ -405,36 +465,37 @@
         const living = n.parents.filter((p) => p.alpha > 0);
         const px = living.length ? living.reduce((s, p) => s + p.x, 0) / living.length : n.ax;
         const py = living.length ? living.reduce((s, p) => s + p.y, 0) / living.length : n.ay;
-        const bx = reduceMotion ? 0 : Math.sin(frame * 0.008 + n.phase) * 2;
-        const by = reduceMotion ? 0 : Math.cos(frame * 0.009 + n.phase) * 2;
+        const frozen = run.state !== 'running';
+        const bx = reduceMotion || frozen ? 0 : Math.sin(frame * 0.008 + n.phase) * 2;
+        const by = reduceMotion || frozen ? 0 : Math.cos(frame * 0.009 + n.phase) * 2;
         n.x = px + (n.ax + bx - px) * te;
         n.y = py + (n.ay + by - py) * te;
-        if (n.outcome === 'fail' && frame - n.born > FAIL_TTL) n.removing = true;
+        if (run.state === 'running' && n.outcome === 'fail' && frame - n.born > FAIL_TTL) n.removing = true;
         if (n.removing) n.alpha = Math.max(0, n.alpha - 0.02);
         else n.alpha = Math.min(n.outcome === 'fail' ? 0.5 : 1, n.alpha + 0.035);
         if (n.flash > 0) n.flash -= 0.025;
       }
-      for (let i = isl.nodes.length - 1; i >= 0; i--) {
-        const n = isl.nodes[i];
+      for (let i = run.nodes.length - 1; i >= 0; i--) {
+        const n = run.nodes[i];
         if (n.removing && n.alpha <= 0) {
           for (const p of n.parents) p.children--;
-          isl.nodes.splice(i, 1);
+          run.nodes.splice(i, 1);
         }
       }
     }
+    runs = runs.filter((r) => !(r.state === 'fading' && r.nodes.length === 0));
 
-    const champ = champion();
-
-    /* ---- draw lineage edges (within islands only) ---- */
-    for (const isl of islands) {
-      for (const n of isl.nodes) {
+    /* ---- draw lineage edges ---- */
+    for (const run of runs) {
+      const dim = run.state === 'running' ? 1 : 0.7; // frozen artifacts recede
+      for (const n of run.nodes) {
         for (const p of n.parents) {
-          const a = Math.min(n.alpha, p.alpha);
+          const a = Math.min(n.alpha, p.alpha) * dim;
           if (a <= 0) continue;
           let stroke: string;
           let lw = 0.8;
           if (n.outcome === 'better') {
-            stroke = dark ? `hsla(${isl.hue}, 70%, 70%, ${0.45 * a})` : `hsla(${isl.hue}, 65%, 32%, ${0.4 * a})`;
+            stroke = dark ? `hsla(${run.hue}, 70%, 70%, ${0.45 * a})` : `hsla(${run.hue}, 65%, 32%, ${0.4 * a})`;
             lw = 1.1;
           } else if (n.outcome === 'worse') {
             stroke = dark ? `hsla(40, 45%, 60%, ${0.25 * a})` : `hsla(38, 50%, 40%, ${0.22 * a})`;
@@ -452,18 +513,20 @@
     }
 
     /* ---- draw nodes ---- */
-    for (const isl of islands) {
-      for (const n of isl.nodes) {
+    for (const run of runs) {
+      const dim = run.state === 'running' ? 1 : 0.7;
+      for (const n of run.nodes) {
         if (n.alpha <= 0) continue;
+        const a = n.alpha * dim;
         let fill: string;
         const r = 1.6 + n.score * 3;
         if (n.outcome === 'fail') {
-          fill = dark ? `hsla(5, 70%, 55%, ${0.45 * n.alpha})` : `hsla(4, 75%, 45%, ${0.4 * n.alpha})`;
+          fill = dark ? `hsla(5, 70%, 55%, ${0.45 * a})` : `hsla(4, 75%, 45%, ${0.4 * a})`;
         } else if (n.outcome === 'worse') {
-          fill = dark ? `hsla(40, 40%, 58%, ${0.5 * n.alpha})` : `hsla(38, 45%, 45%, ${0.45 * n.alpha})`;
+          fill = dark ? `hsla(40, 40%, 58%, ${0.5 * a})` : `hsla(38, 45%, 45%, ${0.45 * a})`;
         } else {
           const l = dark ? 55 + n.score * 32 : 45 - n.score * 18;
-          fill = `hsla(${isl.hue}, 65%, ${l}%, ${(0.45 + n.score * 0.5) * n.alpha})`;
+          fill = `hsla(${run.hue}, 65%, ${l}%, ${(0.45 + n.score * 0.5) * a})`;
         }
         ctx.fillStyle = fill;
         ctx.beginPath();
@@ -471,7 +534,7 @@
         ctx.fill();
 
         if (n.flash > 0) {
-          ctx.strokeStyle = dark ? `hsla(${isl.hue}, 80%, 78%, ${n.flash * 0.6})` : `hsla(${isl.hue}, 70%, 35%, ${n.flash * 0.5})`;
+          ctx.strokeStyle = dark ? `hsla(${run.hue}, 80%, 78%, ${n.flash * 0.6})` : `hsla(${run.hue}, 70%, 35%, ${n.flash * 0.5})`;
           ctx.lineWidth = 1.1;
           ctx.beginPath();
           ctx.arc(n.x, n.y, r + 4 + (1 - n.flash) * 7, 0, Math.PI * 2);
@@ -480,18 +543,29 @@
       }
     }
 
-    /* ---- champion halo ---- */
-    if (champ) {
-      const halo = 6 + Math.sin(frame * 0.06) * 1.5;
-      ctx.strokeStyle = dark ? 'hsla(50, 90%, 72%, 0.75)' : 'hsla(45, 95%, 38%, 0.7)';
+    /* ---- crown every champion; converged runs get a check ---- */
+    ctx.font = '10px ui-monospace, SFMono-Regular, Menlo, monospace';
+    ctx.textAlign = 'left';
+    for (const run of runs) {
+      if (run.state === 'fading') continue;
+      const champ = runChampion(run);
+      if (!champ) continue;
+      const active = run.state === 'running';
+      const halo = active ? 6 + Math.sin(frame * 0.06) * 1.5 : 6;
+      ctx.strokeStyle = dark ? `hsla(50, 90%, 72%, ${active ? 0.75 : 0.5})` : `hsla(45, 95%, 38%, ${active ? 0.7 : 0.45})`;
       ctx.lineWidth = 1.3;
       ctx.beginPath();
       ctx.arc(champ.x, champ.y, halo, 0, Math.PI * 2);
       ctx.stroke();
+      if (!active) {
+        ctx.fillStyle = dark ? 'hsla(50, 80%, 75%, 0.6)' : 'hsla(45, 90%, 35%, 0.55)';
+        ctx.fillText(`✓ ${champ.score.toFixed(2)}`, champ.x + 10, champ.y + 3);
+      }
     }
 
     if (frame % 20 === 0) {
-      statsEl.textContent = `expedition ${expedition} · best ${(champ?.score ?? 0).toFixed(3)}`;
+      const liveNow = runs.filter((r) => r.state === 'running').length;
+      statsEl.textContent = `running ${liveNow} · solved ${solvedTotal}`;
     }
     requestAnimationFrame(tick);
   }
