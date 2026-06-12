@@ -1,13 +1,20 @@
-_site
-.bundle
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-.DS_store
-.ruby-version
-.tweet-cache
-Gemfile.lock
-assets/libs/
-node_modules/
-vendor
+# Astro site
+site/node_modules/
+site/dist/
+site/.astro/
+
+# OS / editor
+.DS_Store
+Thumbs.db
 .idea
+
+# local agent tooling
+.agents/
+.claude/
+skills-lock.json
+
+# leftovers from the old Jekyll site (untracked build caches)
+_site/
+.jekyll-cache/
+.tweet-cache/
+work_in_progress/
