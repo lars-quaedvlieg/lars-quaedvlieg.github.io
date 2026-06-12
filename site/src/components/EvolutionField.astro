@@ -48,10 +48,9 @@
 >
   <p class="font-mono text-[10px] tracking-widest text-accent-700 uppercase dark:text-accent-400">you found the search</p>
   <p class="mt-2">
-    This page is a fitness landscape, and what's crawling over it is <em>evolutionary search</em>. I'm not researching
-    it right now, but I'm a big believer in the idea: I think it will end up cracking a lot of hard problems.
-    Each colored lineage is an independent run: it samples parents (better programs reproduce more), and an LLM-style
-    operator proposes children, scored by the ground they land on.
+    What you're seeing on this page is <em>evolutionary search</em>. The contours are a score landscape, and each
+    colored lineage is an independent run: it samples parents (better programs reproduce more often), and an LLM
+    proposes new children, scored by the ground they land on.
   </p>
   <ul class="mt-2 space-y-1">
     <li><span class="mr-1 inline-block h-2 w-2 rounded-full bg-teal-500"></span> improved on its parent</li>
@@ -60,17 +59,17 @@
     <li><span class="mr-1 inline-block h-2 w-2 rounded-full border border-yellow-500"></span> champion of its run</li>
   </ul>
   <p class="mt-2">
-    Runs converge on a summit (or stagnate on a local optimum) and freeze as artifacts. Your text is sacred ground;
-    your cursor is a fitness peak. Try luring a run somewhere.
+    Runs converge on a summit, or stagnate on a local optimum, and freeze. The text never gets overgrown, and the
+    search is drawn toward your cursor.
   </p>
   <p class="mt-2">
-    Curious? We explored this in
+    I think this idea will crack a lot of hard problems. We explored it in
     <a
       href="https://arxiv.org/abs/2504.05108"
       target="_blank"
       rel="noopener"
       class="text-accent-700 underline underline-offset-2 dark:text-accent-400">our COLM 2025 paper</a
-    >, and it's being bet on at scale: see
+    >;
     <a
       href="https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/"
       target="_blank"
@@ -82,13 +81,13 @@
       target="_blank"
       rel="noopener"
       class="text-accent-700 underline underline-offset-2 dark:text-accent-400">AIRA</a
-    > team at Meta FAIR, and
+    > team at Meta FAIR,
     <a
       href="https://recursive.com"
       target="_blank"
       rel="noopener"
       class="text-accent-700 underline underline-offset-2 dark:text-accent-400">Recursive</a
-    >.
+    >, and others are betting on it at scale.
   </p>
   <p
     id="evo-live"
@@ -109,8 +108,7 @@
   });
   console.log(
     '%cYou found the search.%c\n' +
-      'This site runs island-model evolutionary search over the page as a fitness landscape.\n' +
-      'Text is sacred ground. Your cursor is a fitness peak. The counter bottom-right explains the rest.',
+      'This site runs evolutionary search over every page. The counter in the bottom-right corner explains the rest.',
     'color:#0d9488;font-weight:bold;font-size:14px',
     'color:inherit'
   );
