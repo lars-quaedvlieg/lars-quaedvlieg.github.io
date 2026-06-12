@@ -1,0 +1,165 @@
+---
+// Generative "evolutionary search" canvas: a population of candidate solutions
+// drifts over a hidden fitness landscape. Every few seconds a generation passes —
+// the fittest reproduce with mutation, the rest fade out. The cursor becomes a
+// moving fitness peak, so visitors literally steer the search.
+---
+
+<div id="evo-hero" class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+  <canvas id="evo-canvas" class="h-full w-full"></canvas>
+  <p
+    id="evo-gen"
+    class="absolute right-4 bottom-3 font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none dark:text-ink-500/70"
+  >
+    generation 0
+  </p>
+</div>
+
+<script>
+  const canvas = document.getElementById('evo-canvas') as HTMLCanvasElement;
+  const genLabel = document.getElementById('evo-gen')!;
+  const ctx = canvas.getContext('2d')!;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let w = 0, h = 0, dpr = 1;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth;
+    h = canvas.clientHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  interface Particle {
+    x: number; y: number; vx: number; vy: number;
+    hue: number; r: number; born: number; alpha: number; dying: boolean;
+  }
+
+  const POP = Math.min(110, Math.floor((window.innerWidth * 0.07) + 40));
+  const particles: Particle[] = [];
+  let generation = 0;
+  let frame = 0;
+
+  // Fitness peaks: two slow-orbiting attractors + the cursor when present.
+  const peaks = [
+    { x: 0.28, y: 0.42, ox: 0.28, oy: 0.42, t: 0 },
+    { x: 0.74, y: 0.55, ox: 0.74, oy: 0.55, t: Math.PI },
+  ];
+  let mouse: { x: number; y: number } | null = null;
+  const hero = document.getElementById('evo-hero')!.parentElement!;
+  hero.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  });
+  hero.addEventListener('pointerleave', () => (mouse = null));
+
+  function spawn(x?: number, y?: number, hue?: number): Particle {
+    return {
+      x: x ?? Math.random() * w,
+      y: y ?? Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      hue: hue !== undefined ? hue + (Math.random() - 0.5) * 24 : 150 + Math.random() * 80,
+      r: 1.2 + Math.random() * 1.8,
+      born: frame,
+      alpha: 0,
+      dying: false,
+    };
+  }
+  for (let i = 0; i < POP; i++) particles.push(spawn());
+
+  function fitness(p: Particle): number {
+    let f = 0;
+    const pts = mouse ? [...peaks.map((pk) => ({ x: pk.x * w, y: pk.y * h })), mouse] : peaks.map((pk) => ({ x: pk.x * w, y: pk.y * h }));
+    for (const pt of pts) {
+      const d2 = (p.x - pt.x) ** 2 + (p.y - pt.y) ** 2;
+      f += Math.exp(-d2 / (2 * (w * 0.18) ** 2));
+    }
+    return f;
+  }
+
+  function evolve() {
+    generation++;
+    genLabel.textContent = `generation ${generation}`;
+    const scored = particles.filter((p) => !p.dying).map((p) => ({ p, f: fitness(p) }));
+    scored.sort((a, b) => b.f - a.f);
+    // Bottom ~quarter dies; the top reproduces with mutation near the parent.
+    const losers = scored.slice(Math.floor(scored.length * 0.75));
+    for (const { p } of losers) p.dying = true;
+    const parents = scored.slice(0, losers.length);
+    for (const { p } of parents) {
+      particles.push(spawn(p.x + (Math.random() - 0.5) * 60, p.y + (Math.random() - 0.5) * 60, p.hue));
+    }
+  }
+  if (!reduceMotion) setInterval(evolve, 2600);
+
+  function isDark() {
+    return document.documentElement.classList.contains('dark');
+  }
+
+  function tick() {
+    frame++;
+    ctx.clearRect(0, 0, w, h);
+    const dark = isDark();
+
+    // Drift the ambient peaks in slow orbits.
+    for (const pk of peaks) {
+      pk.t += 0.0022;
+      pk.x = pk.ox + Math.cos(pk.t) * 0.06;
+      pk.y = pk.oy + Math.sin(pk.t * 1.3) * 0.08;
+    }
+
+    // Move particles: gentle gradient ascent + noise drift.
+    for (const p of particles) {
+      const eps = 4;
+      const fx = fitness({ ...p, x: p.x + eps }) - fitness({ ...p, x: p.x - eps });
+      const fy = fitness({ ...p, y: p.y + eps }) - fitness({ ...p, y: p.y - eps });
+      p.vx += fx * 1.1 + (Math.random() - 0.5) * 0.05;
+      p.vy += fy * 1.1 + (Math.random() - 0.5) * 0.05;
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+      if (!reduceMotion) {
+        p.x += p.vx;
+        p.y += p.vy;
+      }
+      if (p.dying) p.alpha = Math.max(0, p.alpha - 0.012);
+      else p.alpha = Math.min(1, p.alpha + 0.02);
+    }
+    for (let i = particles.length - 1; i >= 0; i--) {
+      if (particles[i].dying && particles[i].alpha <= 0) particles.splice(i, 1);
+    }
+
+    // Faint links between nearby particles (the "population graph").
+    ctx.lineWidth = 0.6;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i], b = particles[j];
+        const d2 = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
+        if (d2 < 90 * 90) {
+          const o = (1 - d2 / (90 * 90)) * 0.14 * a.alpha * b.alpha;
+          ctx.strokeStyle = dark ? `rgba(140, 220, 200, ${o})` : `rgba(20, 120, 110, ${o})`;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Particles, brighter when fitter.
+    for (const p of particles) {
+      const f = Math.min(1, fitness(p));
+      const l = dark ? 60 + f * 25 : 38 - f * 10;
+      ctx.fillStyle = `hsla(${p.hue}, 55%, ${l}%, ${(0.35 + f * 0.55) * p.alpha})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + f * 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+</script>

@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/inter';
+import '@fontsource-variable/fraunces';
 import '@fontsource/lora/400.css';
 import '@fontsource/lora/600.css';
 import '@fontsource/lora/700.css';
@@ -11,9 +12,11 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Full-bleed page: the page manages its own widths/padding (used by the homepage hero). */
+  full?: boolean;
 }
 
-const { title, description = SITE.description, ogImage } = Astro.props;
+const { title, description = SITE.description, ogImage, full = false } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.name}` : SITE.name;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -115,7 +118,7 @@ const isActive = (href: string) => {
       </div>
     </header>
 
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6">
+    <main class:list={[full ? 'w-full flex-1' : 'mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6']}>
       <slot />
     </main>
 
@@ -152,6 +155,20 @@ const isActive = (href: string) => {
       document.getElementById('menu-toggle')?.addEventListener('click', () => {
         menu?.classList.toggle('hidden');
       });
+
+      // Scroll-reveal: fade sections in as they enter the viewport.
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('revealed');
+              observer.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
     </script>
   </body>
 </html>

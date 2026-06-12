@@ -6,6 +6,7 @@
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Lora', ui-serif, Georgia, serif;
+  --font-display: 'Fraunces Variable', 'Lora', ui-serif, Georgia, serif;
 
   --color-accent-50: oklch(0.984 0.014 180.72);
   --color-accent-100: oklch(0.953 0.051 180.08);
@@ -94,4 +95,39 @@ body {
 /* References list produced by the blog migration */
 .prose .references-list {
   @apply text-sm text-ink-600 dark:text-ink-400;
+}
+
+/* ---------- Editorial system ---------- */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  @apply font-semibold tracking-tight text-ink-900 dark:text-ink-50;
+}
+
+/* Numbered section: "01 / About" eyebrow + big serif title */
+.section-eyebrow {
+  @apply font-mono text-xs tracking-[0.25em] text-accent-700 uppercase dark:text-accent-400;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 60;
+  @apply mt-2 text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl dark:text-ink-50;
+}
+
+/* Scroll-reveal motion */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
