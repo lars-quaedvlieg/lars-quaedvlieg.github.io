@@ -2,17 +2,17 @@
 // Full-page generative layer: ONE evolutionary search expedition over the
 // page-as-score-landscape.
 //
-//   · the page IS the fitness surface, and you can see it: soft contour
-//     glows mark the peaks (headings, portrait, publications); text blocks
-//     are walls with zero score
+//   · the page IS the fitness surface, and you can see it: a procedural
+//     terrain of peaks (soft contour glows) scattered through the whitespace
+//   · content is SACRED ground — zero score, never overgrown; the lineages
+//     wrap around the text on their way past
 //   · the expedition starts at the short description up top and is guided
-//     DOWNWARD by the landscape — programs are scored by the ground they
-//     land on, high-scoring lineages get sampled more, so the frontier
-//     climbs from peak to peak toward the publications
+//     DOWNWARD by the terrain — programs are scored by the ground they land
+//     on, high-scoring lineages get sampled more, so the frontier climbs
+//     from peak to peak toward the bottom of the page
 //   · peaks DEPLETE as the population feeds on them (their glow dims), so
-//     the search moves on — a guide that walks visitors through the page
-//   · when the frontier reaches the bottom, the expedition retires and a
-//     new one sets out from the top
+//     the search keeps moving; when the frontier reaches the bottom the
+//     expedition retires and a new one sets out over a NEW random terrain
 ---
 
 <div id="evo-field" class="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
@@ -42,7 +42,7 @@
   const FAIL_TTL = 320;
   const PRUNE_EVERY = 200;
   const CROSS_P = 0.4;        // chance a beat samples TWO parents
-  const PAD = 12;
+  const PAD = 16;             // sacred margin around content blocks
   const DOWN_BIAS = 0.45;     // how strongly candidates prefer heading down-page
   const RECENCY = 0.0009;     // sampling decay per frame of age (frontier advances)
   const DEPLETE = 0.0035;     // peak energy drain per occupant per check
@@ -73,17 +73,6 @@
       const r = el.getBoundingClientRect();
       return { x: r.left - fr.left - PAD, y: r.top - fr.top - PAD, w: r.width + PAD * 2, h: r.height + PAD * 2 };
     });
-    const oldPeaks = peaks;
-    peaks = [...document.querySelectorAll('[data-evo-peak]')].map((el, i) => {
-      const r = el.getBoundingClientRect();
-      return {
-        x: r.left - fr.left + r.width / 2,
-        y: r.top - fr.top + r.height / 2,
-        amp: parseFloat((el as HTMLElement).dataset.evoPeak || '') || 0.8,
-        sigma: Math.max(130, Math.max(r.width, r.height) * 0.7),
-        energy: oldPeaks[i]?.energy ?? 1, // survive re-measures
-      };
-    });
     const start = document.querySelector('[data-evo-start]');
     if (start) {
       const r = start.getBoundingClientRect();
@@ -94,9 +83,50 @@
         : { x: Math.min(w - 60, r.right - fr.left + 110), y: r.top - fr.top + r.height * 0.45 };
     }
   }
+
+  function insideBlock(x: number, y: number): boolean {
+    for (const b of blocks) {
+      if (x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h) return true;
+    }
+    return false;
+  }
+
+  /** Procedural terrain: random peaks in the whitespace between the content. */
+  function generatePeaks() {
+    peaks = [];
+    const K = Math.max(4, Math.min(10, Math.round(h / 550)));
+    for (let k = 0; k < K; k++) {
+      const bandY = ((k + 0.3 + Math.random() * 0.4) / K) * h;
+      let best: Peak | null = null;
+      let bestD = -1;
+      for (let c = 0; c < 24; c++) {
+        const x = 40 + Math.random() * (w - 80);
+        const y = Math.max(60, Math.min(h - 60, bandY + (Math.random() - 0.5) * 220));
+        if (insideBlock(x, y)) continue;
+        const dPeaks = peaks.length ? Math.min(...peaks.map((p) => Math.hypot(p.x - x, p.y - y))) : 9999;
+        if (dPeaks > bestD) {
+          bestD = dPeaks;
+          best = { x, y, amp: 0.55 + Math.random() * 0.45, sigma: 130 + Math.random() * 90, energy: 1 };
+        }
+      }
+      if (best) peaks.push(best);
+    }
+  }
+
   collect();
-  window.addEventListener('load', () => { resize(); collect(); });
-  new ResizeObserver(() => { resize(); collect(); }).observe(field);
+  generatePeaks();
+  let terrainH = h;
+  function remeasure() {
+    resize();
+    collect();
+    // Only regrow the terrain when the page itself changed shape.
+    if (Math.abs(h - terrainH) > h * 0.15) {
+      terrainH = h;
+      generatePeaks();
+    }
+  }
+  window.addEventListener('load', remeasure);
+  new ResizeObserver(remeasure).observe(field);
   setInterval(collect, 2500);
 
   let mouse: { x: number; y: number } | null = null;
@@ -107,9 +137,7 @@
 
   function fitness(x: number, y: number): number {
     if (x < 14 || y < 14 || x > w - 14 || y > h - 14) return 0;
-    for (const b of blocks) {
-      if (x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h) return 0;
-    }
+    if (insideBlock(x, y)) return 0; // sacred ground
     let f = 0.06;
     for (const pk of peaks) {
       const d2 = (x - pk.x) ** 2 + (y - pk.y) ** 2;
@@ -218,7 +246,7 @@
     root.t = 1;
     nodes.push(root);
     for (let i = 0; i < 2; i++) generateChildren([root]);
-    for (const pk of peaks) pk.energy = 1;
+    generatePeaks(); // every expedition explores fresh terrain
   }
   launchExpedition();
 
