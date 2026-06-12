@@ -6,7 +6,6 @@ import Timeline from '../components/Timeline.astro';
 import PublicationCard from '../components/PublicationCard.astro';
 import { SOCIALS, withBase } from '../lib/site';
 import { loadPublications } from '../lib/bibtex';
-import { fetchCitationCounts } from '../lib/citations';
 
 const interests = ['Evolutionary Search with LLMs', 'AI for Science', 'Reinforcement Learning'];
 
@@ -19,7 +18,6 @@ const secNum = {
   research: showNews ? '04' : '03',
 };
 const selectedPubs = loadPublications().filter((p) => p.selected).slice(0, 3);
-const citations = await fetchCitationCounts(selectedPubs.map((p) => p.title));
 
 const news = (await getCollection('news', (n) => n.data.display))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -197,7 +195,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
             </div>
           </div>
           <div class="space-y-4">
-            {selectedPubs.map((pub) => <PublicationCard pub={pub} citations={citations[pub.title]} />)}
+            {selectedPubs.map((pub) => <PublicationCard pub={pub} />)}
           </div>
         </section>
       </div>
