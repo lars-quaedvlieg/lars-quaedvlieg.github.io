@@ -12,16 +12,16 @@ const { pub } = Astro.props;
 <article
   data-evo-block
  
-  class="flex flex-col gap-4 rounded-xl border border-ink-200 bg-white/80 p-5 backdrop-blur-sm transition-shadow hover:shadow-md sm:flex-row dark:border-ink-800 dark:bg-ink-950/80 dark:hover:shadow-ink-900/50"
+  class="flex gap-4 rounded-xl border border-ink-200 bg-white/80 p-4 backdrop-blur-sm transition-shadow hover:shadow-md sm:p-5 dark:border-ink-800 dark:bg-ink-950/80 dark:hover:shadow-ink-900/50"
 >
   {
     pub.preview && (
-      <div class="w-full shrink-0 sm:w-44">
+      <div class="w-24 shrink-0 sm:w-44">
         <img
           src={withBase(previewUrl(pub.preview))}
           alt={`Preview for ${pub.title}`}
           loading="lazy"
-          class="w-full rounded-lg border border-ink-100 object-cover dark:border-ink-800"
+          class="aspect-[4/3] w-full rounded-lg border border-ink-100 object-cover sm:aspect-auto dark:border-ink-800"
         />
       </div>
     )
