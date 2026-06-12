@@ -1,0 +1,157 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/lora/400.css';
+import '@fontsource/lora/600.css';
+import '@fontsource/lora/700.css';
+import '../styles/global.css';
+import { SITE, NAV, SOCIALS, withBase } from '../lib/site';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = SITE.description, ogImage } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const isActive = (href: string) => {
+  const target = (base + href).replace(/\/$/, '') || '/';
+  return href === '/' ? currentPath === target : currentPath.startsWith(target);
+};
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(withBase(ogImage ?? '/assets/img/profile.png'), Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      // Set theme before paint to avoid a flash of the wrong mode.
+      const stored = localStorage.getItem('theme');
+      const dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    </script>
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <header class="sticky top-0 z-40 border-b border-ink-200/70 bg-white/80 backdrop-blur dark:border-ink-800/70 dark:bg-ink-950/80">
+      <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <a href={withBase('/')} class="font-serif text-lg font-bold tracking-tight text-ink-900 dark:text-ink-100">
+          Lars <span class="text-accent-600 dark:text-accent-400">Quaedvlieg</span>
+        </a>
+        <div class="flex items-center gap-1 sm:gap-2">
+          <ul class="hidden items-center gap-1 sm:flex">
+            {
+              NAV.map((item) => (
+                <li>
+                  <a
+                    href={withBase(item.href)}
+                    class:list={[
+                      'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                      isActive(item.href)
+                        ? 'bg-accent-50 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300'
+                        : 'text-ink-600 hover:bg-ink-100 hover:text-ink-900 dark:text-ink-300 dark:hover:bg-ink-800 dark:hover:text-ink-100',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <button
+            id="theme-toggle"
+            type="button"
+            class="rounded-md p-2 text-ink-500 hover:bg-ink-100 hover:text-ink-900 dark:text-ink-300 dark:hover:bg-ink-800 dark:hover:text-ink-100"
+            aria-label="Toggle dark mode"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="hidden h-5 w-5 dark:block">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5 dark:hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+            </svg>
+          </button>
+          <button
+            id="menu-toggle"
+            type="button"
+            class="rounded-md p-2 text-ink-500 hover:bg-ink-100 hover:text-ink-900 sm:hidden dark:text-ink-300 dark:hover:bg-ink-800"
+            aria-label="Open menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+      <div id="mobile-menu" class="hidden border-t border-ink-200/70 px-4 pb-3 sm:hidden dark:border-ink-800/70">
+        {
+          NAV.map((item) => (
+            <a
+              href={withBase(item.href)}
+              class:list={[
+                'block rounded-md px-3 py-2 text-sm font-medium',
+                isActive(item.href)
+                  ? 'bg-accent-50 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300'
+                  : 'text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6">
+      <slot />
+    </main>
+
+    <footer class="border-t border-ink-200/70 dark:border-ink-800/70">
+      <div class="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-8 sm:px-6">
+        <div class="flex items-center gap-4">
+          {
+            SOCIALS.map((s) => (
+              <a
+                href={s.href}
+                target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel="noopener"
+                aria-label={s.label}
+                title={s.label}
+                class="text-ink-400 transition-colors hover:text-accent-600 dark:text-ink-500 dark:hover:text-accent-400"
+              >
+                <Icon name={s.icon} class="h-5 w-5" />
+              </a>
+            ))
+          }
+        </div>
+        <p class="text-xs text-ink-400 dark:text-ink-500">
+          © {new Date().getFullYear()} Lars C.P.M. Quaedvlieg · Built with <a class="hover:text-accent-600" href="https://astro.build" target="_blank" rel="noopener">Astro</a> · Hosted on <a class="hover:text-accent-600" href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const dark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+      const menu = document.getElementById('mobile-menu');
+      document.getElementById('menu-toggle')?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

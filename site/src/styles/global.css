@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Lora', ui-serif, Georgia, serif;
+
+  --color-accent-50: oklch(0.984 0.014 180.72);
+  --color-accent-100: oklch(0.953 0.051 180.08);
+  --color-accent-200: oklch(0.91 0.096 180.42);
+  --color-accent-300: oklch(0.855 0.138 181.07);
+  --color-accent-400: oklch(0.777 0.152 181.91);
+  --color-accent-500: oklch(0.704 0.14 182.5);
+  --color-accent-600: oklch(0.6 0.118 184.7);
+  --color-accent-700: oklch(0.511 0.096 186.39);
+  --color-accent-800: oklch(0.437 0.078 188.22);
+  --color-accent-900: oklch(0.386 0.063 188.42);
+
+  --color-ink-50: oklch(0.985 0.002 247.84);
+  --color-ink-100: oklch(0.967 0.003 264.54);
+  --color-ink-200: oklch(0.928 0.006 264.53);
+  --color-ink-300: oklch(0.872 0.01 258.34);
+  --color-ink-400: oklch(0.707 0.022 261.32);
+  --color-ink-500: oklch(0.551 0.027 264.36);
+  --color-ink-600: oklch(0.446 0.03 256.8);
+  --color-ink-700: oklch(0.373 0.034 259.73);
+  --color-ink-800: oklch(0.278 0.033 256.85);
+  --color-ink-900: oklch(0.21 0.034 264.66);
+  --color-ink-950: oklch(0.13 0.028 261.69);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-ink-800 antialiased dark:bg-ink-950 dark:text-ink-200;
+}
+
+/* ---------- Prose styling for markdown content ---------- */
+.prose {
+  @apply text-[1.02rem] leading-relaxed;
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-serif font-semibold text-ink-900 dark:text-ink-100 scroll-mt-24;
+}
+.prose h1 { @apply text-3xl mt-10 mb-4; }
+.prose h2 { @apply text-2xl mt-10 mb-3 border-b border-ink-200 dark:border-ink-800 pb-2; }
+.prose h3 { @apply text-xl mt-8 mb-2; }
+.prose h4 { @apply text-lg mt-6 mb-2; }
+.prose p { @apply my-4; }
+.prose a {
+  @apply text-accent-700 dark:text-accent-400 underline decoration-accent-300 dark:decoration-accent-700 underline-offset-2 hover:decoration-2;
+}
+.prose ul { @apply list-disc pl-6 my-4 space-y-1; }
+.prose ol { @apply list-decimal pl-6 my-4 space-y-1; }
+.prose blockquote {
+  @apply border-l-4 border-accent-300 dark:border-accent-700 pl-4 italic text-ink-600 dark:text-ink-400 my-6;
+}
+.prose img { @apply rounded-lg mx-auto my-6 max-w-full; }
+.prose figure { @apply my-6; }
+.prose figcaption,
+.prose .caption {
+  @apply text-sm text-ink-500 dark:text-ink-400 text-center mt-2;
+}
+.prose pre {
+  @apply rounded-lg p-4 my-6 overflow-x-auto text-sm border border-ink-200 dark:border-ink-800;
+}
+.prose code:not(pre code) {
+  @apply rounded bg-ink-100 dark:bg-ink-800 px-1.5 py-0.5 text-[0.9em] font-mono;
+}
+.prose table {
+  @apply w-full my-6 text-sm border-collapse;
+}
+.prose th {
+  @apply border-b-2 border-ink-300 dark:border-ink-700 px-3 py-2 text-left font-semibold;
+}
+.prose td {
+  @apply border-b border-ink-200 dark:border-ink-800 px-3 py-2;
+}
+.prose hr { @apply my-10 border-ink-200 dark:border-ink-800; }
+
+/* KaTeX display equations: allow horizontal scroll on small screens */
+.prose .katex-display {
+  @apply overflow-x-auto overflow-y-hidden py-1;
+}
+.dark .katex { color: var(--color-ink-100); }
+
+/* References list produced by the blog migration */
+.prose .references-list {
+  @apply text-sm text-ink-600 dark:text-ink-400;
+}

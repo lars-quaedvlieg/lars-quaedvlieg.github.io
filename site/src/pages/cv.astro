@@ -1,0 +1,99 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import Base from '../layouts/Base.astro';
+
+interface CvItem {
+  title?: string;
+  institution?: string;
+  year?: string;
+  description?: (string | { title: string; contents: string[] })[];
+  name?: string;
+  value?: string;
+}
+interface CvSection {
+  title: string;
+  type: 'map' | 'list' | 'time_table' | 'nested_list';
+  contents: (CvItem | string)[];
+}
+
+const cv = yaml.load(fs.readFileSync(path.join(process.cwd(), 'src/data/cv.yml'), 'utf-8')) as CvSection[];
+---
+
+<Base title="CV" description="Curriculum vitae of Lars Quaedvlieg">
+  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">Curriculum vitae</h1>
+
+  {
+    cv.map((section) => (
+      <section class="mt-12">
+        <h2 class="font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">{section.title}</h2>
+
+        {section.type === 'map' && (
+          <dl class="mt-4 divide-y divide-ink-100 dark:divide-ink-800">
+            {(section.contents as CvItem[]).map((item) => (
+              <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-[14rem_1fr]">
+                <dt class="text-sm font-semibold text-ink-500 dark:text-ink-400">{item.name}</dt>
+                <dd class="text-sm text-ink-800 dark:text-ink-200" set:html={item.value} />
+              </div>
+            ))}
+          </dl>
+        )}
+
+        {section.type === 'list' && (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {(section.contents as string[]).map((item) => (
+              <li
+                class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-sm font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300"
+                set:html={item}
+              />
+            ))}
+          </ul>
+        )}
+
+        {section.type === 'time_table' && (
+          <ol class="relative mt-6 ml-3 border-l-2 border-ink-200 dark:border-ink-800">
+            {(section.contents as CvItem[]).map((item) => (
+              <li class="relative mb-8 pl-6 last:mb-0">
+                <span class="absolute top-1.5 -left-[7px] h-3 w-3 rounded-full bg-accent-500 ring-4 ring-white dark:ring-ink-950" />
+                {item.year && <p class="text-xs font-semibold tracking-wide text-ink-400 uppercase dark:text-ink-500">{item.year}</p>}
+                <h3 class="mt-0.5 font-semibold text-ink-900 dark:text-ink-100">{item.title}</h3>
+                {item.institution && <p class="mt-0.5 text-sm text-ink-500 dark:text-ink-400" set:html={item.institution} />}
+                {item.description && (
+                  <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-600 dark:text-ink-400">
+                    {item.description.map((d) =>
+                      typeof d === 'string' ? (
+                        <li set:html={d} />
+                      ) : (
+                        <li>
+                          <span set:html={d.title} />
+                          <ul class="mt-1 list-[circle] space-y-1 pl-5">
+                            {d.contents.map((c) => (
+                              <li set:html={c} />
+                            ))}
+                          </ul>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  /* Links inside CV HTML snippets */
+  :global(dd a, li a, p a) {
+    color: var(--color-accent-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  :global(.dark dd a, .dark li a, .dark p a) {
+    color: var(--color-accent-400);
+  }
+</style>

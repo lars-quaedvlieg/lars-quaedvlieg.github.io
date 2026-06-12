@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE, withBase } from '../../lib/site';
+
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const categories = [...new Set(posts.map((p) => p.data.categories).filter(Boolean))];
+---
+
+<Base title="Blog" description={SITE.blogDescription}>
+  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">{SITE.blogName}</h1>
+  <p class="mt-2 max-w-2xl text-ink-500 dark:text-ink-400">{SITE.blogDescription}</p>
+
+  <div class="mt-8 space-y-6">
+    {
+      posts.map((post) => (
+        <a
+          href={withBase(`/blog/${post.id.replace(/\.md$/, '')}`)}
+          class="group block rounded-xl border border-ink-200 p-5 transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-ink-800"
+        >
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-ink-400 dark:text-ink-500">
+            <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+            {post.data.categories && (
+              <span class="rounded-full bg-accent-50 px-2 py-0.5 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300">
+                {post.data.categories}
+              </span>
+            )}
+          </div>
+          <h2 class="mt-2 font-serif text-xl font-semibold text-ink-900 group-hover:text-accent-700 dark:text-ink-100 dark:group-hover:text-accent-400">
+            {post.data.title}
+          </h2>
+          {post.data.description && (
+            <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{post.data.description}</p>
+          )}
+        </a>
+      ))
+    }
+  </div>
+</Base>

@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import { loadPublications } from '../lib/bibtex';
+
+const pubs = loadPublications();
+const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
+---
+
+<Base title="Publications" description="Publications by Lars Quaedvlieg">
+  <h1 class="font-serif text-3xl font-bold text-ink-900 dark:text-ink-100">Publications</h1>
+  <p class="mt-2 text-ink-500 dark:text-ink-400">
+    Publications by year in reversed chronological order. Also see my
+    <a href="https://scholar.google.com/citations?user=f_-rgVcAAAAJ" target="_blank" rel="noopener" class="text-accent-700 hover:underline dark:text-accent-400">Google Scholar</a> profile.
+  </p>
+
+  {
+    years.map((year) => (
+      <section class="mt-10">
+        <h2 class="font-serif text-xl font-bold text-ink-400 dark:text-ink-500">{year}</h2>
+        <div class="mt-4 space-y-4">
+          {pubs
+            .filter((p) => p.year === year)
+            .map((pub) => (
+              <PublicationCard pub={pub} />
+            ))}
+        </div>
+      </section>
+    ))
+  }
+</Base>

@@ -1,0 +1,196 @@
+@article{quaedvlieg2025swizz,
+  title={Swizz: One-Liner Figures, LaTeX Tables, and Flexible Layouts for Scientific Papers},
+  author={<b>Quaedvlieg</b>*, <b>Lars</b> and Miele*, Andrea and Gulcehre, Caglar},
+  abstract={Producing publication-quality visualizations and tables for machine learning papers is often tedious, time-consuming, and prone to inconsistencies. We introduce Swizz, a lightweight Python library designed specifically for researchers to effortlessly generate elegant figures, LaTeX-ready tables, and customizable figure layouts with minimal code. Swizz enables one-line creation of consistent, conference-ready visualizations, including advanced plots and multilevel tables, and provides intuitive, composable layouts to simplify complex figure arrangements. Its automated styling and built-in visual gallery facilitate rapid experimentation, allowing researchers to focus more on research and less on formatting. Swizz is publicly available, easy to integrate into existing workflows, and is themed for major machine learning publication venues. Swizz is open source (MIT) and is available on GitHub and PyPI.},
+  journal={International Conference on Machine Learning (ICML) CodeML Workshop},
+  year={2025},
+  month={June},
+  pdf={swizz.pdf},
+  selected={true},
+  preview={swizz.png},
+  abbr={ICML CodeML<br>Workshop},
+  html={https://lars-quaedvlieg.github.io/swizz/}
+}
+
+
+@article{surina2025algorithm,
+  title={Algorithm Discovery With LLMs: Evolutionary Search Meets Reinforcement Learning},
+  author={Surina, Anja and Mansouri, Amin and <b>Quaedvlieg</b>, <b>Lars</b> and Seddas, Amal and Viazovska, Maryna and Abbe, Emmanuel and Gulcehre, Caglar},
+  abstract={Discovering efficient algorithms for solving complex problems has been an outstanding challenge in mathematics and computer science, requiring substantial human expertise over the years. Recent advancements in evolutionary search with large language models (LLMs) have shown promise in accelerating the discovery of algorithms across various domains, particularly in mathematics and optimization. However, existing approaches treat the LLM as a static generator, missing the opportunity to update the model with the signal obtained from evolutionary exploration. In this work, we propose to augment LLM-based evolutionary search by continuously refining the search operator - the LLM - through reinforcement learning (RL) fine-tuning. Our method leverages evolutionary search as an exploration strategy to discover improved algorithms, while RL optimizes the LLM policy based on these discoveries. Our experiments on three combinatorial optimization tasks - bin packing, traveling salesman, and the flatpack problem - show that combining RL and evolutionary search improves discovery efficiency of improved algorithms, showcasing the potential of RL-enhanced evolutionary strategies to assist computer scientists and mathematicians for more efficient algorithm design.},
+  journal={arXiv preprint arXiv:2504.05108},
+  year={2025},
+  month={April},
+  pdf={https://arxiv.org/pdf/2504.05108},
+  selected={true},
+  preview={evotune.png},
+}
+
+@article{quaedvlieg2025optimizing,
+  title={Optimizing Job Allocation using Reinforcement Learning with Graph Neural Networks},
+  author={<b>Quaedvlieg</b>, <b>Lars</b>},
+  abstract={Efficient job allocation in complex scheduling problems poses significant challenges in real-world applications. In this report, we propose a novel approach that leverages the power of Reinforcement Learning (RL) and Graph Neural Networks (GNNs) to tackle the Job Allocation Problem (JAP). The JAP involves allocating a maximum set of jobs to available resources while considering several constraints. Our approach enables learning of adaptive policies through trial-and-error interactions with the environment while exploiting the graph-structured data of the problem. By leveraging RL, we eliminate the need for manual annotation, a major bottleneck in supervised learning approaches. Experimental evaluations on synthetic and real-world data demonstrate the effectiveness and generalizability of our proposed approach, outperforming baseline algorithms and showcasing its potential for optimizing job allocation in complex scheduling problems.},
+  journal={arXiv preprint arXiv:2501.19063},
+  year={2025},
+  month={January},
+  pdf={https://arxiv.org/pdf/2501.19063},
+  selected={true},
+  preview={job_allocation.png}
+}
+
+@article{boige2023pasta,
+      title={PASTA: Pretrained Action-State Transformer Agents},
+      author={Boige*, Raphael and Flet-Berliac*, Yannis and <b>Quaedvlieg</b>, <b>Lars</b> and Flajolet, Arthur and Richard, Guillaume and Pierrot, Thomas},
+      abstract={Self-supervised learning has brought about a revolutionary paradigm shift in various computing domains, including NLP, vision, and biology. Recent approaches involve pre-training transformer models on vast amounts of unlabeled data, serving as a starting point for efficiently solving downstream tasks. In reinforcement learning, researchers have recently adapted these approaches, developing models pre-trained on expert trajectories. This advancement enables the models to tackle a broad spectrum of tasks, ranging from robotics to recommendation systems. However, existing methods mostly rely on intricate pre-training objectives tailored to specific downstream applications. This paper conducts a comprehensive investigation of models, referred to as pre-trained action-state transformer agents (PASTA). Our study covers a unified methodology and covers an extensive set of general downstream tasks including behavioral cloning, offline RL, sensor failure robustness, and dynamics change adaptation. Our objective is to systematically compare various design choices and offer valuable insights that will aid practitioners in developing robust models. Key highlights of our study include tokenization at the component level for actions and states, the use of fundamental pre-training objectives such as next token prediction or masked language modeling, simultaneous training of models across multiple domains, and the application of various fine-tuning strategies. In this study, the developed models contain fewer than 7 million parameters allowing a broad community to use these models and reproduce our experiments. We hope that this study will encourage further research into the use of transformers with first principle design choices to represent RL trajectories and contribute to robust policy learning.},
+      journal={Reinforcement Learning Journal,},
+      volume={3},
+      pages={1511-1532},
+      year={2024},
+      month={Aug},
+      pdf={https://rlj.cs.umass.edu/2024/papers/RLJ_RLC_2024_191.pdf},
+      selected={true},
+      preview={pasta.png},
+      abbr={RLC},
+}
+
+@article{quaedvlieg2023misdp,
+  title={Maximum Independent Set: Self-Training through Dynamic Programming},
+  author={<b>Quaedvlieg</b>*, <b>Lars</b> and Brusca*, L. and Skoulakis, S. and Chrysos, G. and Cevher, V.},
+  abstract={This work presents a novel graph neural network (GNN) framework for solving the maximum independent set (MIS) inspired by dynamic programming (DP). Specifically, given a graph, we propose a DP-like recursive algorithm based on GNNs that firstly constructs two smaller sub-graphs,  predicts the one with the larger MIS, and then uses it in the next recursive call.  To train our algorithm, we require annotated comparisons of different graphs concerning their MIS size. Annotating the comparisons with the output of our algorithm leads to a self-training process that results in more accurate self-annotation of the comparisons and vice versa. We provide numerical evidence showing the superiority of our method vs prior methods in multiple synthetic and real-world datasets.},
+  journal={Advances in Neural Information Processing Systems (NeurIPS),},
+  year={2023},
+  month={July},
+  pdf={https://proceedings.neurips.cc/paper_files/paper/2023/file/7fe3170d88a8310ca86df2843f54236c-Paper-Conference.pdf},
+  selected={true},
+  preview={mis_us.png},
+  abbr={NeurIPS},
+}
+
+
+@article{quaedvlieg2022marl,
+  title={Multi-Agent Reinforcement Learning with Graph Neural Networks for Online Multi-Hoist Scheduling},
+  author={<b>Quaedvlieg</b>, <b>Lars</b>},
+  abstract={This thesis explores an approach to solving the online multi-hoist scheduling problem by combining graph neural networks and multi-agent reinforcement learning. It approaches the problem by creating two sets of agents: source agents and hoists. When requested, a source agent selects a job from a queue of jobs in a source station to give to hoists. The hoists are responsible for picking up and dropping off jobs at stations, and coordinate with each other to avoid scenarios that would result in a deadlock. The devised algorithms are trained and benchmarked against other approaches, such as random and heuristic algorithms. Further insights into the methods are obtained from an analysis using dimensionality reduction on neural activations of the environment states. The results indicate that deadlocks are avoided in all experimental results. Furthermore, the approach in this thesis outperforms the other approaches in the benchmark by 7.50% to 10%. By analyzing the neural activations, it is shown that the hoist agents estimate that situations with many jobs being processed yield a higher job throughput than situations with less. Further research into the overall approach is recommended, but the results show potential to perform well against other approaches in existing literature.},
+  journal={Bachelor's Thesis,},
+  year={2022},
+  month={July},
+  pdf={bsc_thesis.pdf},
+  selected={true},
+  preview={bsc_thesis.png}
+}
+
+---
+Examples below
+---
+
+@string{aps = {American Physical Society,}}
+
+@book{einstein1920relativity,
+  title={Relativity: the Special and General Theory},
+  author={Einstein, Albert},
+  year={1920},
+  publisher={Methuen & Co Ltd},
+  html={relativity.html}
+}
+
+@book{einstein1956investigations,
+  bibtex_show={true},
+  title={Investigations on the Theory of the Brownian Movement},
+  author={Einstein, Albert},
+  year={1956},
+  publisher={Courier Corporation},
+  preview={brownian-motion.gif}
+}
+
+@article{einstein1950meaning,
+  abbr={AJP},
+  bibtex_show={true},
+  title={The meaning of relativity},
+  author={Einstein, Albert and Taub, AH},
+  journal={American Journal of Physics},
+  volume={18},
+  number={6},
+  pages={403--404},
+  year={1950},
+  publisher={American Association of Physics Teachers}
+}
+
+@article{PhysRev.47.777,
+  abbr={PhysRev},
+  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
+  author={Einstein*†, A. and Podolsky*, B. and Rosen*, N.},
+  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
+  journal={Phys. Rev.},
+  location={New Jersey},
+  volume={47},
+  issue={10},
+  pages={777--780},
+  numpages={0},
+  year={1935},
+  month={May},
+  publisher=aps,
+  doi={10.1103/PhysRev.47.777},
+  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
+  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
+  pdf={example_pdf.pdf},
+  altmetric={248277},
+  dimensions={true},
+  google_scholar_id={qyhmnyLat1gC},
+  video={https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ},
+  additional_info={. *More Information* can be [found here](https://github.com/alshedivat/al-folio/)},
+  annotation={* Example use of superscripts<br>† Albert Einstein},
+  selected={true},
+  inspirehep_id = {3255}
+}
+
+@article{einstein1905molekularkinetischen,
+  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
+  author={Einstein, A.},
+  journal={Annalen der physik},
+  volume={322},
+  number={8},
+  pages={549--560},
+  year={1905},
+  publisher={Wiley Online Library}
+}
+
+@article{einstein1905movement,
+  abbr={Ann. Phys.},
+  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
+  author={Einstein, A.},
+  journal={Ann. Phys.},
+  volume={17},
+  pages={549--560},
+  year={1905}
+}
+
+@article{einstein1905electrodynamics,
+  title={On the electrodynamics of moving bodies},
+  author={Einstein, A.},
+  year={1905}
+}
+
+@Article{einstein1905photoelectriceffect,
+  bibtex_show={true},
+  abbr={Ann. Phys.},
+  title="{{\"U}ber einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt}",
+  author={Albert Einstein},
+  abstract={This is the abstract text.},
+  journal={Ann. Phys.},
+  volume={322},
+  number={6},
+  pages={132--148},
+  year={1905},
+  doi={10.1002/andp.19053220607},
+  award={Albert Einstein receveid the **Nobel Prize in Physics** 1921 *for his services to Theoretical Physics, and especially for his discovery of the law of the photoelectric effect*},
+  award_name={Nobel Prize}
+}
+
+@book{przibram1967letters,
+  bibtex_show={true},
+  title={Letters on wave mechanics},
+  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
+  year={1967},
+  publisher={Vision},
+  preview={wave-mechanics.gif},
+  abbr={Vision}
+}

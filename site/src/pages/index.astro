@@ -1,0 +1,130 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Timeline from '../components/Timeline.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import { SITE, SOCIALS, withBase } from '../lib/site';
+import { loadPublications } from '../lib/bibtex';
+
+const interests = ['Evolutionary Search with LLMs', 'AI for Science', 'Reinforcement Learning'];
+const selectedPubs = loadPublications().filter((p) => p.selected).slice(0, 3);
+
+const news = (await getCollection('news', (n) => n.data.display))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+const newsRendered = await Promise.all(
+  news.map(async (item) => ({ date: item.data.date, Content: (await render(item)).Content }))
+);
+
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="flex flex-col-reverse items-center gap-10 sm:flex-row sm:items-start sm:justify-between">
+    <div class="max-w-2xl">
+      <h1 class="font-serif text-4xl font-bold tracking-tight text-ink-900 dark:text-ink-100">
+        Lars C.P.M. Quaedvlieg
+      </h1>
+      <p class="mt-3 text-lg font-medium text-accent-700 dark:text-accent-400">{SITE.role}</p>
+      <p class="mt-1 text-sm text-ink-500 dark:text-ink-400">MSc Data Science @ EPFL · {SITE.location} 🇬🇧</p>
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        {
+          interests.map((tag) => (
+            <span class="rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800 dark:border-accent-800 dark:bg-accent-900/30 dark:text-accent-300">
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="prose mt-6">
+        <p>
+          In January 2026, I joined <a href="https://www.jumptrading.com/" target="_blank" rel="noopener">Jump Trading</a> as a
+          <strong>Member of Technical Staff (AI Researcher)</strong>. I was previously a <strong>Research Scientist intern</strong> in the
+          <em>Core Learning &amp; Reasoning</em> pillar at <a href="https://ai.meta.com/research/" target="_blank" rel="noopener">Meta</a> FAIR.
+          I finished my MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener">EPFL</a>,
+          where I worked as a <a href="https://www.epfl.ch/schools/ic/education/master/research-scholars/" target="_blank" rel="noopener">Research Assistant</a>
+          in the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener">Caglar Gulcehre Lab for AI Research</a>. I am also a recipient
+          of the <a href="https://www.epfl.ch/education/master/master-excellence-fellowships/" target="_blank" rel="noopener">EPFL Excellence Fellowship</a>.
+          My research focuses on foundation models and reinforcement learning — specifically <strong>evolutionary search with LLMs</strong> and <strong>AI4Math</strong>.
+        </p>
+        <p>
+          When I'm not doing research or working on side projects, you can find me in the calisthenics parks 🤸 or playing
+          <a href="https://www.geoguessr.com/" target="_blank" rel="noopener">GeoGuessr</a> 🌎.
+        </p>
+      </div>
+
+      <div class="mt-6 flex items-center gap-4">
+        {
+          SOCIALS.map((s) => (
+            <a
+              href={s.href}
+              target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+              rel="noopener"
+              aria-label={s.label}
+              title={s.label}
+              class="text-ink-400 transition-colors hover:text-accent-600 dark:text-ink-500 dark:hover:text-accent-400"
+            >
+              <Icon name={s.icon} class="h-6 w-6" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="shrink-0">
+      <img
+        src={withBase('/assets/img/profile.png')}
+        alt="Portrait of Lars Quaedvlieg"
+        class="h-44 w-44 rounded-2xl border border-ink-200 object-cover shadow-lg sm:h-56 sm:w-56 dark:border-ink-800"
+      />
+      <div class="mt-4 flex items-center justify-center gap-4 opacity-80">
+        <img src={withBase('/assets/img/jump-trading-logo.jpg')} alt="Jump Trading" class="h-8 w-auto rounded" />
+        <img src={withBase('/assets/img/meta-logo.png')} alt="Meta" class="h-6 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+        <img src={withBase('/assets/img/epfl-logo.png')} alt="EPFL" class="h-5 w-auto dark:rounded dark:bg-white/90 dark:p-0.5" />
+      </div>
+    </div>
+  </section>
+
+  <!-- News -->
+  {
+    newsRendered.length > 0 && (
+      <section class="mt-16">
+        <h2 class="font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">News</h2>
+        <ul class="mt-5 space-y-4">
+          {newsRendered.map(({ date, Content }) => (
+            <li class="flex gap-4">
+              <span class="w-20 shrink-0 pt-0.5 text-sm font-semibold text-ink-400 dark:text-ink-500">{fmt(date)}</span>
+              <div class="prose min-w-0 flex-1 text-[0.95rem] [&_p]:my-0">
+                <Content />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <!-- Timeline -->
+  <section class="mt-16">
+    <h2 class="font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">Journey</h2>
+    <p class="mt-2 mb-6 text-sm text-ink-500 dark:text-ink-400">
+      A timeline of my research and education so far — see the <a href={withBase('/cv')} class="text-accent-700 hover:underline dark:text-accent-400">full CV</a> for details.
+    </p>
+    <Timeline />
+  </section>
+
+  <!-- Selected publications -->
+  <section class="mt-16">
+    <div class="flex items-baseline justify-between">
+      <h2 class="font-serif text-2xl font-bold text-ink-900 dark:text-ink-100">Selected publications</h2>
+      <a href={withBase('/publications')} class="text-sm font-medium text-accent-700 hover:underline dark:text-accent-400">All publications →</a>
+    </div>
+    <div class="mt-5 space-y-4">
+      {selectedPubs.map((pub) => <PublicationCard pub={pub} />)}
+    </div>
+  </section>
+</Base>
