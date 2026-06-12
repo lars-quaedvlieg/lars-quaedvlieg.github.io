@@ -45,7 +45,7 @@
   let N_RUNS = 5;
   let N_HILLS = 28;
   let N_ROLLERS = 8;
-  const RUN_CAP = mobile ? 26 : 36;      // living nodes per run
+  const RUN_CAP = mobile ? 30 : 44;      // living nodes per run
   const SAMPLE_EVERY = mobile ? 24 : 14; // frames between beats, per run
   const GROW_FRAMES = 22;
   const FAIL_P = 0.1;
@@ -275,7 +275,7 @@
     const pool = run.nodes.filter((n) => !n.removing && n.outcome !== 'fail' && n.t >= 1);
     const out: PNode[] = [];
     for (let s = 0; s < k && pool.length; s++) {
-      const weights = pool.map((n) => Math.exp(n.score * 6 - (frame - n.born) * RECENCY));
+      const weights = pool.map((n) => Math.exp(n.score * 4 - (frame - n.born) * RECENCY));
       let r = Math.random() * weights.reduce((a, b) => a + b, 0);
       let pick = pool.length - 1;
       for (let i = 0; i < pool.length; i++) {
@@ -291,24 +291,40 @@
   /**
    * Candidate placement. Each run carries a weak prior toward its target:
    * on flat ground the prior steers the lineage; near the peak the actual
-   * score gradient dominates (the prior is a bounded multiplier).
+   * score gradient dominates. Exploration comes from three places:
+   *   · candidates are picked STOCHASTICALLY (weighted, not argmax)
+   *   · a CROWDING penalty pushes children away from existing nodes
+   *   · ~15% of proposals are long-range jumps (high-variance mutations)
    */
   function childAnchor(run: Run, parents: PNode[]): [number, number, number] | null {
     const px = parents.reduce((s, p) => s + p.ax, 0) / parents.length;
     const py = parents.reduce((s, p) => s + p.ay, 0) / parents.length;
     const toTarget = Math.atan2(run.target.y - py, run.target.x - px);
-    let best: [number, number, number] | null = null;
-    let bestV = -1;
-    for (let c = 0; c < 6; c++) {
+    const cands: { ax: number; ay: number; f: number; v: number }[] = [];
+    for (let c = 0; c < 7; c++) {
       const dir = Math.random() * Math.PI * 2;
-      const d = STEP();
+      const d = STEP() * (Math.random() < 0.15 ? 2.4 : 1); // exploration jump
       const ax = px + Math.cos(dir) * d;
       const ay = py + Math.sin(dir) * d;
       const f = fitness(ax, ay);
-      const v = f * (1 + PRIOR * Math.cos(dir - toTarget));
-      if (v > bestV) { bestV = v; best = [ax, ay, f]; }
+      if (f <= 0.015) continue;
+      let crowd = 0;
+      for (const n of run.nodes) {
+        if (!n.removing && (n.ax - ax) ** 2 + (n.ay - ay) ** 2 < 48 * 48) crowd++;
+      }
+      const v = Math.max(1e-4, (f * (1 + PRIOR * Math.cos(dir - toTarget))) / (1 + 0.7 * crowd));
+      cands.push({ ax, ay, f, v });
     }
-    return best && best[2] > 0.015 ? best : null;
+    if (!cands.length) return null;
+    // weighted pick (v²): good ground usually wins, but not always
+    const total = cands.reduce((s, c) => s + c.v * c.v, 0);
+    let r = Math.random() * total;
+    for (const c of cands) {
+      r -= c.v * c.v;
+      if (r <= 0) return [c.ax, c.ay, c.f];
+    }
+    const last = cands[cands.length - 1];
+    return [last.ax, last.ay, last.f];
   }
 
   function generateChildren(run: Run, parents: PNode[]) {
