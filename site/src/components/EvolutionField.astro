@@ -35,19 +35,20 @@
   const mobile = window.innerWidth < 640;
 
   /* ----------------------- tuning ----------------------- */
-  const POP_CAP = mobile ? 46 : 80;     // living nodes before pruning
-  const SAMPLE_EVERY = mobile ? 34 : 22; // frames between sampling beats
+  const POP_CAP = mobile ? 60 : 130;    // living nodes before pruning
+  const SAMPLE_EVERY = mobile ? 26 : 14; // frames between sampling beats
   const GROW_FRAMES = 22;
   const FAIL_P = 0.1;
   const FAIL_TTL = 320;
-  const PRUNE_EVERY = 200;
+  const PRUNE_EVERY = 280;
   const CROSS_P = 0.4;        // chance a beat samples TWO parents
   const PAD = 16;             // sacred margin around content blocks
   const DOWN_BIAS = 0.45;     // how strongly candidates prefer heading down-page
-  const RECENCY = 0.0009;     // sampling decay per frame of age (frontier advances)
+  const RECENCY = 0.0005;     // sampling decay per frame of age (frontier advances)
   const DEPLETE = 0.0035;     // peak energy drain per occupant per check
-  const STEP = () => (mobile ? 32 : 42) + Math.random() * 26;
+  const STEP = () => (mobile ? 36 : 46) + Math.random() * 30;
   const HUE = 172;            // population color family
+  const CELL = mobile ? 22 : 18; // heatmap resolution (css px per cell)
 
   let w = 0, h = 0, dpr = 1;
   function resize() {
@@ -135,7 +136,8 @@
     mouse = { x: e.clientX - fr.left, y: e.clientY - fr.top };
   });
 
-  function fitness(x: number, y: number): number {
+  /** Terrain-only score (what the heatmap shows). */
+  function terrain(x: number, y: number): number {
     if (x < 14 || y < 14 || x > w - 14 || y > h - 14) return 0;
     if (insideBlock(x, y)) return 0; // sacred ground
     let f = 0.06;
@@ -143,11 +145,45 @@
       const d2 = (x - pk.x) ** 2 + (y - pk.y) ** 2;
       if (d2 < pk.sigma * pk.sigma * 9) f += pk.amp * pk.energy * Math.exp(-d2 / (2 * pk.sigma * pk.sigma));
     }
-    if (mouse) {
+    return Math.min(1, f);
+  }
+
+  /** What the search optimizes: terrain + the visitor's cursor. */
+  function fitness(x: number, y: number): number {
+    let f = terrain(x, y);
+    if (f > 0 && mouse) {
       const d2 = (x - mouse.x) ** 2 + (y - mouse.y) ** 2;
       f += 0.4 * Math.exp(-d2 / (2 * 150 * 150));
     }
     return Math.min(1, f);
+  }
+
+  /* ---------------- visible score surface (heatmap) ---------------- */
+  const heat = document.createElement('canvas');
+  const hctx = heat.getContext('2d')!;
+  function drawHeatmap() {
+    const dark = isDark();
+    const gw = Math.max(1, Math.ceil(w / CELL));
+    const gh = Math.max(1, Math.ceil(h / CELL));
+    heat.width = gw;
+    heat.height = gh;
+    const img = hctx.createImageData(gw, gh);
+    const [cr, cg, cb] = dark ? [45, 212, 191] : [13, 148, 136];
+    const maxA = dark ? 0.24 : 0.15;
+    for (let gy = 0; gy < gh; gy++) {
+      for (let gx = 0; gx < gw; gx++) {
+        const f = terrain(gx * CELL + CELL / 2, gy * CELL + CELL / 2);
+        const i = (gy * gw + gx) * 4;
+        if (f <= 0.075) continue; // base plain stays invisible
+        // quantize into bands so the surface reads as topography
+        const level = Math.ceil(Math.min(1, f) * 6) / 6;
+        img.data[i] = cr;
+        img.data[i + 1] = cg;
+        img.data[i + 2] = cb;
+        img.data[i + 3] = Math.floor(level * maxA * 255);
+      }
+    }
+    hctx.putImageData(img, 0, 0);
   }
 
   /* ---------------- the expedition ---------------- */
@@ -224,7 +260,7 @@
   }
 
   function generateChildren(parents: PNode[]) {
-    const n = 1 + Math.floor(Math.random() * 2); // 1–2 programs per prompt
+    const n = 2 + Math.floor(Math.random() * 2); // 2–3 programs per prompt
     const pScore = Math.max(...parents.map((p) => p.score));
     for (let k = 0; k < n; k++) {
       const spot = childAnchor(parents);
@@ -261,23 +297,25 @@
   const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
   function drawLandscape(dark: boolean) {
+    // the score surface itself
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(heat, 0, 0, heat.width, heat.height, 0, 0, w, h);
+    // summit markers with their current score, so the terrain is legible
+    ctx.font = '10px ui-monospace, SFMono-Regular, Menlo, monospace';
+    ctx.textAlign = 'center';
     for (const pk of peaks) {
-      const a = (0.5 + pk.amp * 0.5) * (0.25 + pk.energy * 0.75);
-      // soft summit glow
-      const g = ctx.createRadialGradient(pk.x, pk.y, 0, pk.x, pk.y, pk.sigma * 1.7);
-      g.addColorStop(0, dark ? `hsla(${HUE}, 60%, 60%, ${0.07 * a})` : `hsla(${HUE}, 65%, 40%, ${0.06 * a})`);
-      g.addColorStop(1, 'transparent');
-      ctx.fillStyle = g;
-      ctx.fillRect(pk.x - pk.sigma * 1.7, pk.y - pk.sigma * 1.7, pk.sigma * 3.4, pk.sigma * 3.4);
-      // contour rings make it read as topography
-      const rings = mobile ? 2 : 3;
-      for (let i = 1; i <= rings; i++) {
-        ctx.strokeStyle = dark ? `hsla(${HUE}, 50%, 65%, ${0.05 * a})` : `hsla(${HUE}, 55%, 35%, ${0.05 * a})`;
-        ctx.lineWidth = 0.8;
-        ctx.beginPath();
-        ctx.arc(pk.x, pk.y, pk.sigma * (0.45 + i * 0.4), 0, Math.PI * 2);
-        ctx.stroke();
-      }
+      const v = pk.amp * pk.energy;
+      const a = 0.3 + v * 0.5;
+      ctx.strokeStyle = dark ? `hsla(${HUE}, 60%, 70%, ${a * 0.5})` : `hsla(${HUE}, 60%, 30%, ${a * 0.45})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pk.x - 4, pk.y);
+      ctx.lineTo(pk.x + 4, pk.y);
+      ctx.moveTo(pk.x, pk.y - 4);
+      ctx.lineTo(pk.x, pk.y + 4);
+      ctx.stroke();
+      ctx.fillStyle = dark ? `hsla(${HUE}, 45%, 78%, ${a})` : `hsla(${HUE}, 55%, 25%, ${a})`;
+      ctx.fillText(v.toFixed(2), pk.x, pk.y - 9);
     }
   }
 
@@ -289,6 +327,8 @@
     const viewTop = -fr.top - 400;
     const viewBot = -fr.top + window.innerHeight + 400;
 
+    // keep the visible surface in sync with depletion / theme / layout
+    if (frame === 1 || frame % 45 === 0) drawHeatmap();
     drawLandscape(dark);
 
     /* ---- expedition lifecycle ---- */
@@ -331,7 +371,7 @@
       const leaves = nodes
         .filter((n) => !n.removing && n.children === 0 && n.outcome !== 'root')
         .sort((a, b) => a.score - b.score);
-      const cut = liveCount > POP_CAP ? Math.max(6, liveCount - POP_CAP) : Math.max(2, Math.floor(leaves.length * 0.15));
+      const cut = liveCount > POP_CAP ? Math.max(6, liveCount - POP_CAP) : Math.max(2, Math.floor(leaves.length * 0.1));
       for (const n of leaves.slice(0, cut)) n.removing = true;
     }
 
