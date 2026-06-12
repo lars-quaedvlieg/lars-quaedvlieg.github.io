@@ -3,7 +3,7 @@ export const SITE = {
   firstName: 'Lars',
   title: 'Lars Quaedvlieg',
   description:
-    'Personal website of Lars C.P.M. Quaedvlieg — AI researcher working on evolutionary search with LLMs, AI for science, and reinforcement learning.',
+    'Personal website of Lars C.P.M. Quaedvlieg, AI researcher and builder working on iterative self-improvement and reinforcement learning.',
   role: 'Member of Technical Staff @ Jump Trading',
   location: 'London, United Kingdom',
   email: 'larsquaedvlieg@outlook.com',

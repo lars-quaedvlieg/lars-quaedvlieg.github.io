@@ -27,7 +27,7 @@
 <button
   id="evo-stats"
   type="button"
-  class="fixed right-3 bottom-2 z-20 cursor-help font-mono text-[10px] tracking-widest text-ink-400/70 uppercase select-none hover:text-accent-600 dark:text-ink-500/70 dark:hover:text-accent-400"
+  class="fixed right-3 bottom-2.5 z-20 cursor-help font-mono text-xs tracking-widest text-ink-500 uppercase select-none hover:text-accent-600 dark:text-ink-400 dark:hover:text-accent-400"
   aria-expanded="false"
   aria-controls="evo-about"
 >
@@ -40,7 +40,8 @@
 >
   <p class="font-mono text-[10px] tracking-widest text-accent-700 uppercase dark:text-accent-400">you found the search</p>
   <p class="mt-2">
-    This page is a fitness landscape, and what's crawling over it is <em>evolutionary search</em> — the thing I research.
+    This page is a fitness landscape, and what's crawling over it is <em>evolutionary search</em>. I'm not researching
+    it right now, but I'm a big believer in the idea: I think it will end up cracking a lot of hard problems.
     Each colored lineage is an independent run: it samples parents (better programs reproduce more), and an LLM-style
     operator proposes children, scored by the ground they land on.
   </p>
@@ -51,8 +52,35 @@
     <li><span class="mr-1 inline-block h-2 w-2 rounded-full border border-yellow-500"></span> champion of its run</li>
   </ul>
   <p class="mt-2">
-    Runs converge on a summit — or stagnate on a local optimum — then freeze as artifacts. Your text is sacred ground;
+    Runs converge on a summit (or stagnate on a local optimum) and freeze as artifacts. Your text is sacred ground;
     your cursor is a fitness peak. Try luring a run somewhere.
+  </p>
+  <p class="mt-2">
+    Curious? We explored this in
+    <a
+      href="https://arxiv.org/abs/2504.05108"
+      target="_blank"
+      rel="noopener"
+      class="text-accent-700 underline underline-offset-2 dark:text-accent-400">our COLM 2025 paper</a
+    >, and it's being bet on at scale: see
+    <a
+      href="https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/"
+      target="_blank"
+      rel="noopener"
+      class="text-accent-700 underline underline-offset-2 dark:text-accent-400">AlphaEvolve</a
+    > at Google DeepMind, the
+    <a
+      href="https://arxiv.org/abs/2507.02554"
+      target="_blank"
+      rel="noopener"
+      class="text-accent-700 underline underline-offset-2 dark:text-accent-400">AIRA</a
+    > team at Meta FAIR, and
+    <a
+      href="https://recursive.com"
+      target="_blank"
+      rel="noopener"
+      class="text-accent-700 underline underline-offset-2 dark:text-accent-400">Recursive</a
+    >.
   </p>
 </aside>
 

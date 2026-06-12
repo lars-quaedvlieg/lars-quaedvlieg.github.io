@@ -75,7 +75,7 @@ export const TIMELINE: TimelineEntry[] = [
     org: 'Maastricht University',
     orgUrl: 'https://curriculum.maastrichtuniversity.nl/education/bachelor/data-science-and-artificial-intelligence',
     description:
-      'Graduated summa cum laude (9.5/10, ranked 1st of 104). University-wide Best Bachelor’s Thesis Award.',
+      'Graduated summa cum laude (9.5/10, ranked 1st of 104). <a href="https://www.maastrichtuniversity.nl/lars-quaedvlieg" target="_blank" rel="noopener">University-wide Best Bachelor’s Thesis Award</a> for “Multi-Agent Reinforcement Learning with Graph Neural Networks for Online Multi-Hoist Scheduling”.',
     type: 'education',
   },
 ];

@@ -2,9 +2,11 @@
 import Base from '../layouts/Base.astro';
 import PublicationCard from '../components/PublicationCard.astro';
 import { loadPublications } from '../lib/bibtex';
+import { fetchCitationCounts } from '../lib/citations';
 
 const pubs = loadPublications();
 const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
+const citations = await fetchCitationCounts(pubs.map((p) => p.title));
 ---
 
 <Base title="Publications" description="Publications by Lars Quaedvlieg">
@@ -24,7 +26,7 @@ const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
           {pubs
             .filter((p) => p.year === year)
             .map((pub) => (
-              <PublicationCard pub={pub} />
+              <PublicationCard pub={pub} citations={citations[pub.title]} />
             ))}
         </div>
       </section>

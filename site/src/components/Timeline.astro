@@ -25,7 +25,12 @@ const typeStyles: Record<string, string> = {
             entry.org
           )}
         </h3>
-        {entry.description && <p class="mt-1 text-sm text-ink-600 dark:text-ink-400">{entry.description}</p>}
+        {entry.description && (
+          <p
+            class="mt-1 text-sm text-ink-600 dark:text-ink-400 [&_a]:text-accent-700 [&_a]:underline [&_a]:underline-offset-2 dark:[&_a]:text-accent-400"
+            set:html={entry.description}
+          />
+        )}
       </li>
     ))
   }

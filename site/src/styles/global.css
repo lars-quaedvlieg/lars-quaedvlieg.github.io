@@ -131,3 +131,60 @@ body {
     transition: none;
   }
 }
+
+/* Marker-highlighted interests in the hero. Each span takes a --hue matching
+   one of the evolution runs' lineage colors, sits at a slight marker tilt,
+   drifts gently out of phase with its neighbors, and wiggles when poked. */
+.hl {
+  display: inline-block;
+  padding: 0.02em 0.32em;
+  border-radius: 0.45em;
+  font-weight: 600;
+  color: var(--color-ink-900);
+  background: linear-gradient(
+    100deg,
+    hsla(var(--hue), 75%, 60%, 0) 0%,
+    hsla(var(--hue), 75%, 60%, 0.3) 4%,
+    hsla(var(--hue), 75%, 55%, 0.24) 96%,
+    hsla(var(--hue), 75%, 60%, 0) 100%
+  );
+  rotate: var(--tilt, -1deg);
+  animation: hl-drift 7s ease-in-out infinite;
+  animation-delay: var(--drift, 0s);
+}
+.dark .hl {
+  color: var(--color-ink-50);
+}
+.hl:hover {
+  animation: hl-wiggle 0.4s ease-in-out;
+}
+@keyframes hl-drift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -2px;
+  }
+}
+@keyframes hl-wiggle {
+  0%,
+  100% {
+    rotate: var(--tilt, -1deg);
+    scale: 1;
+  }
+  30% {
+    rotate: calc(var(--tilt, -1deg) + 2.5deg);
+    scale: 1.06;
+  }
+  70% {
+    rotate: calc(var(--tilt, -1deg) - 2deg);
+    scale: 1.03;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hl,
+  .hl:hover {
+    animation: none;
+  }
+}

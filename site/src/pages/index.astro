@@ -6,9 +6,20 @@ import Timeline from '../components/Timeline.astro';
 import PublicationCard from '../components/PublicationCard.astro';
 import { SOCIALS, withBase } from '../lib/site';
 import { loadPublications } from '../lib/bibtex';
+import { fetchCitationCounts } from '../lib/citations';
 
 const interests = ['Evolutionary Search with LLMs', 'AI for Science', 'Reinforcement Learning'];
+
+// News is currently outdated; flip to true to show the section again.
+const showNews = false;
+const secNum = {
+  about: '01',
+  news: '02',
+  journey: showNews ? '03' : '02',
+  research: showNews ? '04' : '03',
+};
 const selectedPubs = loadPublications().filter((p) => p.selected).slice(0, 3);
+const citations = await fetchCitationCounts(selectedPubs.map((p) => p.title));
 
 const news = (await getCollection('news', (n) => n.data.display))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -32,14 +43,18 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
             <p class="font-mono text-xs tracking-[0.3em] text-accent-700 uppercase dark:text-accent-400">
               AI researcher · London
             </p>
-            <h1 class="display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.95]">
+            <h1 class="display mt-4 text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.95]">
               Lars<br />Quaedvlieg
             </h1>
-            <p class="mt-6 max-w-xl text-lg text-ink-600 sm:text-xl dark:text-ink-300">
-              I search the space of algorithms — with evolution, reinforcement, and the occasional large language model.
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-600 sm:text-xl dark:text-ink-300">
+              I'm a big believer in <span class="hl" style="--hue: 172; --tilt: -1deg; --drift: 0s">iterative self-improvement</span>
+              and <span class="hl" style="--hue: 260; --tilt: 1.1deg; --drift: -2.3s">reinforcement learning</span>,
+              and I love <span class="hl" style="--hue: 140; --tilt: -1.2deg; --drift: -4.1s">building things</span> like
+              apps, tools, this site, etc!
             </p>
-            <p class="mt-3 text-sm font-medium text-ink-500 dark:text-ink-400">
-              Member of Technical Staff @ Jump Trading · previously Meta FAIR & EPFL
+            <p class="mt-4 text-sm font-medium text-ink-500 dark:text-ink-400">
+              <span class="hl" style="--hue: 205; --tilt: 0.8deg; --drift: -5.4s">Member of Technical Staff @ Jump Trading</span>
+              · previously Meta FAIR &amp; EPFL
             </p>
             <div class="mt-8 flex flex-wrap items-center gap-3">
               <a
@@ -74,7 +89,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
           </div>
         </div>
         <p class="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce font-mono text-[10px] tracking-[0.2em] whitespace-nowrap text-ink-400 uppercase sm:tracking-[0.3em] dark:text-ink-500">
-          scroll — follow the search ↓
+          scroll · follow the search ↓
         </p>
       </section>
 
@@ -83,7 +98,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
         <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-24 md:grid-cols-[16rem_1fr] md:py-20 dark:border-ink-800">
           <div>
             <div data-evo-block>
-              <p class="section-eyebrow">01 / About</p>
+              <p class="section-eyebrow">{secNum.about} / About</p>
               <h2 class="section-title">The short version</h2>
             </div>
           </div>
@@ -92,10 +107,12 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
               <div class="prose" data-evo-block>
                 <p>
                   In January 2026, I joined <a href="https://www.jumptrading.com/" target="_blank" rel="noopener">Jump Trading</a> as a
-                  <strong>Member of Technical Staff (AI Researcher)</strong>. I was previously a <strong>Research Scientist intern</strong> in the
-                  <em>Core Learning &amp; Reasoning</em> pillar at <a href="https://ai.meta.com/research/" target="_blank" rel="noopener">Meta</a> FAIR,
+                  <strong>Member of Technical Staff (AI Researcher)</strong>. I was previously a <strong>Research Scientist intern</strong> on the
+                  reinforcement learning team in the <em>Core Learning &amp; Reasoning</em> pillar at
+                  <a href="https://ai.meta.com/research/" target="_blank" rel="noopener">Meta</a> FAIR,
                   and finished my MSc in Data Science at <a href="https://www.epfl.ch/education/master/programs/data-science/" target="_blank" rel="noopener">EPFL</a>
-                  as a research assistant in the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener">Caglar Gulcehre Lab for AI Research</a>,
+                  as a <a href="https://www.epfl.ch/schools/ic/education/master/research-scholars/" target="_blank" rel="noopener">research scholar</a>
+                  in the <a href="https://www.epfl.ch/labs/claire/" target="_blank" rel="noopener">Caglar Gulcehre Lab for AI Research</a>,
                   on an <a href="https://www.epfl.ch/education/master/master-excellence-fellowships/" target="_blank" rel="noopener">EPFL Excellence Fellowship</a>.
                 </p>
                 <p>
@@ -130,11 +147,11 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 
         <!-- ============ 02 / News ============ -->
         {
-          newsRendered.length > 0 && (
+          showNews && newsRendered.length > 0 && (
             <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-24 md:grid-cols-[16rem_1fr] md:py-20 dark:border-ink-800">
               <div>
                 <div data-evo-block>
-                  <p class="section-eyebrow">02 / News</p>
+                  <p class="section-eyebrow">{secNum.news} / News</p>
                   <h2 class="section-title">Lately</h2>
                 </div>
               </div>
@@ -156,7 +173,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
         <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-24 md:grid-cols-[16rem_1fr] md:py-20 dark:border-ink-800">
           <div>
             <div data-evo-block>
-              <p class="section-eyebrow">03 / Journey</p>
+              <p class="section-eyebrow">{secNum.journey} / Journey</p>
               <h2 class="section-title">How I got here</h2>
               <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
                 Full details in the <a href={withBase('/cv')} class="text-accent-700 hover:underline dark:text-accent-400">CV</a>.
@@ -172,7 +189,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
         <section class="reveal grid grid-cols-1 gap-10 border-t border-ink-200 py-24 md:grid-cols-[16rem_1fr] md:py-20 dark:border-ink-800">
           <div>
             <div data-evo-block>
-              <p class="section-eyebrow">04 / Research</p>
+              <p class="section-eyebrow">{secNum.research} / Research</p>
               <h2 class="section-title">Selected work</h2>
               <p class="mt-3 text-sm text-ink-500 dark:text-ink-400">
                 <a href={withBase('/publications')} class="text-accent-700 hover:underline dark:text-accent-400">All publications →</a>
@@ -180,7 +197,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
             </div>
           </div>
           <div class="space-y-4">
-            {selectedPubs.map((pub) => <PublicationCard pub={pub} />)}
+            {selectedPubs.map((pub) => <PublicationCard pub={pub} citations={citations[pub.title]} />)}
           </div>
         </section>
       </div>
